@@ -288,7 +288,7 @@ const QuizPlayPage = () => {
           onClose={() => navigate("/student/quizzes")}
         />
 
-        <section className="mt-[70px] rounded-[18px] border border-[#ECECEC] bg-white px-[27px] py-[28px]">
+        <section className="mx-auto mt-[70px] w-full rounded-[18px] border border-[#ECECEC] bg-white px-[27px] py-[28px] shadow-[0_8px_24px_rgba(101,29,255,0.08)] lg:max-w-[760px] lg:px-[42px] lg:py-[34px]">
           <div className="flex items-center gap-[10px]">
             <div className="flex h-[35px] w-[35px] items-center justify-center rounded-[8px] bg-[#F3E8FF] text-[#6D22F3]">
               <Sparkles size={20} />
@@ -337,8 +337,8 @@ const QuizPlayPage = () => {
 
         <button
           onClick={handleNext}
-          className="mt-[19px] flex h-[52px] w-full items-center justify-center gap-[10px] rounded-[8px] border-2 border-[#00B8FF] bg-gradient-to-r from-[#7B2CFF] to-[#4F1DE8] text-[16px] font-bold text-white"
-        >
+          className="mx-auto mt-[19px] flex h-[52px] w-full items-center justify-center gap-[10px] rounded-[8px] border-2 border-[#00B8FF] bg-gradient-to-r from-[#7B2CFF] to-[#4F1DE8] text-[16px] font-bold text-white lg:max-w-[760px]"
+          >
           Lanjut ke Soal
           <ArrowRight size={23} />
         </button>
@@ -370,7 +370,7 @@ const QuizPlayPage = () => {
           {currentQuestion.question}
         </h1>
 
-        <div className="mt-[25px] space-y-[10px]">
+        <div className="mt-[25px] space-y-[10px] lg:grid lg:grid-cols-2 lg:gap-[12px] lg:space-y-0">
           {currentQuestion.choices.map((choice, index) => {
             const isSelected = selectedAnswer === index;
             const isCorrect = answerStatus && index === correctAnswer;
@@ -424,7 +424,7 @@ const QuizPlayPage = () => {
         </div>
       </section>
 
-      <div className="mt-[28px] flex items-center justify-between px-[8px]">
+      <div className="mx-auto mt-[28px] flex w-full items-center justify-between px-[8px] lg:max-w-[760px]">
         <button
           disabled={currentIndex === 0}
           onClick={handlePrevious}
@@ -449,8 +449,8 @@ const QuizPlayPage = () => {
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[18px] pt-[22px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[18px] pb-[32px] pt-[22px] lg:flex lg:max-w-[980px] lg:flex-col lg:px-[32px] lg:pt-[38px]">
         {children}
       </div>
     </main>
@@ -459,7 +459,7 @@ const PageLayout = ({ children }) => {
 
 const TopQuizBar = ({ onClose, elapsedTime }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="mx-auto flex w-full items-center justify-between lg:max-w-[760px]">
       <button onClick={onClose} className="text-[#6B7280]">
         <X size={24} />
       </button>

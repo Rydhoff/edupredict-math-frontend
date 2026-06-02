@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { Check } from "lucide-react";
 import useCachedFetch from "../../hooks/useCachedFetch";
 
@@ -27,6 +25,7 @@ import logicGeniusLockedBadge from "../../assets/images/badges/logic-genius-lock
 
 import speedSolverBadge from "../../assets/images/badges/speed-solver.png";
 import speedSolverLockedBadge from "../../assets/images/badges/speed-solver-locked.png";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 
 const avatarMap = {
   male: maleAvatar,
@@ -179,7 +178,7 @@ const RewardsPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
           Rewards
         </h1>
@@ -187,8 +186,9 @@ const RewardsPage = () => {
         <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
           Terus belajar dan kumpulkan XP!
         </p>
+<div className="lg:mt-[24px] lg:grid lg:grid-cols-[0.85fr_1.15fr] lg:gap-[24px]">
 
-        <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[22px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)]">
+        <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[22px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0 lg:self-start">
           <div className="flex items-center justify-between">
             <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
               Leaderboard
@@ -224,12 +224,12 @@ const RewardsPage = () => {
           </div>
         </section>
 
-        <section className="mt-[20px] rounded-[14px] border border-[#E5E7EB] bg-white px-[21px] pb-[23px] pt-[20px]">
+        <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[23px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0">
           <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
             Achievements
           </h2>
 
-          <div className="mt-[17px] grid grid-cols-2 gap-[12px]">
+          <div className="mt-[17px] grid grid-cols-2 gap-[12px] lg:grid-cols-3 xl:grid-cols-4">
             {achievements.length === 0 ? (
               <PageState
                 type="empty"
@@ -249,8 +249,10 @@ const RewardsPage = () => {
             )}
           </div>
         </section>
+        </div>
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );
@@ -259,10 +261,11 @@ const RewardsPage = () => {
 const PageLayout = ({ children }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         {children}
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );

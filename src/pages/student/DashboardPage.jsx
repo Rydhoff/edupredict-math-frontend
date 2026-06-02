@@ -11,6 +11,7 @@ import DailyQuestCard from "../../components/student/DailyQuestCard";
 import StreakCard from "../../components/student/StreakCard";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
 import JoinClassModal from "../../components/student/JoinClassModal";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 
 const DashboardPage = () => {
   const [showJoinClass, setShowJoinClass] = useState(false);
@@ -30,7 +31,7 @@ const DashboardPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[15px] pb-[104px] pt-[46px]">
+    <div className="mx-auto min-h-screen w-full max-w-[460px] lg:max-w-[1200px] px-[15px] pb-[104px] pt-[46px] lg:ml-[300px] lg:mr-[32px] lg:max-w-[1180px] lg:px-[32px] lg:pb-[40px]">
         {loading ? (
           <PageState type="loading" title="Memuat dashboard..." />
         ) : error ? (
@@ -57,25 +58,32 @@ const DashboardPage = () => {
           <div className="animate-[fadeIn_0.35s_ease-out]">
             <DashboardHeader dashboard={dashboard} />
 
-            <div className="transition duration-300 hover:-translate-y-[2px]">
-              <HeroBanner />
-            </div>
+            <div className="lg:mt-[24px] lg:grid lg:grid-cols-[1.25fr_0.75fr] lg:gap-[24px]">
+              <div>
+                <div className="transition duration-300 hover:-translate-y-[2px]">
+                  <HeroBanner />
+                </div>
 
-            <div className="transition duration-300 hover:-translate-y-[2px]">
-              <ProgressCard dashboard={dashboard} />
-            </div>
+                <div className="transition duration-300 hover:-translate-y-[2px]">
+                  <ProgressCard dashboard={dashboard} />
+                </div>
+              </div>
 
-            <div className="transition duration-300 hover:-translate-y-[2px]">
-              <DailyQuestCard dashboard={dashboard} />
-            </div>
+              <div>
+                <div className="transition duration-300 hover:-translate-y-[2px]">
+                  <DailyQuestCard dashboard={dashboard} />
+                </div>
 
-            <div className="transition duration-300 hover:-translate-y-[2px]">
-              <StreakCard dashboard={dashboard} />
+                <div className="transition duration-300 hover:-translate-y-[2px]">
+                  <StreakCard dashboard={dashboard} />
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
 
       {showJoinClass && (

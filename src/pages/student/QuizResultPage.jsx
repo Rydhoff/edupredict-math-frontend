@@ -42,7 +42,7 @@ const QuizResultPage = () => {
   if (!result) {
     return (
       <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-        <div className="mx-auto min-h-screen w-full max-w-[460px] px-[15px] pt-[92px]">
+        <div className="mx-auto flex min-h-screen w-full max-w-[460px] items-center px-[15px] lg:max-w-[720px] lg:px-[32px]">
           <PageState
             type="empty"
             title="Result tidak tersedia"
@@ -76,7 +76,9 @@ const QuizResultPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[15px] pb-[38px] pt-[74px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[15px] pb-[38px] pt-[74px] lg:flex lg:max-w-[980px] lg:items-center lg:px-[32px] lg:py-[48px]">
+        <div className="w-full lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-[42px]">
+        <div className="relative z-10 w-[215px] object-contain transition duration-300 hover:scale-105 lg:w-[300px]">
         <div className="relative flex justify-center">
 
           <img
@@ -97,7 +99,8 @@ const QuizResultPage = () => {
         <p className="mx-auto mt-[6px] max-w-[330px] text-center text-[13px] font-medium leading-[1.35] text-[#6B7280]">
           {message.desc}
         </p>
-
+        </div>
+<div className="lg:rounded-[24px] lg:border lg:border-[#E5E7EB] lg:bg-white lg:p-[24px] lg:shadow-[0_18px_45px_rgba(101,29,255,0.08)]">
         <section className="mt-[28px] grid grid-cols-2 overflow-hidden rounded-[14px] border border-[#E4D3FF] bg-[#FAF5FF] py-[18px] shadow-[0_8px_24px_rgba(101,29,255,0.08)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.12)]">
           <div className="border-r border-[#E4D3FF] text-center">
             <p className="text-[14px] font-medium text-[#6B7280]">
@@ -158,6 +161,8 @@ const QuizResultPage = () => {
           <Home size={18} />
           Kembali ke Home
         </button>
+        </div>
+        </div>
       </div>
     </main>
   );

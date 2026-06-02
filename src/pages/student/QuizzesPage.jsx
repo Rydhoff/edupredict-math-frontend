@@ -7,6 +7,7 @@ import StudentBottomNav from "../../components/student/StudentBottomNav";
 import QuizCategoryCard from "../../components/student/QuizCategoryCard";
 import { quizCategories } from "../../data/quizData";
 import useCachedFetch from "../../hooks/useCachedFetch";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 
 const getProgressByCategory = (dashboard, categoryTitle) => {
   const key = categoryTitle === "Campuran Soal" ? "Healthy Mix" : categoryTitle;
@@ -86,7 +87,7 @@ const QuizzesPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         <header>
           <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
             Quizzes
@@ -115,7 +116,7 @@ const QuizzesPage = () => {
           {filteredCategories.length} topik tersedia
         </p>
 
-        <div className="mt-[14px] space-y-[16px]">
+        <div className="mt-[14px] space-y-[16px] lg:grid lg:grid-cols-2 lg:gap-[18px] lg:space-y-0 xl:grid-cols-3">
           {filteredCategories.length === 0 ? (
             <PageState
               type="empty"
@@ -135,6 +136,7 @@ const QuizzesPage = () => {
         </div>
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );
@@ -143,10 +145,11 @@ const QuizzesPage = () => {
 const PageLayout = ({ children }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         {children}
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );

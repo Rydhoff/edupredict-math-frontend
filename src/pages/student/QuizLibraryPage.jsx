@@ -8,6 +8,7 @@ import StudentBottomNav from "../../components/student/StudentBottomNav";
 import QuizListItem from "../../components/student/QuizListItem";
 import { quizCategories, quizLibrary } from "../../data/quizData";
 import mascot from "../../assets/images/mascot-dashboard.png";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 
 const categoryMap = {
   campuran: "Campuran Soal",
@@ -83,20 +84,20 @@ const QuizLibraryPage = () => {
   };
   
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[10px] pb-[108px] pt-[38px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+  <div className="mx-auto min-h-screen w-full max-w-[460px] px-[10px] pb-[108px] pt-[38px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px] lg:pt-[49px]">
         <button
           onClick={() => navigate("/student/quizzes")}
-          className="ml-[2px] text-[#6B7280]"
+          className="ml-[2px] flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
         >
           <ArrowLeft size={23} />
         </button>
 
-        <section className="mt-[20px] mb-[12px] flex h-[136px] items-center overflow-hidden rounded-[14px] border border-[#E4D3FF] bg-[#F7F0FF] px-[13px] shadow-[0_8px_22px_rgba(101,29,255,0.08)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.14)]">
+       <section className="mt-[20px] mb-[12px] flex h-[136px] items-center overflow-hidden rounded-[18px] border border-[#E4D3FF] bg-[#F7F0FF] px-[13px] shadow-[0_8px_22px_rgba(101,29,255,0.08)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.14)] lg:h-[170px] lg:px-[24px]">
           <img
             src={mascot}
             alt="Octa"
-            className="h-[126px] w-[145px] object-contain transition duration-300 hover:scale-105"
+            className="h-[126px] w-[145px] object-contain transition duration-300 hover:scale-105 lg:h-[160px] lg:w-[180px]"
           />
 
           <div className="ml-[8px]">
@@ -114,7 +115,7 @@ const QuizLibraryPage = () => {
           </div>
         </section>
 
-        <section className="rounded-b-[13px] rounded-t-[10px] border border-[#E5E7EB] bg-white px-[13px] pb-[18px] pt-[17px]">
+        <section className="rounded-[18px] border border-[#E5E7EB] bg-white px-[13px] pb-[18px] pt-[17px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:px-[22px] lg:py-[22px]">
           <h1 className="text-[23px] font-bold leading-none tracking-[-0.04em] text-black">
             Library Quiz
           </h1>
@@ -137,7 +138,7 @@ const QuizLibraryPage = () => {
             />
           </div>
 
-          <div className="mt-[16px] flex gap-[11px]">
+          <div className="mt-[16px] flex flex-wrap gap-[11px] lg:items-center">
             <div className="relative">
             <select
               value={category}
@@ -191,7 +192,7 @@ const QuizLibraryPage = () => {
             {filteredQuizzes.length} quiz tersedia
           </p>
 
-          <div className="mt-[12px] space-y-[10px]">
+          <div className="mt-[12px] space-y-[10px] lg:grid lg:grid-cols-2 lg:gap-[14px] lg:space-y-0">
             {filteredQuizzes.length === 0 ? (
               <PageState
                 type="empty"
@@ -220,6 +221,7 @@ const QuizLibraryPage = () => {
         </section>
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   PolarGrid,
   PolarRadiusAxis,
@@ -12,6 +12,7 @@ import PageState from "../../components/ui/PageState";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
 import mascotSmall from "../../assets/images/mascot-small.png";
 import useCachedFetch from "../../hooks/useCachedFetch";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 
 const labelPositions = [
   { key: "Bilangan", x: "50%", y: "5%", align: "center" },
@@ -124,7 +125,7 @@ const ProgressPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
           Progress Skill
         </h1>
@@ -133,12 +134,13 @@ const ProgressPage = () => {
           Pantau perkembangan kemampuan matematikamu
         </p>
 
-        <section className="mt-[20px] rounded-[14px] border border-[#E5E7EB] bg-white px-[21px] pb-[24px] pt-[20px]">
+<div className="lg:mt-[24px] lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-[24px]">
+        <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[24px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0 lg:self-start">
           <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
             Skill Mapping
           </h2>
 
-          <div className="relative mt-[12px] h-[330px]">
+          <div className="relative mt-[12px] h-[330px] lg:h-[390px]">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={radarData} outerRadius={92}>
                 <PolarGrid stroke="#E9EAF0" />
@@ -198,7 +200,7 @@ const ProgressPage = () => {
             })}
           </div>
 
-          <div className="mt-[4px] flex h-[72px] items-center rounded-[8px] border border-[#E4D3FF] bg-[#F7F0FF] px-[10px]">
+          <div className="mt-[20px] flex h-[72px] items-center rounded-[8px] border border-[#E4D3FF] bg-[#F7F0FF] px-[10px]">
             <img
               src={mascotSmall}
               alt="Octa"
@@ -219,7 +221,7 @@ const ProgressPage = () => {
           </div>
         </section>
 
-        <section className="mt-[24px] rounded-[14px] border border-[#E5E7EB] bg-white px-[21px] py-[20px]">
+        <section className="mt-[24px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] py-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0">
           <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
             Progress per Kategori
           </h2>
@@ -230,8 +232,10 @@ const ProgressPage = () => {
             ))}
           </div>
         </section>
+        </div>
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );
@@ -240,10 +244,11 @@ const ProgressPage = () => {
 const PageLayout = ({ children }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         {children}
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );

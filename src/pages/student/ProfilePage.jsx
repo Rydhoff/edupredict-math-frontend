@@ -7,7 +7,6 @@ import {
   LogOut,
   Plus,
   Settings,
-  Sparkles,
   Star,
   Target,
   Trophy,
@@ -17,6 +16,7 @@ import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import PageState from "../../components/ui/PageState";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
+import StudentDesktopNav from "../../components/student/StudentDesktopNav";
 import JoinClassModal from "../../components/student/JoinClassModal";
 import profileImage from "../../assets/images/profile/student-profile.png";
 import NotificationBell from "../../components/shared/NotificationBell";
@@ -61,7 +61,7 @@ const ProfilePage = () => {
 
   const dashboard = profileData?.dashboard;
   const classes = profileData?.classes || [];
-  
+
   const student = dashboard?.student || user || {};
   const statistics = dashboard?.statistics || {};
 
@@ -106,161 +106,164 @@ const ProfilePage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px]">
-        <div className="flex items-start justify-between">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
+        <header className="flex items-start justify-between">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
               Profile
             </h1>
+
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
               Kelola akun dan lihat progress-mu!
             </p>
           </div>
 
-          <NotificationBell to="/student/notifications" size={27} />
+          <div className="lg:hidden">
+            <NotificationBell to="/student/notifications" size={27} />
+          </div>
+        </header>
+
+        <div className="lg:mt-[24px] lg:grid lg:grid-cols-[0.95fr_1.05fr] lg:gap-[24px]">
+          <div>
+            <section className="mt-[20px] overflow-hidden rounded-[20px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[20px] shadow-[0_14px_34px_rgba(101,29,255,0.10)] lg:mt-0">
+              <div className="flex items-center">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-[#B88CFF] opacity-40 blur-[12px]" />
+
+                  <img
+                    src={student?.photoUrl || profileImage}
+                    alt={student?.fullName || "Student"}
+                    className="relative h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)]"
+                  />
+                </div>
+
+                <div className="ml-[18px] min-w-0 flex-1">
+                  <h2 className="truncate text-[22px] font-bold tracking-[-0.04em] text-black">
+                    {student?.fullName || "Student"}
+                  </h2>
+
+                  <p className="mt-[5px] text-[13px] font-medium text-[#6B7280]">
+                    Level {level} • Math Explorer
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-[16px]">
+                <div className="flex items-center justify-between">
+                  <p className="text-[12px] font-bold text-[#6B7280]">
+                    XP Progress
+                  </p>
+
+                  <p className="text-[12px] font-bold text-[#651DFF]">
+                    {currentLevelXP} / {neededForCurrentLevel} XP
+                  </p>
+                </div>
+
+                <div className="mt-[7px] h-[8px] overflow-hidden rounded-full bg-[#E5E7EB]">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-[#981DFF] to-[#5A16E8] transition-all duration-700"
+                    style={{ width: `${levelProgress}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-[18px] grid grid-cols-2 gap-[10px]">
+                <button
+                  onClick={() => navigate("/student/settings")}
+                  className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
+                >
+                  <Settings size={17} />
+                  Edit Profile
+                </button>
+
+                <button
+                  onClick={() => setShowJoinClass(true)}
+                  className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] text-[13px] font-bold text-white shadow-[0_8px_18px_rgba(108,33,255,0.25)] transition hover:scale-[1.03] active:scale-[0.98]"
+                >
+                  <Plus size={17} strokeWidth={3} />
+                  Join Kelas
+                </button>
+              </div>
+            </section>
+
+            <section className="mt-[18px] grid grid-cols-4 gap-[7px] lg:grid-cols-2 lg:gap-[12px]">
+              <ProfileStat
+                icon={<Star size={20} fill="#8A19FF" />}
+                value={xp}
+                label="XP"
+                color="text-[#8A19FF]"
+                bg="bg-[#F7F0FF]"
+              />
+
+              <ProfileStat
+                icon={<Flame size={20} fill="#FF7A00" />}
+                value={student?.streak || 0}
+                label="Streak"
+                color="text-[#FF7A00]"
+                bg="bg-[#FFF1E3]"
+              />
+
+              <ProfileStat
+                icon={<Trophy size={20} fill="#F5A400" />}
+                value={statistics.completedQuizzes || 0}
+                label="Quiz"
+                color="text-[#F5A400]"
+                bg="bg-[#FFF1D6]"
+              />
+
+              <ProfileStat
+                icon={<Target size={20} />}
+                value={`${statistics.accuracy || 0}%`}
+                label="Score"
+                color="text-[#16B966]"
+                bg="bg-[#E8F8EE]"
+              />
+            </section>
+          </div>
+
+          <section className="mt-[18px] rounded-[18px] border border-[#E5E7EB] bg-white px-[17px] py-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:mt-0 lg:self-start">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+                  Kelas Saya
+                </h2>
+
+                <p className="mt-[5px] text-[12px] font-medium text-[#6B7280]">
+                  Kelas yang sedang kamu ikuti
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowJoinClass(true)}
+                className="rounded-[10px] bg-[#F7F0FF] px-[12px] py-[8px] text-[13px] font-bold text-[#5A16E8] transition hover:scale-105 active:scale-95"
+              >
+                + Join
+              </button>
+            </div>
+
+            <div className="mt-[16px] space-y-[10px]">
+              {classes.length === 0 ? (
+                <PageState
+                  type="empty"
+                  title="Belum join kelas"
+                  message="Masukkan kode kelas dari teacher untuk bergabung."
+                  action={
+                    <button
+                      onClick={() => setShowJoinClass(true)}
+                      className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
+                    >
+                      Join Kelas
+                    </button>
+                  }
+                />
+              ) : (
+                classes.map((item) => <ClassItem key={item._id} item={item} />)
+              )}
+            </div>
+          </section>
         </div>
 
-        <section className="mt-[20px] overflow-hidden rounded-[20px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[20px] shadow-[0_14px_34px_rgba(101,29,255,0.10)]">
-          <div className="flex items-center">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-[#B88CFF] blur-[12px] opacity-40" />
-
-              <img
-                src={student?.photoUrl || profileImage}
-                alt={student?.fullName || "Student"}
-                className="relative h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)]"
-              />
-            </div>
-
-            <div className="ml-[18px] min-w-0 flex-1">
-              <h2 className="mt-[8px] truncate text-[22px] font-bold tracking-[-0.04em] text-black">
-                {student?.fullName || "Student"}
-              </h2>
-
-              <p className="mt-[4px] text-[13px] font-medium text-[#6B7280]">
-                Level {level} • Math Explorer
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-[16px]">
-            <div className="flex items-center justify-between">
-              <p className="text-[12px] font-bold text-[#6B7280]">
-                XP Progress
-              </p>
-
-              <p className="text-[12px] font-bold text-[#651DFF]">
-                {currentLevelXP} / {neededForCurrentLevel} XP
-              </p>
-            </div>
-
-            <div className="mt-[7px] h-[8px] overflow-hidden rounded-full bg-[#E5E7EB]">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#981DFF] to-[#5A16E8] transition-all duration-700"
-                style={{ width: `${levelProgress}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="mt-[18px] grid grid-cols-2 gap-[10px]">
-            <button
-              onClick={() => navigate("/student/settings")}
-              className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Settings size={17} />
-              Edit Profile
-            </button>
-
-            <button
-              onClick={() => setShowJoinClass(true)}
-              className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] text-[13px] font-bold text-white shadow-[0_8px_18px_rgba(108,33,255,0.25)] transition hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Plus size={17} strokeWidth={3} />
-              Join Kelas
-            </button>
-          </div>
-        </section>
-
-        <section className="mt-[18px] grid grid-cols-4 gap-[7px]">
-          <ProfileStat
-            icon={<Star size={20} fill="#8A19FF" />}
-            value={xp}
-            label="XP"
-            color="text-[#8A19FF]"
-            bg="bg-[#F7F0FF]"
-          />
-
-          <ProfileStat
-            icon={<Flame size={20} fill="#FF7A00" />}
-            value={student?.streak || 0}
-            label="Streak"
-            color="text-[#FF7A00]"
-            bg="bg-[#FFF1E3]"
-          />
-
-          <ProfileStat
-            icon={<Trophy size={20} fill="#F5A400" />}
-            value={statistics.completedQuizzes || 0}
-            label="Quiz"
-            color="text-[#F5A400]"
-            bg="bg-[#FFF1D6]"
-          />
-
-          <ProfileStat
-            icon={<Target size={20} />}
-            value={`${statistics.accuracy || 0}%`}
-            label="Score"
-            color="text-[#16B966]"
-            bg="bg-[#E8F8EE]"
-          />
-        </section>
-
-        <section className="mt-[18px] rounded-[18px] border border-[#E5E7EB] bg-white px-[17px] py-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-                Kelas Saya
-              </h2>
-              <p className="mt-[5px] text-[12px] font-medium text-[#6B7280]">
-                Kelas yang sedang kamu ikuti
-              </p>
-            </div>
-
-            <button
-              onClick={() => setShowJoinClass(true)}
-              className="rounded-[10px] bg-[#F7F0FF] px-[12px] py-[8px] text-[13px] font-bold text-[#5A16E8] transition hover:scale-105 active:scale-95"
-            >
-              + Join
-            </button>
-          </div>
-
-          <div className="mt-[16px] space-y-[10px]">
-            {classes.length === 0 ? (
-              <PageState
-                type="empty"
-                title="Belum join kelas"
-                message="Masukkan kode kelas dari teacher untuk bergabung."
-                action={
-                  <button
-                    onClick={() => setShowJoinClass(true)}
-                    className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
-                  >
-                    Join Kelas
-                  </button>
-                }
-              />
-            ) : (
-              classes.map((item) => (
-                <ClassItem
-                  key={item._id}
-                  item={item}
-                />
-              ))
-            )}
-          </div>
-        </section>
-
-        <section className="mt-[16px] space-y-[12px]">
+        <section className="mt-[20px] space-y-[12px] lg:grid lg:grid-cols-3 lg:gap-[16px] lg:space-y-0">
           <MenuItem
             icon={<BarChart3 size={24} />}
             title="Progress"
@@ -287,6 +290,7 @@ const ProfilePage = () => {
         </section>
       </div>
 
+      <StudentDesktopNav />
       <StudentBottomNav />
 
       {showJoinClass && (
@@ -313,9 +317,11 @@ const ProfilePage = () => {
 const PageLayout = ({ children }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         {children}
       </div>
+
+      <StudentDesktopNav />
       <StudentBottomNav />
     </main>
   );
@@ -373,7 +379,7 @@ const MenuItem = ({ icon, title, desc, color, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="group flex h-[64px] w-full items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[16px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99]"
+      className="group flex h-[64px] w-full items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[16px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99] lg:h-[118px] lg:flex-col lg:items-start lg:justify-center"
     >
       <div
         className={`flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-[11px] ${iconBox}`}
@@ -381,19 +387,19 @@ const MenuItem = ({ icon, title, desc, color, onClick }) => {
         {icon}
       </div>
 
-      <div className="ml-[14px] flex-1">
+      <div className="ml-[14px] flex-1 lg:ml-0 lg:mt-[12px] lg:flex-none">
         <h3 className="text-[13px] font-bold leading-none text-black">
           {title}
         </h3>
 
-        <p className="mt-[7px] text-[11px] font-medium leading-none text-[#6B7280]">
+        <p className="mt-[7px] text-[11px] font-medium leading-[1.25] text-[#6B7280]">
           {desc}
         </p>
       </div>
 
       <ChevronRight
         size={25}
-        className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF]"
+        className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF] lg:absolute lg:right-[16px] lg:top-[16px]"
       />
     </button>
   );

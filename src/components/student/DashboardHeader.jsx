@@ -13,7 +13,7 @@ const DashboardHeader = ({ dashboard }) => {
 
   return (
     <header>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between lg:hidden">
         <div className="flex items-center gap-[9px]">
           <img src={logo} alt="EduPredict Math" className="h-[48px] w-auto" />
 
