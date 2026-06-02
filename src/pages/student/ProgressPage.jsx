@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useMemo, useState } from "react";
 import {
   PolarGrid,
   PolarRadiusAxis,
@@ -12,6 +11,7 @@ import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
 import mascotSmall from "../../assets/images/mascot-small.png";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 const labelPositions = [
   { key: "Bilangan", x: "50%", y: "5%", align: "center" },
@@ -44,29 +44,18 @@ const getValueTextColor = (value) => {
 };
 
 const ProgressPage = () => {
-  const location = useLocation();
-
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchDashboard = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: dashboard,
+    loading,
+    error,
+    refetch: fetchDashboard,
+  } = useCachedFetch({
+    cacheKey: "student_dashboard",
+    fetcher: async () => {
       const { data } = await api.get("/student/dashboard");
-      setDashboard(data.dashboard);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat progress");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboard();
-  }, [location.key]);
+      return data.dashboard;
+    },
+  });
 
   const categoryProgress = useMemo(() => {
     const progressData = dashboard?.categoryProgress || {};
@@ -110,7 +99,7 @@ const ProgressPage = () => {
           message={error}
           action={
             <button
-              onClick={fetchDashboard}
+              onClick={() => fetchDashboard({ forceLoading: true })}
               className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
             >
               Coba Lagi

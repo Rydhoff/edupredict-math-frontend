@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
 import { Search, Sparkles } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useMemo, useState } from "react";
 
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
 import QuizCategoryCard from "../../components/student/QuizCategoryCard";
 import { quizCategories } from "../../data/quizData";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 const getProgressByCategory = (dashboard, categoryTitle) => {
   const key = categoryTitle === "Campuran Soal" ? "Healthy Mix" : categoryTitle;
@@ -15,31 +15,20 @@ const getProgressByCategory = (dashboard, categoryTitle) => {
 };
 
 const QuizzesPage = () => {
-  const location = useLocation();
-
-  const [dashboard, setDashboard] = useState(null);
   const [search, setSearch] = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchDashboard = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: dashboard,
+    loading,
+    error,
+    refetch: fetchDashboard,
+  } = useCachedFetch({
+    cacheKey: "student_dashboard",
+    fetcher: async () => {
       const { data } = await api.get("/student/dashboard");
-      setDashboard(data.dashboard);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat data quiz");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboard();
-  }, [location.key]);
+      return data.dashboard;
+    },
+  });
 
   const categories = useMemo(() => {
     return quizCategories.map((quiz) => ({
@@ -84,7 +73,7 @@ const QuizzesPage = () => {
           message={error}
           action={
             <button
-              onClick={fetchDashboard}
+              onClick={() => fetchDashboard({ forceLoading: true })}
               className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white transition hover:scale-[1.03] active:scale-[0.98]"
             >
               Coba Lagi

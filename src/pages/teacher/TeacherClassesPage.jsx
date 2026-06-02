@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import {
   ChevronRight,
   Copy,
@@ -7,52 +6,47 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import CreateClassModal from "../../components/teacher/CreateClassModal";
 import PageState from "../../components/ui/PageState";
 import mascotSmall from "../../assets/images/mascot-small.png";
+import useCachedFetch from "../../hooks/useCachedFetch";
+import { clearTeacherCache } from "../../utils/cache";
+
 
 const TeacherClassesPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [classes, setClasses] = useState([]);
   const [search, setSearch] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [copiedCode, setCopiedCode] = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchClasses = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: dashboard,
+    loading,
+    error,
+    refetch: fetchClasses,
+  } = useCachedFetch({
+    cacheKey: "teacher_dashboard",
+    fetcher: async () => {
       const { data } = await api.get("/teacher/dashboard");
+      return data.dashboard;
+    },
+  });
 
-      const mappedClasses = (data.dashboard?.classMonitoring || []).map((item) => ({
-        id: item.id,
-        name: item.className,
-        code: item.classCode,
-        students: item.totalStudents || 0,
-        progress: item.averageProgress || 0,
-      }));
-
-      setClasses(mappedClasses);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat kelas");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchClasses();
-  }, [location.key]);
+  const classes = useMemo(() => {
+    return (dashboard?.classMonitoring || []).map((item) => ({
+      id: item.id,
+      name: item.className,
+      code: item.classCode,
+      students: item.totalStudents || 0,
+      progress: item.averageProgress || 0,
+    }));
+  }, [dashboard]);
 
   const filteredClasses = useMemo(() => {
     return classes.filter((item) => {
@@ -65,17 +59,10 @@ const TeacherClassesPage = () => {
     });
   }, [search, classes]);
 
-  const handleCreateSuccess = (newClass) => {
-    const formattedClass = {
-      id: newClass._id,
-      name: newClass.className,
-      code: newClass.classCode,
-      students: 0,
-      progress: 0,
-    };
-
-    setClasses((prev) => [formattedClass, ...prev]);
+  const handleCreateSuccess = () => {
+    clearTeacherCache();
     setShowCreateModal(false);
+    fetchClasses({ forceLoading: true });
   };
 
   const handleCopyCode = async (code) => {
@@ -101,7 +88,7 @@ const TeacherClassesPage = () => {
       : 0;
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
       <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
         <header className="flex items-start justify-between">
           <div>
@@ -203,7 +190,7 @@ const TeacherClassesPage = () => {
               message={error}
               action={
                 <button
-                  onClick={fetchClasses}
+                  onClick={() => fetchClasses({ forceLoading: true })}
                   className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
                 >
                   Coba Lagi

@@ -17,73 +17,67 @@ import CreateClassModal from "../../components/teacher/CreateClassModal";
 import logo from "../../assets/images/logo.png";
 import mascot from "../../assets/images/mascot-dashboard.png";
 import NotificationBell from "../../components/shared/NotificationBell";
+import useCachedFetch from "../../hooks/useCachedFetch";
+import { clearTeacherCache } from "../../utils/cache";
 
 const TeacherDashboardPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [dashboard, setDashboard] = useState(null);
-  const [classMonitoring, setClassMonitoring] = useState([]);
+  
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchDashboard = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: dashboard,
+    loading,
+    error,
+    refetch: fetchDashboard,
+  } = useCachedFetch({
+    cacheKey: "teacher_dashboard",
+    fetcher: async () => {
       const { data } = await api.get("/teacher/dashboard");
+      return data.dashboard;
+    },
+  });
 
-      setDashboard(data.dashboard?.summary || null);
-      setClassMonitoring(data.dashboard?.classMonitoring || []);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat dashboard");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboard();
-  }, [location.key]);
+  const summary = dashboard?.summary || {};
+const classMonitoring = dashboard?.classMonitoring || [];
+  
 
   const handleCreateSuccess = () => {
+    clearTeacherCache();
     setShowCreateModal(false);
-    fetchDashboard();
+    fetchDashboard({ forceLoading: true });
   };
 
   const summaryCards = [
-    {
-      icon: Users,
-      value: dashboard?.totalStudents ?? 0,
-      label: "Siswa Aktif",
-      bg: "bg-[#F3E8FF]",
-      color: "text-[#8A19FF]",
-    },
-    {
-      icon: TrendingUp,
-      value: `${dashboard?.averageProgress ?? 0}%`,
-      label: "Rata-rata\nProgress",
-      bg: "bg-[#E8F8EE]",
-      color: "text-[#16B966]",
-    },
-    {
-      icon: TriangleAlert,
-      value: dashboard?.studentsNeedAttention ?? 0,
-      label: "Butuh\nPerhatian",
-      bg: "bg-[#FFF1E3]",
-      color: "text-[#FF9A1F]",
-    },
-    {
-      icon: FileText,
-      value: dashboard?.weeklyCompletedQuiz ?? 0,
-      label: "Quiz\nMinggu Ini",
-      bg: "bg-[#EAF2FF]",
-      color: "text-[#2478FF]",
-    },
-  ];
+  {
+    icon: Users,
+    value: summary.totalStudents ?? 0,
+    label: "Siswa Aktif",
+    bg: "bg-[#F3E8FF]",
+    color: "text-[#8A19FF]",
+  },
+  {
+    icon: TrendingUp,
+    value: `${summary.averageProgress ?? 0}%`,
+    label: "Rata-rata\nProgress",
+    bg: "bg-[#E8F8EE]",
+    color: "text-[#16B966]",
+  },
+  {
+    icon: TriangleAlert,
+    value: summary.studentsNeedAttention ?? 0,
+    label: "Butuh\nPerhatian",
+    bg: "bg-[#FFF1E3]",
+    color: "text-[#FF9A1F]",
+  },
+  {
+    icon: FileText,
+    value: summary.weeklyCompletedQuiz ?? 0,
+    label: "Quiz\nMinggu Ini",
+    bg: "bg-[#EAF2FF]",
+    color: "text-[#2478FF]",
+  },
+];
 
   return (
     <main className="min-h-screen bg-white">
@@ -155,7 +149,7 @@ const TeacherDashboardPage = () => {
               message={error}
               action={
                 <button
-                  onClick={fetchDashboard}
+                  onClick={() => fetchDashboard({ forceLoading: true })}
                   className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
                 >
                   Coba Lagi

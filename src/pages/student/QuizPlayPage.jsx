@@ -12,6 +12,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
+import { clearStudentCache } from "../../utils/cache";
 
 const formatQuizTime = (ms = 0) => {
   const totalSeconds = Math.floor(ms / 1000);
@@ -225,6 +226,8 @@ const QuizPlayPage = () => {
         quizSessionId,
       });
 
+      clearStudentCache();
+
       navigate("/student/quiz/result", {
         state: {
           ...data.result,
@@ -297,7 +300,7 @@ const QuizPlayPage = () => {
           </div>
 
           <p className="mt-[25px] text-[14px] font-medium text-[#6B7280]">
-            Konsep yang akan kamu temui:
+            Konsep yang kamu temui:
           </p>
 
           <span className="mt-[8px] inline-flex rounded-[8px] bg-[#F4EAFE] px-[11px] py-[5px] text-[13px] font-bold text-[#651DFF]">
@@ -421,7 +424,7 @@ const QuizPlayPage = () => {
         </div>
       </section>
 
-      <div className="mt-[28px] flex items-center justify-between px-[26px]">
+      <div className="mt-[28px] flex items-center justify-between px-[8px]">
         <button
           disabled={currentIndex === 0}
           onClick={handlePrevious}

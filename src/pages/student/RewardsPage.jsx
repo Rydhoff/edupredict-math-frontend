@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Check } from "lucide-react";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
@@ -72,40 +73,32 @@ const achievementsBase = [
 ];
 
 const RewardsPage = () => {
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [leaderboardError, setLeaderboardError] = useState("");
-  const [achievements, setAchievements] = useState([]);
-  const location = useLocation();
+  const {
+  data: rewardsData,
+  loading,
+  error,
+  refetch: fetchRewardsData,
+} = useCachedFetch({
+  cacheKey: "student_rewards",
+  fetcher: async () => {
+    const [dashboardRes, leaderboardRes, achievementsRes] =
+      await Promise.all([
+        api.get("/student/dashboard"),
+        api.get("/leaderboard"),
+        api.get("/achievements"),
+      ]);
 
-  const fetchRewardsData = async () => {
-  try {
-    setLoading(true);
-    setError("");
-    setLeaderboardError("");
+    return {
+      dashboard: dashboardRes.data.dashboard,
+      leaderboard: leaderboardRes.data.leaderboard || [],
+      achievements: achievementsRes.data.achievements || [],
+    };
+  },
+});
 
-    const [dashboardRes, leaderboardRes, achievementsRes] = await Promise.all([
-      api.get("/student/dashboard"),
-      api.get("/leaderboard"),
-      api.get("/achievements"),
-    ]);
-
-    setDashboard(dashboardRes.data.dashboard);
-    setLeaderboard(leaderboardRes.data.leaderboard || []);
-    setAchievements(achievementsRes.data.achievements || []);
-  } catch (err) {
-    setError(err.response?.data?.message || "Gagal memuat rewards");
-  } finally {
-    setLoading(false);
-  }
-};
-
-useEffect(() => {
-  fetchRewardsData();
-}, [location.key]);
-
+  const dashboard = rewardsData?.dashboard;
+  const leaderboard = rewardsData?.leaderboard || [];
+  const achievements = rewardsData?.achievements || [];
   const student = dashboard?.student || {};
   const statistics = dashboard?.statistics || {};
 
@@ -161,7 +154,7 @@ useEffect(() => {
           message={error}
           action={
             <button
-              onClick={fetchRewardsData}
+              onClick={() => fetchRewardsData({ forceLoading: true })}
               className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
             >
               Coba Lagi
@@ -296,7 +289,7 @@ const LeaderboardItem = ({ user }) => {
       <img
         src={avatar}
         alt={user.name}
-        className="h-[29px] w-[29px] rounded-full object-cover"
+        className="h-[29px] w-[29px] object-cover"
       />
 
       <p

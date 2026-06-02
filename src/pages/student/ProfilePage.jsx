@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart3,
   ChevronRight,
@@ -20,53 +20,48 @@ import StudentBottomNav from "../../components/student/StudentBottomNav";
 import JoinClassModal from "../../components/student/JoinClassModal";
 import profileImage from "../../assets/images/profile/student-profile.png";
 import NotificationBell from "../../components/shared/NotificationBell";
+import useCachedFetch from "../../hooks/useCachedFetch";
+import { clearStudentCache } from "../../utils/cache";
 
 const getNextLevelXP = (level = 1) => {
   return Math.max(Number(level) || 1, 1) * 100;
 };
 
 const ProfilePage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
 
   const [showLogout, setShowLogout] = useState(false);
   const [showJoinClass, setShowJoinClass] = useState(false);
 
-  const [dashboard, setDashboard] = useState(null);
-  const [classes, setClasses] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchProfileData = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: profileData,
+    loading,
+    error,
+    refetch: fetchProfileData,
+  } = useCachedFetch({
+    cacheKey: "student_profile",
+    fetcher: async () => {
       const [dashboardRes, classesRes] = await Promise.all([
         api.get("/student/dashboard"),
         api.get("/classes/my"),
       ]);
 
-      setDashboard(dashboardRes.data.dashboard);
-      setClasses(classesRes.data.classes || []);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat profile");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfileData();
-  }, [location.key]);
+      return {
+        dashboard: dashboardRes.data.dashboard,
+        classes: classesRes.data.classes || [],
+      };
+    },
+  });
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const dashboard = profileData?.dashboard;
+  const classes = profileData?.classes || [];
+  
   const student = dashboard?.student || user || {};
   const statistics = dashboard?.statistics || {};
 
@@ -98,7 +93,7 @@ const ProfilePage = () => {
           message={error}
           action={
             <button
-              onClick={fetchProfileData}
+              onClick={() => fetchProfileData({ forceLoading: true })}
               className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
             >
               Coba Lagi
@@ -298,8 +293,9 @@ const ProfilePage = () => {
         <JoinClassModal
           onClose={() => setShowJoinClass(false)}
           onSuccess={() => {
+            clearStudentCache();
             setShowJoinClass(false);
-            fetchProfileData();
+            fetchProfileData({ forceLoading: true });
           }}
         />
       )}

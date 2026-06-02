@@ -8,56 +8,54 @@ import {
   TriangleAlert,
   Target,
 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 const filters = ["Semua", "Low Risk", "Medium Risk", "Hard Risk"];
 
 const TeacherStudentsPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [classes, setClasses] = useState([]);
   const [selectedClassId, setSelectedClassId] = useState("all");
 
   const [students, setStudents] = useState([]);
   const [activeFilter, setActiveFilter] = useState("Semua");
   const [search, setSearch] = useState("");
-
-  const [loading, setLoading] = useState(true);
   const [studentsLoading, setStudentsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [studentsError, setStudentsError] = useState("");
 
-  const fetchInitialData = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: dashboard,
+    loading,
+    error,
+    refetch: fetchDashboard,
+  } = useCachedFetch({
+    cacheKey: "teacher_dashboard",
+    fetcher: async () => {
       const { data } = await api.get("/teacher/dashboard");
-      const classList = data.dashboard?.classMonitoring || [];
+      return data.dashboard;
+    },
+  });
 
-      setClasses(classList);
-      setSelectedClassId("all");
+  const classes = dashboard?.classMonitoring || [];
+useEffect(() => {
+  if (!loading && classes.length > 0 && selectedClassId === "all") {
+    fetchAllStudents(classes, false);
+  }
 
-      if (classList.length > 0) {
-        await fetchAllStudents(classList);
-      } else {
-        setStudents([]);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat data siswa");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!loading && classes.length === 0) {
+    setStudents([]);
+  }
+}, [loading, classes.length]);
 
   const fetchClassStudents = async (classId) => {
     try {
       setStudentsLoading(true);
-      setError("");
+      setStudentsError("");
 
       const { data } = await api.get(`/teacher/classes/${classId}/analytics`);
 
@@ -72,16 +70,26 @@ const TeacherStudentsPage = () => {
 
       setStudents(mappedStudents);
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat siswa kelas");
+      setStudentsError(err.response?.data?.message || "Gagal memuat siswa kelas");
     } finally {
       setStudentsLoading(false);
     }
   };
 
-  const fetchAllStudents = async (classList = classes) => {
+  const cacheKey = "teacher_students";
+
+  const fetchAllStudents = async (classList = classes, force = false) => {
+    const cached = sessionStorage.getItem(cacheKey);
+
+    if (cached && !force) {
+      setStudents(JSON.parse(cached));
+      setStudentsLoading(false);
+      return;
+    }
+
     try {
       setStudentsLoading(true);
-      setError("");
+      setStudentsError("");
 
       const results = await Promise.all(
         classList.map(async (classItem) => {
@@ -120,17 +128,21 @@ const TeacherStudentsPage = () => {
         }
       });
 
-      setStudents([...uniqueMap.values()]);
+      const finalStudents = [...uniqueMap.values()];
+
+      setStudents(finalStudents);
+
+      sessionStorage.setItem(
+        cacheKey,
+        JSON.stringify(finalStudents)
+      );
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat semua siswa");
+      setStudentsError(err.response?.data?.message || "Gagal memuat semua siswa");
     } finally {
       setStudentsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchInitialData();
-  }, [location.key]);
 
   const handleChangeClass = async (e) => {
     const classId = e.target.value;
@@ -287,14 +299,18 @@ const TeacherStudentsPage = () => {
         <section className="mt-[15px] rounded-[18px] border border-[#E5E7EB] bg-white px-[16px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
           {loading || studentsLoading ? (
             <PageState type="loading" title="Memuat siswa..." />
-          ) : error ? (
+          ) : error || studentsError ? (
             <PageState
               type="error"
               title="Gagal memuat siswa"
-              message={error}
+              message={error || studentsError}
               action={
                 <button
-                  onClick={fetchInitialData}
+                  onClick={() => {
+                    sessionStorage.removeItem("teacher_students");
+                    fetchDashboard({ forceLoading: true });
+                    fetchAllStudents(classes, true);
+                  }}
                   className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
                 >
                   Coba Lagi

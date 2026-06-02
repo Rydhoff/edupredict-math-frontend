@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart3,
   ChevronRight,
@@ -19,52 +19,47 @@ import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import CreateClassModal from "../../components/teacher/CreateClassModal";
 import teacherPhoto from "../../assets/images/profile/teacher-profile.png";
 import NotificationBell from "../../components/shared/NotificationBell";
+import useCachedFetch from "../../hooks/useCachedFetch";
+import { clearTeacherCache } from "../../utils/cache";
 
 const TeacherProfilePage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { logout, user, getProfile } = useAuth();
-
-  const [profile, setProfile] = useState(user);
-  const [dashboard, setDashboard] = useState(null);
   const [showLogout, setShowLogout] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchProfileData = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
+  const {
+    data: profileData,
+    loading,
+    error,
+    refetch: fetchProfileData,
+  } = useCachedFetch({
+    cacheKey: "teacher_profile",
+    fetcher: async () => {
       const [profileRes, dashboardRes] = await Promise.all([
         getProfile(),
         api.get("/teacher/dashboard"),
       ]);
 
-      setProfile(profileRes || user);
-      setDashboard(dashboardRes.data.dashboard);
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal memuat profile teacher");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfileData();
-  }, [location.key]);
+      return {
+        profile: profileRes || user,
+        dashboard: dashboardRes.data.dashboard,
+      };
+    },
+  });
 
   const handleCreateSuccess = () => {
+    clearTeacherCache();
     setShowCreateModal(false);
-    fetchProfileData();
+    fetchProfileData({ forceLoading: true });
   };
 
   const handleLogout = () => {
     logout();
     navigate("/login");
-  };
+  };  
+
+  const profile = profileData?.profile || user;
+  const dashboard = profileData?.dashboard;
 
   const summary = dashboard?.summary || {};
   const classMonitoring = dashboard?.classMonitoring || [];
@@ -86,7 +81,7 @@ const TeacherProfilePage = () => {
           message={error}
           action={
             <button
-              onClick={fetchProfileData}
+              onClick={() => fetchProfileData({ forceLoading: true })}
               className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
             >
               Coba Lagi

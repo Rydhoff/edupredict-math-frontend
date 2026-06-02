@@ -121,7 +121,7 @@ const RegisterPage = () => {
       absolute
       right-[0px]
       top-[-10px]
-      w-[175px]
+      w-[132px]
       object-contain
       drop-shadow-[0_14px_24px_rgba(101,29,255,0.12)]
       transition

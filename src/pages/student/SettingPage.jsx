@@ -19,6 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 import PageState from "../../components/ui/PageState";
 import StudentBottomNav from "../../components/student/StudentBottomNav";
 import profileImage from "../../assets/images/profile/student-profile.png";
+import { clearStudentCache } from "../../utils/cache";
 
 const formatDateForInput = (value) => {
   if (!value) return "";
@@ -125,9 +126,10 @@ const SettingPage = () => {
         interests: form.interests.trim(),
       });
 
+      setProfilePhoto(data.photoUrl || data.user?.photoUrl || "");
       updateUser(data.user);
-      setProfilePhoto(data.user?.photoUrl || profilePhoto);
-      setSuccess("✨ Profile student berhasil diperbarui");
+      clearStudentCache();
+      setSuccess("📸 Foto profile berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal update profile");
     } finally {

@@ -21,6 +21,7 @@ import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import studentPhoto from "../../assets/images/profile/student-ridho.png";
+import { clearTeacherCache } from "../../utils/cache";
 
 const categoryLabels = [
   "Bilangan",
@@ -88,6 +89,8 @@ const TeacherStudentDetailPage = () => {
       setError("");
 
       await api.delete(`/classes/${selectedClassId}/students/${studentId}`);
+      clearTeacherCache();
+      sessionStorage.removeItem("teacher_students");
 
       setShowRemoveModal(false);
       navigate("/teacher/students");

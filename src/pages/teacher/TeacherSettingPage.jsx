@@ -18,6 +18,7 @@ import { useAuth } from "../../context/AuthContext";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import teacherPhoto from "../../assets/images/profile/teacher-profile.png";
+import { clearTeacherCache } from "../../utils/cache";
 
 const formatDateForInput = (value) => {
   if (!value) return "";
@@ -122,6 +123,7 @@ const TeacherSettingPage = () => {
       });
 
       updateUser(data.user);
+      clearTeacherCache();
       setProfilePhoto(data.user?.photoUrl || profilePhoto);
       setSuccess("✨ Profile teacher berhasil diperbarui");
     } catch (err) {
@@ -180,6 +182,7 @@ const TeacherSettingPage = () => {
 
       setProfilePhoto(data.photoUrl || data.user?.photoUrl || "");
       updateUser(data.user);
+      clearTeacherCache();
       setSuccess("📸 Foto profile berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal upload foto");

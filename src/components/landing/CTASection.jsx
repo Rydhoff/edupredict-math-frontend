@@ -9,7 +9,7 @@ const CTASection = () => {
           <img
             src={mascotCta}
             alt="Octa Mascot"
-            className="w-[148px] scale-[1.2] object-contain drop-shadow-[0_15px_25px_rgba(101,29,255,0.12)] transition duration-300 hover:scale-[1.25]"
+            className="w-[128px] scale-[1.2] object-contain drop-shadow-[0_15px_25px_rgba(101,29,255,0.12)] transition duration-300 hover:scale-[1.25]"
           />
         </div>
 
