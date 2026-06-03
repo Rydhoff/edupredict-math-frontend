@@ -15,7 +15,7 @@ const HeroBanner = () => {
           </p>
 
           <p className="mt-[19px] w-[155px] text-[17px] font-bold leading-[1.08] tracking-[-0.03em] text-black">
-            Siap meningkatkan skill matematika hari ini?
+            Siap meningkatkan<br />skill matematika<br />hari ini?
           </p>
 
           <a

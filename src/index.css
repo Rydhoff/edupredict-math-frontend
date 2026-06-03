@@ -24,3 +24,17 @@ body {
     transform: translateY(0);
   }
 }
+
+.recharts-wrapper,
+.recharts-surface,
+.recharts-layer,
+.recharts-sector,
+.recharts-bar-rectangle,
+.recharts-line,
+.recharts-dot {
+  outline: none !important;
+}
+
+.recharts-wrapper *:focus {
+  outline: none !important;
+}
