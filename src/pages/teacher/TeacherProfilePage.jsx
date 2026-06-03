@@ -7,8 +7,6 @@ import {
   Plus,
   Settings,
   School,
-  Sparkles,
-  Trophy,
   Users,
 } from "lucide-react";
 
@@ -16,17 +14,19 @@ import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import CreateClassModal from "../../components/teacher/CreateClassModal";
 import teacherPhoto from "../../assets/images/profile/teacher-profile.png";
-import NotificationBell from "../../components/shared/NotificationBell";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearTeacherCache } from "../../utils/cache";
 
 const TeacherProfilePage = () => {
   const navigate = useNavigate();
   const { logout, user, getProfile } = useAuth();
+
   const [showLogout, setShowLogout] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+
   const {
     data: profileData,
     loading,
@@ -56,7 +56,7 @@ const TeacherProfilePage = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
-  };  
+  };
 
   const profile = profileData?.profile || user;
   const dashboard = profileData?.dashboard;
@@ -93,153 +93,161 @@ const TeacherProfilePage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
-        <div className="flex items-start justify-between">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+        <header className="flex items-start justify-between gap-[14px]">
           <div>
-            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
               Profile
             </h1>
+
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
               Kelola akun dan pantau kelasmu!
             </p>
           </div>
+        </header>
 
-          <NotificationBell to="/teacher/notifications" size={27} />
-        </div>
+        <div className="mt-[20px] lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-[24px]">
+          <aside className="lg:sticky lg:top-[32px]">
+            <section className="overflow-hidden rounded-[24px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[22px] shadow-[0_14px_34px_rgba(101,29,255,0.10)]">
+              <div className="flex items-center lg:flex-col lg:text-center">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-[#B88CFF] opacity-40 blur-[12px]" />
 
-        <section className="mt-[20px] overflow-hidden rounded-[20px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[20px] shadow-[0_14px_34px_rgba(101,29,255,0.10)]">
-          <div className="flex items-center">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-[#B88CFF] blur-[12px] opacity-40" />
-              <img
-                src={profile?.photoUrl || teacherPhoto}
-                alt={profile?.fullName || "Teacher"}
-                className="relative h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)]"
+                  <img
+                    src={profile?.photoUrl || teacherPhoto}
+                    alt={profile?.fullName || "Teacher"}
+                    className="relative h-[82px] w-[82px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)] lg:h-[110px] lg:w-[110px]"
+                  />
+                </div>
+
+                <div className="ml-[18px] min-w-0 flex-1 lg:ml-0 lg:mt-[16px] lg:w-full">
+                  <h2 className="truncate text-[22px] font-bold tracking-[-0.04em] text-black">
+                    {profile?.fullName || "Teacher"}
+                  </h2>
+
+                  <p className="mt-[5px] truncate text-[13px] font-medium text-[#6B7280]">
+                    {profile?.email || "-"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-[18px] grid grid-cols-2 gap-[10px]">
+                <button
+                  onClick={() => navigate("/teacher/settings")}
+                  className="flex h-[40px] items-center justify-center gap-[7px] rounded-[12px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
+                >
+                  <Settings size={17} />
+                  Edit Profile
+                </button>
+
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="flex h-[40px] items-center justify-center gap-[7px] rounded-[12px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] text-[13px] font-bold text-white shadow-[0_8px_18px_rgba(108,33,255,0.25)] transition hover:scale-[1.03] active:scale-[0.98]"
+                >
+                  <Plus size={17} strokeWidth={3} />
+                  Buat Kelas
+                </button>
+              </div>
+            </section>
+
+            <section className="mt-[18px] grid grid-cols-3 gap-[8px] lg:grid-cols-1">
+              <ProfileStat
+                icon={<School size={20} />}
+                value={classMonitoring.length || 0}
+                label="Kelas"
+                color="text-[#651DFF]"
+                bg="bg-[#F7F0FF]"
               />
-            </div>
 
-            <div className="ml-[18px] min-w-0 flex-1">
-              <h2 className="mt-[8px] truncate text-[22px] font-bold tracking-[-0.04em] text-black">
-                {profile?.fullName || "Teacher"}
-              </h2>
-
-              <p className="mt-[4px] truncate text-[13px] font-medium text-[#6B7280]">
-                {profile?.email || "-"}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-[18px] grid grid-cols-2 gap-[10px]">
-            <button
-              onClick={() => navigate("/teacher/settings")}
-              className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Settings size={17} />
-              Edit Profile
-            </button>
-
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] text-[13px] font-bold text-white shadow-[0_8px_18px_rgba(108,33,255,0.25)] transition hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Plus size={17} strokeWidth={3} />
-              Buat Kelas
-            </button>
-          </div>
-        </section>
-
-        <section className="mt-[18px] grid grid-cols-3 gap-[8px]">
-          <ProfileStat
-            icon={<School size={20} />}
-            value={classMonitoring.length || 0}
-            label="Kelas"
-            color="text-[#651DFF]"
-            bg="bg-[#F7F0FF]"
-          />
-
-          <ProfileStat
-            icon={<Users size={20} />}
-            value={summary.totalStudents || 0}
-            label="Students"
-            color="text-[#16B966]"
-            bg="bg-[#E8F8EE]"
-          />
-
-          <ProfileStat
-            icon={<BarChart3 size={20} />}
-            value={`${summary.averageProgress || 0}%`}
-            label="Progress"
-            color="text-[#F59E0B]"
-            bg="bg-[#FFF1D6]"
-          />
-        </section>
-
-        <section className="mt-[18px] rounded-[18px] border border-[#E5E7EB] bg-white px-[17px] py-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-                Kelas Saya
-              </h2>
-              <p className="mt-[5px] text-[12px] font-medium text-[#6B7280]">
-                Monitoring kelas aktif teacher
-              </p>
-            </div>
-
-            <button
-              onClick={() => navigate("/teacher/classes")}
-              className="rounded-[10px] bg-[#F7F0FF] px-[12px] py-[8px] text-[13px] font-bold text-[#5A16E8] transition hover:scale-105 active:scale-95"
-            >
-              Lihat Semua
-            </button>
-          </div>
-
-          <div className="mt-[16px] space-y-[10px]">
-            {classMonitoring.length === 0 ? (
-              <PageState
-                type="empty"
-                title="Belum ada kelas"
-                message="Buat kelas terlebih dahulu untuk memantau siswa."
-                action={
-                  <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
-                  >
-                    + Buat Kelas
-                  </button>
-                }
+              <ProfileStat
+                icon={<Users size={20} />}
+                value={summary.totalStudents || 0}
+                label="Students"
+                color="text-[#16B966]"
+                bg="bg-[#E8F8EE]"
               />
-            ) : (
-              classMonitoring.slice(0, 3).map((item) => (
-                <ClassItem
-                  key={item.id}
-                  item={item}
-                  onClick={() => navigate(`/teacher/classes/${item.id}`)}
+
+              <ProfileStat
+                icon={<BarChart3 size={20} />}
+                value={`${summary.averageProgress || 0}%`}
+                label="Progress"
+                color="text-[#F59E0B]"
+                bg="bg-[#FFF1D6]"
+              />
+            </section>
+
+            <section className="mt-[16px] space-y-[12px]">
+              <MenuItem
+                icon={<Settings size={25} />}
+                title="Setting"
+                desc="Ubah pengaturan akun dan lainnya"
+                color="violet"
+                onClick={() => navigate("/teacher/settings")}
+              />
+
+              <MenuItem
+                icon={<LogOut size={24} />}
+                title="Logout"
+                desc="Keluar dari akun yang digunakan saat ini"
+                color="red"
+                onClick={() => setShowLogout(true)}
+              />
+            </section>
+          </aside>
+
+          <section className="mt-[18px] rounded-[24px] border border-[#E5E7EB] bg-white px-[18px] py-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:mt-0 lg:px-[22px]">
+            <div className="flex items-center justify-between gap-[14px]">
+              <div>
+                <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[26px]">
+                  Kelas Saya
+                </h2>
+
+                <p className="mt-[5px] text-[12px] font-medium text-[#6B7280]">
+                  Monitoring kelas aktif teacher
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate("/teacher/classes")}
+                className="shrink-0 rounded-[12px] bg-[#F7F0FF] px-[12px] py-[8px] text-[13px] font-bold text-[#5A16E8] transition hover:scale-105 active:scale-95"
+              >
+                Lihat Semua
+              </button>
+            </div>
+
+            <div className="mt-[16px]">
+              {classMonitoring.length === 0 ? (
+                <PageState
+                  type="empty"
+                  title="Belum ada kelas"
+                  message="Buat kelas terlebih dahulu untuk memantau siswa."
+                  action={
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
+                    >
+                      + Buat Kelas
+                    </button>
+                  }
                 />
-              ))
-            )}
-          </div>
-        </section>
-
-        <section className="mt-[16px] space-y-[12px]">
-          <MenuItem
-            icon={<Settings size={25} />}
-            title="Setting"
-            desc="Ubah pengaturan akun dan lainnya"
-            color="violet"
-            onClick={() => navigate("/teacher/settings")}
-          />
-
-          <MenuItem
-            icon={<LogOut size={24} />}
-            title="Logout"
-            desc="Keluar dari akun yang digunakan saat ini"
-            color="red"
-            onClick={() => setShowLogout(true)}
-          />
-        </section>
+              ) : (
+                <div className="grid gap-[12px] lg:grid-cols-2">
+                  {classMonitoring.slice(0, 6).map((item) => (
+                    <ClassItem
+                      key={item.id}
+                      item={item}
+                      onClick={() => navigate(`/teacher/classes/${item.id}`)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
 
       {showCreateModal && (
@@ -261,11 +269,12 @@ const TeacherProfilePage = () => {
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         {children}
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
     </main>
   );
@@ -273,20 +282,22 @@ const PageLayout = ({ children }) => {
 
 const ProfileStat = ({ icon, value, label, color, bg }) => {
   return (
-    <div className="rounded-[15px] border border-[#E5E7EB] bg-white px-[8px] py-[13px] text-center shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(0,0,0,0.06)]">
+    <div className="rounded-[15px] border border-[#E5E7EB] bg-white px-[8px] py-[13px] text-center shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition hover:-translate-y-[2px] hover:shadow-[0_10px_24px_rgba(0,0,0,0.06)] lg:flex lg:items-center lg:px-[13px] lg:text-left">
       <div
-        className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-[11px] ${bg} ${color}`}
+        className={`mx-auto flex h-[34px] w-[34px] items-center justify-center rounded-[11px] ${bg} ${color} lg:mx-0`}
       >
         {icon}
       </div>
 
-      <p className="mt-[9px] text-[20px] font-bold leading-none text-black">
-        {value}
-      </p>
+      <div className="lg:ml-[12px]">
+        <p className="mt-[9px] text-[20px] font-bold leading-none text-black lg:mt-0">
+          {value}
+        </p>
 
-      <p className="mt-[7px] text-[11px] font-medium leading-none text-[#6B7280]">
-        {label}
-      </p>
+        <p className="mt-[7px] text-[11px] font-medium leading-none text-[#6B7280]">
+          {label}
+        </p>
+      </div>
     </div>
   );
 };
@@ -297,9 +308,9 @@ const ClassItem = ({ item, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="group w-full rounded-[16px] border border-[#E5E7EB] bg-white px-[15px] py-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99]"
+      className="group w-full rounded-[18px] border border-[#E5E7EB] bg-white px-[15px] py-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99]"
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-[12px]">
         <div className="min-w-0">
           <h3 className="truncate text-[15px] font-bold leading-none text-[#101348]">
             {item.className}
@@ -312,7 +323,7 @@ const ClassItem = ({ item, onClick }) => {
 
         <ChevronRight
           size={23}
-          className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF]"
+          className="shrink-0 text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF]"
         />
       </div>
 

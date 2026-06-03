@@ -8,7 +8,6 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
   UserRound,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -17,13 +16,16 @@ import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import teacherPhoto from "../../assets/images/profile/teacher-profile.png";
 import { clearTeacherCache } from "../../utils/cache";
 
 const formatDateForInput = (value) => {
   if (!value) return "";
+
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+
   return date.toISOString().split("T")[0];
 };
 
@@ -125,7 +127,7 @@ const TeacherSettingPage = () => {
       updateUser(data.user);
       clearTeacherCache();
       setProfilePhoto(data.user?.photoUrl || profilePhoto);
-      setSuccess("✨ Profile teacher berhasil diperbarui");
+      setSuccess("Profile teacher berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal update profile");
     } finally {
@@ -156,7 +158,7 @@ const TeacherSettingPage = () => {
         newPassword: "",
       });
 
-      setSuccess("🔒 Password berhasil diperbarui");
+      setSuccess("Password berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal update password");
     } finally {
@@ -183,7 +185,7 @@ const TeacherSettingPage = () => {
       setProfilePhoto(data.photoUrl || data.user?.photoUrl || "");
       updateUser(data.user);
       clearTeacherCache();
-      setSuccess("📸 Foto profile berhasil diperbarui");
+      setSuccess("Foto profile berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal upload foto");
     } finally {
@@ -210,7 +212,7 @@ const TeacherSettingPage = () => {
           action={
             <button
               onClick={loadProfile}
-              className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
+              className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
             >
               Coba Lagi
             </button>
@@ -221,30 +223,30 @@ const TeacherSettingPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
-        <div className="flex items-start gap-[14px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+        <header className="flex items-start gap-[14px]">
           <button
             onClick={() => navigate("/teacher/profile")}
-            className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-[#F8F9FB] text-[#6B7280] transition hover:scale-105 active:scale-95"
+            className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
           >
             <ArrowLeft size={23} />
           </button>
 
           <div>
-            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
-              Setting
+            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
+              Pengaturan Akun
             </h1>
 
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
               Kelola informasi akun teacher
             </p>
           </div>
-        </div>
+        </header>
 
         {(error || success) && (
           <div
-            className={`mt-[16px] rounded-[12px] border px-[13px] py-[10px] text-[13px] font-semibold ${
+            className={`mt-[18px] rounded-[14px] border px-[14px] py-[11px] text-[13px] font-semibold ${
               error
                 ? "border-red-100 bg-red-50 text-red-600"
                 : "border-green-100 bg-green-50 text-green-600"
@@ -254,158 +256,168 @@ const TeacherSettingPage = () => {
           </div>
         )}
 
-        <section className="mt-[21px] overflow-hidden rounded-[20px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[20px] shadow-[0_14px_34px_rgba(101,29,255,0.10)]">
-          <div className="flex items-center">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-[#B88CFF] blur-[12px] opacity-40" />
+        <div className="mt-[22px] grid gap-[18px] lg:grid-cols-[330px_1fr] lg:items-start lg:gap-[24px]">
+          <aside className="space-y-[18px] lg:sticky lg:top-[32px]">
+            <section className="overflow-hidden rounded-[24px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] via-white to-[#F7F0FF] px-[20px] py-[22px] shadow-[0_16px_40px_rgba(101,29,255,0.10)]">
+              <div className="flex items-center lg:flex-col lg:text-center">
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-[#B88CFF] opacity-40 blur-[12px]" />
 
-              <img
-                src={profilePhoto || teacherPhoto}
-                alt="Profile"
-                className="relative h-[82px] w-[82px] rounded-full border-4 border-white object-cover shadow-[0_4px_14px_rgba(0,0,0,0.12)]"
+                  <img
+                    src={profilePhoto || teacherPhoto}
+                    alt="Profile"
+                    className="relative h-[86px] w-[86px] rounded-full border-4 border-white object-cover shadow-[0_6px_18px_rgba(0,0,0,0.14)] lg:h-[112px] lg:w-[112px]"
+                  />
+                </div>
+
+                <div className="ml-[18px] min-w-0 flex-1 lg:ml-0 lg:mt-[16px] lg:w-full">
+                  <h2 className="truncate text-[22px] font-bold tracking-[-0.04em] text-black">
+                    {form.fullName || "Teacher"}
+                  </h2>
+
+                  <p className="mt-[5px] truncate text-[13px] font-medium text-[#6B7280]">
+                    {form.email || "-"}
+                  </p>
+                </div>
+              </div>
+
+              <label className="mt-[18px] flex h-[42px] cursor-pointer items-center justify-center rounded-[13px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.02] active:scale-[0.98]">
+                {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profile"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadPhoto}
+                  disabled={uploadingPhoto}
+                  className="hidden"
+                />
+              </label>
+            </section>
+
+            <section className="rounded-[24px] border border-[#E5E7EB] bg-white px-[20px] pb-[22px] pt-[20px] shadow-[0_12px_34px_rgba(0,0,0,0.04)]">
+              <SectionTitle
+                icon={<Lock size={19} />}
+                title="Security Center"
+                color="text-red-500"
+                bg="bg-[#FFF1F1]"
+              />
+
+              <PasswordInput
+                label="Password Lama"
+                name="currentPassword"
+                value={passwordForm.currentPassword}
+                onChange={handlePasswordChange}
+                placeholder="Password lama"
+                visible={showCurrentPassword}
+                onToggle={() => setShowCurrentPassword((prev) => !prev)}
+              />
+
+              <PasswordInput
+                label="Password Baru"
+                name="newPassword"
+                value={passwordForm.newPassword}
+                onChange={handlePasswordChange}
+                placeholder="Minimal 6 karakter"
+                visible={showNewPassword}
+                onToggle={() => setShowNewPassword((prev) => !prev)}
+              />
+
+              <div className="mt-[15px] rounded-[14px] border border-[#E5E7EB] bg-[#F9FAFB] px-[13px] py-[12px]">
+                <div className="flex items-start gap-[8px]">
+                  <ShieldCheck size={18} className="mt-[1px] text-[#16B966]" />
+
+                  <p className="text-[12px] font-medium leading-[1.45] text-[#6B7280]">
+                    Gunakan kombinasi huruf, angka, dan simbol agar akun teacher
+                    lebih aman.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleUpdatePassword}
+                disabled={savingPassword}
+                className="mt-[18px] h-[44px] w-full rounded-[14px] border border-[#E4D3FF] bg-[#F7F0FF] text-[14px] font-bold text-[#5A16E8] transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+              >
+                {savingPassword ? "Menyimpan password..." : "Update password"}
+              </button>
+            </section>
+          </aside>
+
+          <section className="rounded-[24px] border border-[#E5E7EB] bg-white px-[20px] pb-[24px] pt-[20px] shadow-[0_12px_34px_rgba(0,0,0,0.04)] lg:px-[24px]">
+            <SectionTitle
+              icon={<UserRound size={19} />}
+              title="Informasi Akun"
+              color="text-[#651DFF]"
+              bg="bg-[#F7F0FF]"
+            />
+
+            <Input
+              icon={<UserRound size={18} />}
+              label="Nama Lengkap"
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+              placeholder="Masukkan nama lengkap"
+            />
+
+            <Input
+              icon={<Mail size={18} />}
+              label="Email"
+              name="email"
+              value={form.email}
+              disabled
+            />
+
+            <div className="mt-[18px]">
+              <Label>Peran</Label>
+
+              <div className="mt-[9px] grid grid-cols-2 gap-[10px]">
+                <RoleButton active={false} disabled>
+                  Student
+                </RoleButton>
+
+                <RoleButton active>Teacher</RoleButton>
+              </div>
+            </div>
+
+            <div className="lg:grid lg:grid-cols-2 lg:gap-[14px]">
+              <Input
+                icon={<Calendar size={18} />}
+                type="date"
+                label="Tanggal Lahir"
+                name="birthDate"
+                value={form.birthDate}
+                onChange={handleChange}
+              />
+
+              <Select
+                label="Jenis Kelamin"
+                name="gender"
+                value={form.gender}
+                onChange={handleChange}
+                options={[
+                  { value: "", label: "Pilih jenis kelamin" },
+                  { value: "male", label: "Laki-laki" },
+                  { value: "female", label: "Perempuan" },
+                ]}
               />
             </div>
 
-            <div className="ml-[18px] min-w-0 flex-1">
-              <h2 className="mt-[8px] truncate text-[22px] font-bold tracking-[-0.04em] text-black">
-                {form.fullName || "Teacher"}
-              </h2>
+            <button
+              onClick={handleUpdateProfile}
+              disabled={savingProfile}
+              className="mt-[22px] flex h-[46px] w-full items-center justify-center gap-[8px] rounded-[15px] bg-[#16B966] px-[14px] text-[14px] font-bold text-white shadow-[0_10px_22px_rgba(22,185,102,0.22)] transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+            >
+              <span className="flex h-[19px] w-[19px] items-center justify-center rounded-full bg-white">
+                <CheckCircle size={14} className="text-[#16B966]" />
+              </span>
 
-              <p className="mt-[4px] truncate text-[13px] font-medium text-[#6B7280]">
-                {form.email || "-"}
-              </p>
-            </div>
-          </div>
-
-          <label className="mt-[16px] flex h-[38px] cursor-pointer items-center justify-center rounded-[11px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.02] active:scale-[0.98]">
-            {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profile"}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleUploadPhoto}
-              disabled={uploadingPhoto}
-              className="hidden"
-            />
-          </label>
-        </section>
-
-        <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] pb-[22px] pt-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition hover:-translate-y-[2px]">
-          <SectionTitle
-            icon={<UserRound size={20} />}
-            title="Informasi Akun"
-            color="text-[#651DFF]"
-            bg="bg-[#F7F0FF]"
-          />
-
-          <Input
-            icon={<UserRound size={18} />}
-            label="Nama Lengkap"
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
-            placeholder="Masukkan nama lengkap"
-          />
-
-          <Input
-            icon={<Mail size={18} />}
-            label="Email"
-            name="email"
-            value={form.email}
-            disabled
-          />
-
-          <div className="mt-[14px]">
-            <Label>Peran</Label>
-
-            <div className="mt-[8px] grid grid-cols-2 gap-[8px]">
-              <RoleButton active={false} disabled>
-                Student
-              </RoleButton>
-              <RoleButton active>Teacher</RoleButton>
-            </div>
-          </div>
-
-          <Input
-            icon={<Calendar size={18} />}
-            type="date"
-            label="Tanggal Lahir"
-            name="birthDate"
-            value={form.birthDate}
-            onChange={handleChange}
-          />
-
-          <Select
-            label="Jenis Kelamin"
-            name="gender"
-            value={form.gender}
-            onChange={handleChange}
-            options={[
-              { value: "", label: "Pilih jenis kelamin" },
-              { value: "male", label: "Laki-laki" },
-              { value: "female", label: "Perempuan" },
-            ]}
-          />
-
-          <button
-            onClick={handleUpdateProfile}
-            disabled={savingProfile}
-            className="mt-[18px] flex h-[42px] w-full items-center justify-center gap-[7px] rounded-[12px] bg-[#16B966] px-[14px] text-[14px] font-bold text-white shadow-[0_8px_18px_rgba(22,185,102,0.22)] transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-          >
-            <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white">
-              <CheckCircle size={14} className="text-[#16B966]" />
-            </span>
-            {savingProfile ? "Menyimpan profile..." : "Update profile"}
-          </button>
-        </section>
-
-        <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] pb-[22px] pt-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition hover:-translate-y-[2px]">
-          <SectionTitle
-            icon={<Lock size={20} />}
-            title="Security Center"
-            color="text-red-500"
-            bg="bg-[#FFF1F1]"
-          />
-
-          <PasswordInput
-            label="Password Lama"
-            name="currentPassword"
-            value={passwordForm.currentPassword}
-            onChange={handlePasswordChange}
-            placeholder="Masukkan password lama"
-            visible={showCurrentPassword}
-            onToggle={() => setShowCurrentPassword((prev) => !prev)}
-          />
-
-          <PasswordInput
-            label="Password Baru"
-            name="newPassword"
-            value={passwordForm.newPassword}
-            onChange={handlePasswordChange}
-            placeholder="Minimal 6 karakter"
-            visible={showNewPassword}
-            onToggle={() => setShowNewPassword((prev) => !prev)}
-          />
-
-          <div className="mt-[14px] rounded-[13px] border border-[#E5E7EB] bg-[#F9FAFB] px-[13px] py-[11px]">
-            <div className="flex items-start gap-[8px]">
-              <ShieldCheck size={18} className="mt-[1px] text-[#16B966]" />
-              <p className="text-[12px] font-medium leading-[1.4] text-[#6B7280]">
-                Gunakan kombinasi huruf, angka, dan simbol agar akun teacher
-                lebih aman.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleUpdatePassword}
-            disabled={savingPassword}
-            className="mt-[18px] h-[42px] w-full rounded-[12px] border border-[#E4D3FF] bg-[#F7F0FF] text-[14px] font-bold text-[#5A16E8] transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-          >
-            {savingPassword ? "Menyimpan password..." : "Update password"}
-          </button>
-        </section>
+              {savingProfile ? "Menyimpan profile..." : "Update profile"}
+            </button>
+          </section>
+        </div>
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
     </main>
   );
@@ -413,11 +425,12 @@ const TeacherSettingPage = () => {
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         {children}
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
     </main>
   );
@@ -425,14 +438,14 @@ const PageLayout = ({ children }) => {
 
 const SectionTitle = ({ icon, title, color, bg }) => {
   return (
-    <div className="flex items-center gap-[9px]">
+    <div className="flex items-center gap-[10px]">
       <div
-        className={`flex h-[34px] w-[34px] items-center justify-center rounded-[10px] ${bg} ${color}`}
+        className={`flex h-[36px] w-[36px] items-center justify-center rounded-[12px] ${bg} ${color}`}
       >
         {icon}
       </div>
 
-      <h2 className="text-[21px] font-bold tracking-[-0.04em] text-black">
+      <h2 className="text-[20px] font-extrabold tracking-[-0.04em] text-black">
         {title}
       </h2>
     </div>
@@ -458,11 +471,11 @@ const Input = ({
   disabled = false,
 }) => {
   return (
-    <div className="mt-[14px]">
+    <div className="mt-[18px]">
       <Label>{label}</Label>
 
-      <div className="relative mt-[8px] h-[40px] rounded-[12px] border border-[#E5E7EB] bg-white focus-within:border-[#651DFF]">
-        <div className="absolute left-[13px] top-1/2 -translate-y-1/2 text-[#6B7280]">
+      <div className="relative mt-[9px] h-[46px] rounded-[15px] border border-[#E5E7EB] bg-white transition focus-within:border-[#651DFF]">
+        <div className="absolute left-[14px] top-1/2 -translate-y-1/2 text-[#6B7280]">
           {icon}
         </div>
 
@@ -473,7 +486,7 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           disabled={disabled}
-          className="h-full w-full rounded-[12px] px-[13px] pl-[42px] text-[13px] font-medium outline-none disabled:bg-[#F9FAFB] disabled:text-[#6B7280]"
+          className="h-full w-full rounded-[15px] px-[14px] pl-[44px] text-[13px] font-medium outline-none disabled:bg-[#F9FAFB] disabled:text-[#6B7280]"
         />
       </div>
     </div>
@@ -482,14 +495,14 @@ const Input = ({
 
 const Select = ({ label, name, value, onChange, options }) => {
   return (
-    <div className="mt-[14px]">
+    <div className="mt-[18px]">
       <Label>{label}</Label>
 
       <select
         name={name}
         value={value}
         onChange={onChange}
-        className="mt-[8px] h-[40px] w-full rounded-[12px] border border-[#E5E7EB] bg-white px-[13px] text-[13px] font-medium outline-none focus:border-[#651DFF]"
+        className="mt-[9px] h-[46px] w-full rounded-[15px] border border-[#E5E7EB] bg-white px-[14px] text-[13px] font-medium outline-none transition focus:border-[#651DFF]"
       >
         {options.map((item) => (
           <option key={item.value} value={item.value}>
@@ -506,7 +519,7 @@ const RoleButton = ({ active, disabled, children }) => {
     <button
       type="button"
       disabled={disabled}
-      className={`h-[40px] rounded-[12px] border text-[13px] font-bold transition ${
+      className={`h-[46px] rounded-[15px] border text-[13px] font-bold transition ${
         active
           ? "border-[#E4D3FF] bg-[#F7F0FF] text-[#5A16E8]"
           : "border-[#E5E7EB] bg-white text-[#6B7280]"
@@ -527,23 +540,23 @@ const PasswordInput = ({
   onToggle,
 }) => {
   return (
-    <div className="mt-[14px]">
+    <div className="mt-[18px]">
       <Label>{label}</Label>
 
-      <div className="relative mt-[8px] h-[40px] rounded-[12px] border border-[#E5E7EB] focus-within:border-[#651DFF]">
+      <div className="relative mt-[9px] h-[46px] rounded-[15px] border border-[#E5E7EB] bg-white transition focus-within:border-[#651DFF]">
         <input
           type={visible ? "text" : "password"}
           name={name}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="h-full w-full rounded-[12px] px-[13px] pr-[42px] text-[13px] font-medium outline-none"
+          className="h-full w-full rounded-[15px] px-[14px] pr-[44px] text-[13px] font-medium outline-none"
         />
 
         <button
           type="button"
           onClick={onToggle}
-          className="absolute right-[12px] top-1/2 -translate-y-1/2 text-[#111827] transition hover:scale-110"
+          className="absolute right-[13px] top-1/2 -translate-y-1/2 text-[#111827] transition hover:scale-110"
         >
           {visible ? <EyeOff size={19} /> : <Eye size={19} />}
         </button>

@@ -292,7 +292,7 @@ const LeaderboardItem = ({ user }) => {
       <img
         src={avatar}
         alt={user.name}
-        className="h-[29px] w-[29px] object-cover"
+        className="h-[29px] rounded-full w-[29px] object-cover"
       />
 
       <p

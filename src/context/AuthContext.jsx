@@ -1,9 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
-import {
-  clearStudentCache,
-  clearTeacherCache,
-} from "../utils/cache";
+import { clearStudentCache, clearTeacherCache } from "../utils/cache";
 
 const AuthContext = createContext(null);
 
@@ -38,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       setUser(profile);
 
       return profile;
-    } catch (error) {
+    } catch {
       clearAuthData();
       return null;
     }
@@ -62,7 +59,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         await getProfile();
-      } catch (error) {
+      } catch {
         clearAuthData();
       } finally {
         setLoading(false);
@@ -72,43 +69,45 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async ({ email, password, role }) => {
-  const { data } = await api.post("/auth/login", {
-    email,
-    password,
-    role,
-  });
+  const prefetchDashboard = (role) => {
+    if (!role) return;
 
-  saveAuthData(data.token, data.user);
+    const cacheKey =
+      role === "teacher" ? "teacher_dashboard" : "student_dashboard";
 
-  const cacheKey =
-    role === "teacher" ? "teacher_dashboard" : "student_dashboard";
+    const dashboardUrl =
+      role === "teacher" ? "/teacher/dashboard" : "/student/dashboard";
 
-  const dashboardUrl =
-    role === "teacher" ? "/teacher/dashboard" : "/student/dashboard";
+    api
+      .get(dashboardUrl)
+      .then((res) => {
+        sessionStorage.setItem(cacheKey, JSON.stringify(res.data.dashboard));
+      })
+      .catch(() => {});
+  };
 
-  api
-    .get(dashboardUrl)
-    .then((res) => {
-      sessionStorage.setItem(
-        cacheKey,
-        JSON.stringify(res.data.dashboard)
-      );
-    })
-    .catch(() => {});
+  const login = async ({ email, password }) => {
+    const { data } = await api.post("/auth/login", {
+      email,
+      password,
+    });
 
-  try {
-    const profile = await getProfile();
-    return profile || data.user;
-  } catch {
-    return data.user;
-  }
-};
+    saveAuthData(data.token, data.user);
+    prefetchDashboard(data.user?.role);
+
+    try {
+      const profile = await getProfile();
+      return profile || data.user;
+    } catch {
+      return data.user;
+    }
+  };
 
   const register = async (payload) => {
     const { data } = await api.post("/auth/register", payload);
 
     saveAuthData(data.token, data.user);
+    prefetchDashboard(data.user?.role);
 
     try {
       const profile = await getProfile();
@@ -131,10 +130,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-  clearStudentCache();
-  clearTeacherCache();
-  clearAuthData();
-};
+    clearStudentCache();
+    clearTeacherCache();
+    clearAuthData();
+  };
 
   return (
     <AuthContext.Provider

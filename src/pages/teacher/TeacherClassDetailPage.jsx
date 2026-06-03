@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 
 const TeacherClassDetailPage = () => {
   const navigate = useNavigate();
@@ -99,10 +100,14 @@ const TeacherClassDetailPage = () => {
   if (loading) {
     return (
       <PageWrapper>
-        <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
-        <div className="mx-auto mt-[16px] w-full max-w-[460px] px-[14px]">
-          <PageState type="loading" title="Memuat detail kelas..." />
+        <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+          <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
+          <div className="mt-[18px]">
+            <PageState type="loading" title="Memuat detail kelas..." />
+          </div>
         </div>
+
+        <TeacherDesktopNav />
         <TeacherBottomNav />
       </PageWrapper>
     );
@@ -111,22 +116,27 @@ const TeacherClassDetailPage = () => {
   if (error && !classData) {
     return (
       <PageWrapper>
-        <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
-        <div className="mx-auto mt-[16px] w-full max-w-[460px] px-[14px]">
-          <PageState
-            type="error"
-            title="Gagal memuat detail kelas"
-            message={error}
-            action={
-              <button
-                onClick={fetchClassAnalytics}
-                className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
-              >
-                Coba Lagi
-              </button>
-            }
-          />
+        <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+          <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
+
+          <div className="mt-[18px]">
+            <PageState
+              type="error"
+              title="Gagal memuat detail kelas"
+              message={error}
+              action={
+                <button
+                  onClick={fetchClassAnalytics}
+                  className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
+                >
+                  Coba Lagi
+                </button>
+              }
+            />
+          </div>
         </div>
+
+        <TeacherDesktopNav />
         <TeacherBottomNav />
       </PageWrapper>
     );
@@ -134,19 +144,19 @@ const TeacherClassDetailPage = () => {
 
   return (
     <PageWrapper>
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         <header>
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-[12px]">
+          <div className="flex items-start justify-between gap-[14px]">
+            <div className="flex min-w-0 items-start gap-[12px]">
               <button
                 onClick={() => navigate("/teacher/classes")}
-                className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-[#F8F9FB] text-[#6B7280] transition hover:scale-105 active:scale-95"
+                className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
               >
                 <ArrowLeft size={23} />
               </button>
 
-              <div>
-                <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+              <div className="min-w-0">
+                <h1 className="truncate text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
                   {classData?.className || "Class Detail"}
                 </h1>
 
@@ -158,77 +168,85 @@ const TeacherClassDetailPage = () => {
 
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] border border-red-100 bg-red-50 text-red-500 transition hover:scale-105 active:scale-95"
+              className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] border border-red-100 bg-red-50 text-red-500 transition hover:scale-105 active:scale-95"
             >
               <Trash2 size={20} />
             </button>
           </div>
 
           {error && (
-            <div className="mt-[14px] rounded-[10px] bg-red-50 px-[13px] py-[10px] text-[13px] font-semibold text-red-600">
+            <div className="mt-[14px] rounded-[12px] bg-red-50 px-[13px] py-[10px] text-[13px] font-semibold text-red-600">
               {error}
             </div>
           )}
-
-          <section className="mt-[20px] rounded-[18px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)]">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[12px] font-bold text-[#651DFF]">
-                  Class Code
-                </p>
-                <h2 className="mt-[4px] text-[20px] font-bold text-[#101348]">
-                  {classData?.classCode || "-"}
-                </h2>
-              </div>
-
-              <div className="rounded-full bg-white px-[12px] py-[7px] text-[13px] font-bold text-[#651DFF] shadow-sm">
-                Monitoring
-              </div>
-            </div>
-
-            <div className="mt-[14px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#981DFF] to-[#5A16E8] transition-all duration-700"
-                style={{ width: `${summary?.averageAccuracy || 0}%` }}
-              />
-            </div>
-
-            <p className="mt-[8px] text-[12px] font-medium text-[#6B7280]">
-              Rata-rata akurasi kelas:{" "}
-              <span className="font-bold text-[#101348]">
-                {summary?.averageAccuracy || 0}%
-              </span>
-            </p>
-          </section>
-
-          <div className="mt-[18px] grid grid-cols-2 rounded-[14px] bg-[#F8F9FB] p-[4px]">
-            <TabButton
-              active={tab === "overview"}
-              onClick={() => setTab("overview")}
-            >
-              Overview
-            </TabButton>
-
-            <TabButton
-              active={tab === "students"}
-              onClick={() => setTab("students")}
-            >
-              Student List
-            </TabButton>
-          </div>
         </header>
 
-        {tab === "overview" ? (
-          <OverviewTab
-            summary={summary}
-            strengthTopics={strengthTopics}
-            weakTopics={weakTopics}
-          />
-        ) : (
-          <StudentListTab students={students} />
-        )}
+        <div className="mt-[20px] lg:grid lg:grid-cols-[360px_1fr] lg:items-start lg:gap-[22px]">
+          <aside className="lg:sticky lg:top-[32px]">
+            <section className="rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:rounded-[24px] lg:px-[20px] lg:py-[20px]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[12px] font-bold text-[#651DFF]">
+                    Class Code
+                  </p>
+
+                  <h2 className="mt-[4px] text-[22px] font-bold text-[#101348]">
+                    {classData?.classCode || "-"}
+                  </h2>
+                </div>
+
+                <div className="rounded-full bg-white px-[12px] py-[7px] text-[13px] font-bold text-[#651DFF] shadow-sm">
+                  Monitoring
+                </div>
+              </div>
+
+              <div className="mt-[16px] h-[8px] overflow-hidden rounded-full bg-[#D9D9D9]">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#981DFF] to-[#5A16E8] transition-all duration-700"
+                  style={{ width: `${summary?.averageAccuracy || 0}%` }}
+                />
+              </div>
+
+              <p className="mt-[9px] text-[12px] font-medium text-[#6B7280]">
+                Rata-rata akurasi kelas:{" "}
+                <span className="font-bold text-[#101348]">
+                  {summary?.averageAccuracy || 0}%
+                </span>
+              </p>
+            </section>
+
+            <div className="mt-[16px] grid grid-cols-2 rounded-[16px] bg-[#F8F9FB] p-[4px]">
+              <TabButton
+                active={tab === "overview"}
+                onClick={() => setTab("overview")}
+              >
+                Overview
+              </TabButton>
+
+              <TabButton
+                active={tab === "students"}
+                onClick={() => setTab("students")}
+              >
+                Students
+              </TabButton>
+            </div>
+          </aside>
+
+          <section className="mt-[18px] lg:mt-0">
+            {tab === "overview" ? (
+              <OverviewTab
+                summary={summary}
+                strengthTopics={strengthTopics}
+                weakTopics={weakTopics}
+              />
+            ) : (
+              <StudentListTab students={students} />
+            )}
+          </section>
+        </div>
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
 
       {showDeleteModal && (
@@ -244,24 +262,26 @@ const TeacherClassDetailPage = () => {
 };
 
 const PageWrapper = ({ children }) => {
-  return <main className="min-h-screen bg-white">{children}</main>;
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      {children}
+    </main>
+  );
 };
 
 const HeaderSkeleton = ({ onBack }) => {
   return (
-    <div className="mx-auto w-full max-w-[460px] bg-white px-[14px] pt-[49px]">
-      <div className="flex items-center gap-[12px]">
-        <button
-          onClick={onBack}
-          className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-[#F8F9FB] text-[#6B7280]"
-        >
-          <ArrowLeft size={24} />
-        </button>
+    <div className="flex items-center gap-[12px]">
+      <button
+        onClick={onBack}
+        className="flex h-[38px] w-[38px] items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm"
+      >
+        <ArrowLeft size={24} />
+      </button>
 
-        <h1 className="text-[26px] font-bold tracking-[-0.04em] text-black">
-          Class Detail
-        </h1>
-      </div>
+      <h1 className="text-[26px] font-bold tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
+        Class Detail
+      </h1>
     </div>
   );
 };
@@ -270,7 +290,7 @@ const TabButton = ({ active, onClick, children }) => {
   return (
     <button
       onClick={onClick}
-      className={`h-[38px] rounded-[10px] text-[15px] font-bold transition ${
+      className={`h-[40px] rounded-[12px] text-[14px] font-bold transition ${
         active
           ? "bg-white text-[#651DFF] shadow-[0_4px_14px_rgba(0,0,0,0.06)]"
           : "text-[#6B7280]"
@@ -283,13 +303,13 @@ const TabButton = ({ active, onClick, children }) => {
 
 const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
   return (
-    <>
-      <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-        <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+    <div className="space-y-[17px]">
+      <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px] lg:py-[20px]">
+        <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
           Rangkuman kelas
         </h2>
 
-        <div className="mt-[16px] grid grid-cols-2 gap-[9px]">
+        <div className="mt-[16px] grid grid-cols-2 gap-[9px] lg:gap-[12px]">
           <SummaryBox
             icon={<BarChart3 size={27} />}
             value={`${summary?.averageAccuracy || 0}%`}
@@ -337,14 +357,14 @@ const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
         emptyMessage="Data akan muncul setelah siswa mengerjakan quiz."
         topics={weakTopics}
       />
-    </>
+    </div>
   );
 };
 
 const TopicSection = ({ title, emptyTitle, emptyMessage, topics }) => {
   return (
-    <section className="mt-[17px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+    <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
+      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
         {title}
       </h2>
 
@@ -363,8 +383,8 @@ const StudentListTab = ({ students }) => {
   const navigate = useNavigate();
 
   return (
-    <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+    <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
+      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
         Semua siswa
       </h2>
 
@@ -392,16 +412,19 @@ const StudentListTab = ({ students }) => {
 
 const SummaryBox = ({ icon, value, label, bg, color }) => {
   return (
-    <div className="flex h-[82px] items-center rounded-[13px] border border-[#E5E7EB] bg-white px-[13px] transition hover:-translate-y-[2px] hover:shadow-[0_10px_22px_rgba(0,0,0,0.06)]">
+    <div className="flex min-h-[86px] items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[13px] transition hover:-translate-y-[2px] hover:shadow-[0_10px_22px_rgba(0,0,0,0.06)]">
       <div
-        className={`flex h-[40px] w-[40px] items-center justify-center rounded-[10px] ${bg} ${color}`}
+        className={`flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-[12px] ${bg} ${color}`}
       >
         {icon}
       </div>
 
-      <div className="ml-[11px]">
-        <p className="text-[23px] font-bold leading-none text-black">{value}</p>
-        <p className="mt-[4px] text-[10px] font-medium leading-[1.05] text-[#6B7280]">
+      <div className="ml-[11px] min-w-0">
+        <p className="text-[23px] font-bold leading-none text-black">
+          {value}
+        </p>
+
+        <p className="mt-[4px] text-[10px] font-medium leading-[1.1] text-[#6B7280] lg:text-[11px]">
           {label}
         </p>
       </div>
@@ -419,15 +442,18 @@ const TopicCard = ({ item }) => {
 
   return (
     <div className="rounded-[16px] border border-[#E5E7EB] bg-white px-[18px] py-[16px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-[12px]">
+        <div className="min-w-0">
           <h3 className="text-[14px] font-bold text-black">{item.title}</h3>
+
           <p className="mt-[3px] text-[12px] font-medium text-[#6B7280]">
             {item.desc}
           </p>
         </div>
 
-        <p className="text-[15px] font-bold text-black">{item.value}%</p>
+        <p className="shrink-0 text-[15px] font-bold text-black">
+          {item.value}%
+        </p>
       </div>
 
       <div className="mt-[11px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
@@ -463,16 +489,18 @@ const StudentItem = ({ item, rank, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="group flex min-h-[64px] w-full items-center rounded-[14px] border border-[#E5E7EB] bg-white px-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99]"
+      className="group flex min-h-[74px] w-full items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99]"
     >
-      <p className="w-[28px] text-[16px] font-bold text-black">{rank}</p>
+      <p className="w-[28px] shrink-0 text-[16px] font-bold text-black">
+        {rank}
+      </p>
 
-      <div className="flex-1">
-        <h3 className="text-[16px] font-bold leading-none text-black">
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[16px] font-bold leading-none text-black">
           {student.fullName}
         </h3>
 
-        <div className="mt-[7px] flex gap-[14px] text-[12px] font-medium text-[#6B7280]">
+        <div className="mt-[7px] flex flex-wrap gap-x-[14px] gap-y-[4px] text-[12px] font-medium text-[#6B7280]">
           <p>
             Progress{" "}
             <span className={`font-bold ${progressColor}`}>
@@ -489,7 +517,7 @@ const StudentItem = ({ item, rank, onClick }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-[6px]">
+      <div className="ml-[8px] flex shrink-0 items-center gap-[6px]">
         <span
           className={`rounded-[8px] px-[9px] py-[6px] text-[11px] font-bold ${
             riskStyle[riskLevel] || riskStyle.Unknown
@@ -500,7 +528,7 @@ const StudentItem = ({ item, rank, onClick }) => {
 
         <ChevronRight
           size={21}
-          className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF]"
+          className="hidden text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF] sm:block"
         />
       </div>
     </button>

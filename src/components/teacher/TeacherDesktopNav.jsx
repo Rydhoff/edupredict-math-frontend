@@ -1,18 +1,17 @@
 import { NavLink } from "react-router-dom";
-import { BarChart3, Bell, Brain, Home, Trophy, User } from "lucide-react";
+import { Bell, BookOpen, Home, User, Users } from "lucide-react";
 
 import logo from "../../assets/images/logo.png";
 import NotificationBell from "../shared/NotificationBell";
 
 const items = [
-  { label: "Dashboard", to: "/student", icon: Home },
-  { label: "Quizzes", to: "/student/quizzes", icon: Brain },
-  { label: "Progress", to: "/student/progress", icon: BarChart3 },
-  { label: "Rewards", to: "/student/rewards", icon: Trophy },
-  { label: "Profile", to: "/student/profile", icon: User },
+  { label: "Dashboard", to: "/teacher", icon: Home },
+  { label: "Classes", to: "/teacher/classes", icon: BookOpen },
+  { label: "Students", to: "/teacher/students", icon: Users },
+  { label: "Profile", to: "/teacher/profile", icon: User },
 ];
 
-const StudentDesktopNav = () => {
+const TeacherDesktopNav = () => {
   return (
     <aside className="fixed left-[32px] top-[32px] hidden h-[calc(100vh-64px)] w-[252px] rounded-[28px] border border-[#E8E3F4] bg-white/85 px-[18px] py-[20px] shadow-[0_18px_50px_rgba(31,41,55,0.08)] backdrop-blur-xl lg:flex lg:flex-col">
       <div className="flex items-center gap-[10px] px-[6px]">
@@ -22,8 +21,9 @@ const StudentDesktopNav = () => {
           <h2 className="text-[17px] font-bold leading-none text-[#101348]">
             EduPredict
           </h2>
+
           <p className="mt-[4px] text-[11px] font-medium text-[#8A8A92]">
-            Math Learning
+            Teacher Panel
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@ const StudentDesktopNav = () => {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === "/student"}
+              end={item.to === "/teacher"}
               className={({ isActive }) =>
                 `group flex h-[47px] items-center gap-[12px] rounded-[16px] px-[14px] text-[14px] font-bold transition duration-300 ${
                   isActive
@@ -55,10 +55,9 @@ const StudentDesktopNav = () => {
         })}
       </nav>
 
-      
-
       <div className="mt-auto rounded-[20px] border border-[#EEE7FF] bg-gradient-to-br from-[#F7F0FF] to-white px-[14px] py-[14px]">
         <div className="flex items-center gap-[10px]">
+
           <div className="min-w-0 flex-1">
             <p className="text-[13px] font-bold text-[#101348]">
               Notifications
@@ -68,9 +67,8 @@ const StudentDesktopNav = () => {
           <NotificationBell to="/teacher/notifications" size={24} />
         </div>
       </div>
-
     </aside>
   );
 };
 
-export default StudentDesktopNav;
+export default TeacherDesktopNav;

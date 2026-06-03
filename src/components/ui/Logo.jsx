@@ -6,7 +6,7 @@ const Logo = ({ small = false }) => {
       <img
         src={logo}
         alt="EduPredict Math"
-        className={small ? "h-[28px] w-auto" : "h-[48px] w-auto"}
+        className={small ? "h-[28px] w-auto" : "h-[36px] w-auto"}
       />
 
       {!small && (

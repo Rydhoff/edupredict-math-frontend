@@ -20,6 +20,7 @@ import {
 import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import studentPhoto from "../../assets/images/profile/student-ridho.png";
 import { clearTeacherCache } from "../../utils/cache";
 
@@ -95,7 +96,9 @@ const TeacherStudentDetailPage = () => {
       setShowRemoveModal(false);
       navigate("/teacher/students");
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal menghapus siswa dari kelas");
+      setError(
+        err.response?.data?.message || "Gagal menghapus siswa dari kelas"
+      );
     } finally {
       setRemoving(false);
     }
@@ -110,7 +113,8 @@ const TeacherStudentDetailPage = () => {
       return {
         title: label,
         desc: "Kemampuan siswa pada kategori ini",
-        value: value === null || value === undefined ? 0 : Math.round(value * 100),
+        value:
+          value === null || value === undefined ? 0 : Math.round(value * 100),
       };
     });
   }, [data]);
@@ -167,101 +171,113 @@ const TeacherStudentDetailPage = () => {
   const riskLevel = data.latestPrediction?.riskLevel || "Unknown";
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         <header>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[12px]">
+          <div className="flex items-center justify-between gap-[14px]">
+            <div className="flex min-w-0 items-center gap-[12px]">
               <button
                 onClick={() => navigate(-1)}
-                className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-[#F8F9FB] text-[#6B7280] transition hover:scale-105 active:scale-95"
+                className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
               >
                 <ArrowLeft size={24} />
               </button>
 
-              <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+              <h1 className="truncate text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
                 Student Detail
               </h1>
             </div>
 
             <button
               onClick={() => setShowRemoveModal(true)}
-              className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] border border-red-100 bg-red-50 text-red-500 transition hover:scale-105 active:scale-95"
+              className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] border border-red-100 bg-red-50 text-red-500 transition hover:scale-105 active:scale-95"
             >
               <Trash2 size={20} />
             </button>
           </div>
 
           {error && (
-            <div className="mt-[14px] rounded-[10px] bg-red-50 px-[13px] py-[10px] text-[13px] font-semibold text-red-600">
+            <div className="mt-[14px] rounded-[12px] bg-red-50 px-[13px] py-[10px] text-[13px] font-semibold text-red-600">
               {error}
             </div>
           )}
         </header>
 
-        <section className="mt-[26px] rounded-[18px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[22px] py-[20px] shadow-[0_10px_26px_rgba(101,29,255,0.08)]">
-          <div className="flex items-center">
-            <img
-              src={student.photoUrl || studentPhoto}
-              alt={student.fullName}
-              className="h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.18)]"
-            />
+        <div className="mt-[24px] lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-[24px]">
+          <aside className="lg:sticky lg:top-[32px]">
+            <section className="rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[22px] py-[20px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:rounded-[24px]">
+              <div className="flex items-center lg:flex-col lg:text-center">
+                <img
+                  src={student.photoUrl || studentPhoto}
+                  alt={student.fullName}
+                  className="h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.18)] lg:h-[104px] lg:w-[104px]"
+                />
 
-            <div className="ml-[18px] min-w-0 flex-1">
-              <h2 className="truncate text-[22px] font-bold leading-none tracking-[-0.04em] text-black">
-                {student.fullName}
-              </h2>
+                <div className="ml-[18px] min-w-0 flex-1 lg:ml-0 lg:mt-[16px] lg:w-full">
+                  <h2 className="truncate text-[22px] font-bold leading-none tracking-[-0.04em] text-black">
+                    {student.fullName}
+                  </h2>
 
-              <p className="mt-[7px] text-[12px] font-medium leading-none text-[#6B7280]">
-                XP: {student.xp || 0} • Level {student.level || 1}
-              </p>
+                  <p className="mt-[7px] text-[12px] font-medium leading-none text-[#6B7280]">
+                    XP: {student.xp || 0} • Level {student.level || 1}
+                  </p>
 
-              <RiskBadge riskLevel={riskLevel} />
+                  <RiskBadge riskLevel={riskLevel} />
+                </div>
+              </div>
+
+              <div className="mt-[18px] grid grid-cols-3 gap-[8px] lg:grid-cols-1">
+                <MiniStat
+                  icon={<Target size={18} />}
+                  value={`${stats.accuracy || 0}%`}
+                  label="Akurasi"
+                  color="text-[#651DFF]"
+                  bg="bg-[#F7F0FF]"
+                />
+
+                <MiniStat
+                  icon={<BarChart3 size={18} />}
+                  value={stats.totalAttempts || 0}
+                  label="Attempts"
+                  color="text-[#16B966]"
+                  bg="bg-[#E8F8EE]"
+                />
+
+                <MiniStat
+                  icon={<TriangleAlert size={18} />}
+                  value={riskLevel}
+                  label="Risk"
+                  color="text-[#EF4444]"
+                  bg="bg-[#FFE1E1]"
+                />
+              </div>
+            </section>
+
+            <div className="mt-[18px] grid grid-cols-2 rounded-[16px] bg-[#F8F9FB] p-[4px]">
+              <TabButton
+                active={tab === "overview"}
+                onClick={() => setTab("overview")}
+              >
+                Overview
+              </TabButton>
+
+              <TabButton active={tab === "skill"} onClick={() => setTab("skill")}>
+                Skill
+              </TabButton>
             </div>
-          </div>
+          </aside>
 
-          <div className="mt-[18px] grid grid-cols-3 gap-[8px]">
-            <MiniStat
-              icon={<Target size={18} />}
-              value={`${stats.accuracy || 0}%`}
-              label="Akurasi"
-              color="text-[#651DFF]"
-              bg="bg-[#F7F0FF]"
-            />
-            <MiniStat
-              icon={<BarChart3 size={18} />}
-              value={stats.totalAttempts || 0}
-              label="Attempts"
-              color="text-[#16B966]"
-              bg="bg-[#E8F8EE]"
-            />
-            <MiniStat
-              icon={<TriangleAlert size={18} />}
-              value={riskLevel}
-              label="Risk"
-              color="text-[#EF4444]"
-              bg="bg-[#FFE1E1]"
-            />
-          </div>
-        </section>
-
-        <div className="mt-[18px] grid grid-cols-2 rounded-[14px] bg-[#F8F9FB] p-[4px]">
-          <TabButton active={tab === "overview"} onClick={() => setTab("overview")}>
-            Overview
-          </TabButton>
-
-          <TabButton active={tab === "skill"} onClick={() => setTab("skill")}>
-            Skill
-          </TabButton>
+          <section className="mt-[18px] lg:mt-0">
+            {tab === "overview" ? (
+              <OverviewTab radarData={radarData} skillData={skillData} />
+            ) : (
+              <SkillTab skillData={skillData} />
+            )}
+          </section>
         </div>
-
-        {tab === "overview" ? (
-          <OverviewTab radarData={radarData} skillData={skillData} />
-        ) : (
-          <SkillTab skillData={skillData} />
-        )}
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
 
       {showRemoveModal && (
@@ -281,10 +297,12 @@ const TeacherStudentDetailPage = () => {
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         {children}
       </div>
+
+      <TeacherDesktopNav />
       <TeacherBottomNav />
     </main>
   );
@@ -294,7 +312,7 @@ const TabButton = ({ active, onClick, children }) => {
   return (
     <button
       onClick={onClick}
-      className={`h-[38px] rounded-[10px] text-[15px] font-bold transition ${
+      className={`h-[40px] rounded-[12px] text-[14px] font-bold transition ${
         active
           ? "bg-white text-[#651DFF] shadow-[0_4px_14px_rgba(0,0,0,0.06)]"
           : "text-[#6B7280]"
@@ -326,39 +344,81 @@ const RiskBadge = ({ riskLevel }) => {
 
 const MiniStat = ({ icon, value, label, color, bg }) => {
   return (
-    <div className="rounded-[13px] border border-[#E5E7EB] bg-white px-[8px] py-[11px] text-center shadow-sm transition hover:-translate-y-[2px]">
-      <div className={`mx-auto flex h-[28px] w-[28px] items-center justify-center rounded-[9px] ${bg} ${color}`}>
+    <div className="rounded-[13px] border border-[#E5E7EB] bg-white px-[8px] py-[11px] text-center shadow-sm transition hover:-translate-y-[2px] lg:flex lg:items-center lg:px-[13px] lg:text-left">
+      <div
+        className={`mx-auto flex h-[28px] w-[28px] items-center justify-center rounded-[9px] ${bg} ${color} lg:mx-0 lg:h-[36px] lg:w-[36px] lg:rounded-[11px]`}
+      >
         {icon}
       </div>
-      <p className={`mt-[7px] truncate text-[14px] font-bold leading-none ${color}`}>
-        {value}
-      </p>
-      <p className="mt-[6px] text-[10px] font-medium leading-none text-[#6B7280]">
-        {label}
-      </p>
+
+      <div className="lg:ml-[10px]">
+        <p
+          className={`mt-[7px] truncate text-[14px] font-bold leading-none ${color} lg:mt-0 lg:text-[16px]`}
+        >
+          {value}
+        </p>
+
+        <p className="mt-[6px] text-[10px] font-medium leading-none text-[#6B7280]">
+          {label}
+        </p>
+      </div>
     </div>
   );
 };
 
 const OverviewTab = ({ radarData, skillData }) => {
   const labels = [
-    { title: "Bilangan", value: findValue(skillData, "Bilangan"), x: "50%", y: "4%" },
-    { title: "Aljabar", value: findValue(skillData, "Aljabar"), x: "90%", y: "29%", align: "right" },
-    { title: "Statistika", value: findValue(skillData, "Statistika"), x: "88%", y: "67%", align: "right" },
-    { title: "Rasio", value: findValue(skillData, "Rasio"), x: "50%", y: "92%" },
-    { title: "Geometri", value: findValue(skillData, "Geometri"), x: "10%", y: "67%", align: "left" },
-    { title: "Pengukuran", value: findValue(skillData, "Pengukuran"), x: "10%", y: "29%", align: "left" },
+    {
+      title: "Bilangan",
+      value: findValue(skillData, "Bilangan"),
+      x: "50%",
+      y: "4%",
+    },
+    {
+      title: "Aljabar",
+      value: findValue(skillData, "Aljabar"),
+      x: "90%",
+      y: "29%",
+      align: "right",
+    },
+    {
+      title: "Statistika",
+      value: findValue(skillData, "Statistika"),
+      x: "88%",
+      y: "67%",
+      align: "right",
+    },
+    {
+      title: "Rasio",
+      value: findValue(skillData, "Rasio"),
+      x: "50%",
+      y: "92%",
+    },
+    {
+      title: "Geometri",
+      value: findValue(skillData, "Geometri"),
+      x: "10%",
+      y: "67%",
+      align: "left",
+    },
+    {
+      title: "Pengukuran",
+      value: findValue(skillData, "Pengukuran"),
+      x: "10%",
+      y: "29%",
+      align: "left",
+    },
   ];
 
   return (
-    <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[21px] pb-[24px] pt-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+    <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[21px] pb-[24px] pt-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px]">
+      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
         Skill Mapping
       </h2>
 
-      <div className="relative mt-[8px] h-[320px]">
+      <div className="relative mt-[8px] h-[320px] lg:h-[430px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={radarData} outerRadius={92}>
+          <RadarChart data={radarData} outerRadius="62%">
             <PolarGrid stroke="#E9EAF0" />
             <PolarRadiusAxis
               angle={90}
@@ -367,6 +427,7 @@ const OverviewTab = ({ radarData, skillData }) => {
               tick={{ fontSize: 9, fill: "#9CA3AF" }}
               axisLine={false}
             />
+
             <Radar
               dataKey="value"
               stroke="#641BFF"
@@ -393,10 +454,11 @@ const OverviewTab = ({ radarData, skillData }) => {
                   : "translateX(-50%)",
             }}
           >
-            <p className="whitespace-pre-line text-[9px] font-bold leading-[1.05] text-black">
+            <p className="whitespace-pre-line text-[9px] font-bold leading-[1.05] text-black lg:text-[11px]">
               {item.title}
             </p>
-            <p className="mt-[3px] text-[15px] font-bold leading-none text-[#641BFF]">
+
+            <p className="mt-[3px] text-[15px] font-bold leading-none text-[#641BFF] lg:text-[17px]">
               {item.value}%
             </p>
           </div>
@@ -408,12 +470,12 @@ const OverviewTab = ({ radarData, skillData }) => {
 
 const SkillTab = ({ skillData }) => {
   return (
-    <section className="mt-[16px] rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
+    <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
+      <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
         Skill Progress
       </h2>
 
-      <div className="mt-[20px] space-y-[12px]">
+      <div className="mt-[20px] grid gap-[12px] lg:grid-cols-2">
         {skillData.map((item) => (
           <SkillProgressCard key={item.title} item={item} />
         ))}
@@ -432,15 +494,18 @@ const SkillProgressCard = ({ item }) => {
 
   return (
     <div className="rounded-[16px] border border-[#E5E7EB] bg-white px-[18px] py-[16px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-[12px]">
+        <div className="min-w-0">
           <h3 className="text-[14px] font-bold text-black">{item.title}</h3>
+
           <p className="mt-[3px] text-[12px] font-medium text-[#6B7280]">
             {item.desc}
           </p>
         </div>
 
-        <p className="text-[15px] font-bold text-black">{item.value}%</p>
+        <p className="shrink-0 text-[15px] font-bold text-black">
+          {item.value}%
+        </p>
       </div>
 
       <div className="mt-[11px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">

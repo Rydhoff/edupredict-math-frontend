@@ -3,7 +3,6 @@ import {
   Copy,
   Plus,
   Search,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -11,12 +10,13 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import CreateClassModal from "../../components/teacher/CreateClassModal";
 import PageState from "../../components/ui/PageState";
+
 import mascotSmall from "../../assets/images/mascot-small.png";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearTeacherCache } from "../../utils/cache";
-
 
 const TeacherClassesPage = () => {
   const navigate = useNavigate();
@@ -79,6 +79,7 @@ const TeacherClassesPage = () => {
   };
 
   const totalStudents = classes.reduce((sum, item) => sum + item.students, 0);
+
   const averageProgress =
     classes.length > 0
       ? Math.round(
@@ -89,10 +90,10 @@ const TeacherClassesPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[104px] pt-[49px]">
-        <header className="flex items-start justify-between">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+        <header className="flex items-start justify-between gap-[14px]">
           <div>
-            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+            <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
               Classes
             </h1>
 
@@ -103,7 +104,7 @@ const TeacherClassesPage = () => {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="group flex h-[40px] items-center gap-[7px] rounded-[10px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] px-[14px] text-[14px] font-bold text-white shadow-[0_10px_22px_rgba(108,33,255,0.25)] transition duration-300 hover:scale-[1.03] active:scale-[0.98]"
+            className="group flex h-[40px] shrink-0 items-center gap-[7px] rounded-[12px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] px-[14px] text-[14px] font-bold text-white shadow-[0_10px_22px_rgba(108,33,255,0.25)] transition duration-300 hover:scale-[1.03] active:scale-[0.98] lg:h-[44px] lg:px-[18px]"
           >
             <Plus
               size={18}
@@ -114,7 +115,7 @@ const TeacherClassesPage = () => {
           </button>
         </header>
 
-        <section className="mt-[20px] grid grid-cols-3 gap-[8px]">
+        <section className="mt-[22px] grid grid-cols-3 gap-[8px] lg:gap-[14px]">
           <MiniStatCard
             value={classes.length}
             label="Total Kelas"
@@ -132,44 +133,101 @@ const TeacherClassesPage = () => {
           />
         </section>
 
-        <div className="relative mt-[17px] h-[42px] rounded-[12px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] focus-within:border-[#651DFF]">
-          <Search
-            size={20}
-            className="absolute left-[13px] top-1/2 -translate-y-1/2 text-[#6B7280]"
-          />
+        <div className="mt-[18px] lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-[22px]">
+          <div>
+            <div className="relative h-[44px] rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition focus-within:border-[#651DFF]">
+              <Search
+                size={20}
+                className="absolute left-[13px] top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
 
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari kelas atau kode..."
-            className="h-full w-full rounded-[12px] pl-[43px] pr-[12px] text-[15px] font-medium outline-none placeholder:text-[#8A8A92]"
-          />
-        </div>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari kelas atau kode..."
+                className="h-full w-full rounded-[14px] pl-[43px] pr-[12px] text-[15px] font-medium outline-none placeholder:text-[#8A8A92]"
+              />
+            </div>
 
-        <section className="mt-[17px] flex h-[128px] items-center overflow-hidden rounded-[18px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)]">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-[#EEE4FF] blur-[10px]" />
-            <img
-              src={mascotSmall}
-              alt="Octa"
-              className="relative ml-[-3px] h-[100px] w-[100px] object-contain transition duration-300 hover:scale-105"
-            />
+            <section className="mt-[17px]">
+              {loading ? (
+                <PageState type="loading" title="Memuat kelas..." />
+              ) : error ? (
+                <PageState
+                  type="error"
+                  title="Gagal memuat kelas"
+                  message={error}
+                  action={
+                    <button
+                      onClick={() => fetchClasses({ forceLoading: true })}
+                      className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
+                    >
+                      Coba Lagi
+                    </button>
+                  }
+                />
+              ) : filteredClasses.length === 0 ? (
+                <PageState
+                  type="empty"
+                  title={search ? "Kelas tidak ditemukan" : "Belum ada kelas"}
+                  message={
+                    search
+                      ? "Coba gunakan kata kunci atau kode kelas lain."
+                      : "Buat kelas pertama untuk mulai monitoring siswa."
+                  }
+                  action={
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
+                    >
+                      + Tambah Kelas
+                    </button>
+                  }
+                />
+              ) : (
+                <div className="grid gap-[12px] lg:grid-cols-2">
+                  {filteredClasses.map((item) => (
+                    <ClassCard
+                      key={item.id || item.code}
+                      item={item}
+                      copiedCode={copiedCode}
+                      onCopy={() => handleCopyCode(item.code)}
+                      onClick={() => navigate(`/teacher/classes/${item.id}`)}
+                    />
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
 
-          <div className="ml-[13px] flex-1">
-            <h2 className="mt-[8px] text-[18px] font-bold leading-none text-[#5A16E8]">
-              Cara siswa bergabung
-            </h2>
+          <section className="mt-[17px] flex min-h-[150px] items-center overflow-hidden rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:min-h-[260px] lg:flex-col lg:items-start lg:justify-between lg:px-[22px] lg:py-[22px]">
+            <div className="flex items-center lg:w-full lg:flex-col lg:items-start">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-[#EEE4FF] blur-[10px]" />
 
-            <p className="mt-[6px] text-[13px] font-medium leading-[1.25] text-black">
-              Bagikan kode kelas agar siswa bisa join dan mulai belajar.
-            </p>
+                <img
+                  src={mascotSmall}
+                  alt="Octa"
+                  className="relative ml-[-3px] h-[100px] w-[100px] object-contain transition duration-300 hover:scale-105 lg:ml-0 lg:h-[120px] lg:w-[120px]"
+                />
+              </div>
+
+              <div className="ml-[13px] flex-1 lg:ml-0 lg:mt-[14px]">
+                <h2 className="text-[18px] font-bold leading-none text-[#5A16E8] lg:text-[22px]">
+                  Cara siswa bergabung
+                </h2>
+
+                <p className="mt-[7px] text-[13px] font-medium leading-[1.35] text-black lg:text-[14px]">
+                  Bagikan kode kelas agar siswa bisa join dan mulai belajar.
+                </p>
+              </div>
+            </div>
 
             <button
               onClick={() =>
                 classes[0]?.code ? handleCopyCode(classes[0].code) : null
               }
-              className="mt-[10px] flex h-[34px] w-[200px] items-center justify-between rounded-[9px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF]"
+              className="mt-[10px] hidden h-[38px] w-full items-center justify-between rounded-[12px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF] lg:flex"
             >
               <p className="truncate text-[13px] font-bold text-black">
                 {classes[0]?.code || "Contoh: EP7K9M"}
@@ -177,61 +235,11 @@ const TeacherClassesPage = () => {
 
               <Copy size={17} className="text-[#651DFF]" />
             </button>
-          </div>
-        </section>
-
-        <section className="mt-[17px]">
-          {loading ? (
-            <PageState type="loading" title="Memuat kelas..." />
-          ) : error ? (
-            <PageState
-              type="error"
-              title="Gagal memuat kelas"
-              message={error}
-              action={
-                <button
-                  onClick={() => fetchClasses({ forceLoading: true })}
-                  className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
-                >
-                  Coba Lagi
-                </button>
-              }
-            />
-          ) : filteredClasses.length === 0 ? (
-            <PageState
-              type="empty"
-              title={search ? "Kelas tidak ditemukan" : "Belum ada kelas"}
-              message={
-                search
-                  ? "Coba gunakan kata kunci atau kode kelas lain."
-                  : "Buat kelas pertama untuk mulai monitoring siswa."
-              }
-              action={
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="rounded-[10px] bg-[#651DFF] px-[16px] py-[9px] text-[13px] font-bold text-white"
-                >
-                  + Tambah Kelas
-                </button>
-              }
-            />
-          ) : (
-            <div className="space-y-[12px]">
-              {filteredClasses.map((item, index) => (
-                <ClassCard
-                  key={item.id || item.code}
-                  item={item}
-                  index={index}
-                  copiedCode={copiedCode}
-                  onCopy={() => handleCopyCode(item.code)}
-                  onClick={() => navigate(`/teacher/classes/${item.id}`)}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+          </section>
+        </div>
       </div>
 
+      <TeacherDesktopNav />
       <TeacherBottomNav />
 
       {showCreateModal && (
@@ -246,9 +254,12 @@ const TeacherClassesPage = () => {
 
 const MiniStatCard = ({ value, label, color }) => {
   return (
-    <div className="rounded-[14px] border border-[#E5E7EB] bg-white px-[8px] py-[12px] text-center shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-[2px]">
-      <p className={`text-[20px] font-bold leading-none ${color}`}>{value}</p>
-      <p className="mt-[7px] text-[11px] font-medium leading-none text-[#6B7280]">
+    <div className="rounded-[14px] border border-[#E5E7EB] bg-white px-[8px] py-[12px] text-center shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-[2px] lg:rounded-[18px] lg:py-[16px]">
+      <p className={`text-[20px] font-bold leading-none ${color} lg:text-[25px]`}>
+        {value}
+      </p>
+
+      <p className="mt-[7px] text-[11px] font-medium leading-none text-[#6B7280] lg:text-[12px]">
         {label}
       </p>
     </div>
@@ -261,7 +272,7 @@ const ClassCard = ({ item, onClick, onCopy, copiedCode }) => {
   return (
     <button
       onClick={onClick}
-      className="group w-full rounded-[17px] border border-[#E5E7EB] bg-white px-[18px] py-[15px] text-left shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_12px_28px_rgba(101,29,255,0.08)] active:scale-[0.99]"
+      className="group w-full rounded-[18px] border border-[#E5E7EB] bg-white px-[18px] py-[15px] text-left shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_12px_28px_rgba(101,29,255,0.08)] active:scale-[0.99]"
     >
       <div className="flex items-start justify-between gap-[12px]">
         <div className="min-w-0">
@@ -279,6 +290,7 @@ const ClassCard = ({ item, onClick, onCopy, copiedCode }) => {
               className="flex max-w-[170px] items-center gap-[6px] rounded-[8px] bg-[#F7F0FF] px-[9px] py-[5px] text-[11px] font-bold text-[#651DFF]"
             >
               <Copy size={13} />
+
               <span className="truncate">
                 {copiedCode === item.code ? "Copied!" : item.code}
               </span>

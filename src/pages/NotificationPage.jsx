@@ -11,7 +11,13 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import PageState from "../components/ui/PageState";
+
+import StudentBottomNav from "../components/student/StudentBottomNav";
+import StudentDesktopNav from "../components/student/StudentDesktopNav";
+import TeacherBottomNav from "../components/teacher/TeacherBottomNav";
+import TeacherDesktopNav from "../components/teacher/TeacherDesktopNav";
 
 const iconMap = {
   achievement: Trophy,
@@ -51,6 +57,10 @@ const styleMap = {
 
 const NotificationPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const role = user?.role || "student";
+  const isTeacher = role === "teacher";
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,16 +124,19 @@ const NotificationPage = () => {
   const unreadCount = notifications.filter((item) => !item.isRead).length;
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] bg-white px-[14px] pb-[40px] pt-[49px]">
-        <header className="flex items-start justify-between">
-          <div className="flex items-start gap-[12px]">
-            <button onClick={() => navigate(-1)} className="pt-[2px] text-[#6B7280]">
+    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+        <header className="flex items-start justify-between gap-[14px]">
+          <div className="flex min-w-0 items-start gap-[12px]">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
+            >
               <ArrowLeft size={24} />
             </button>
 
-            <div>
-              <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+            <div className="min-w-0">
+              <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
                 Notification
               </h1>
 
@@ -139,7 +152,7 @@ const NotificationPage = () => {
             <button
               onClick={handleReadAll}
               disabled={markingAll || unreadCount === 0}
-              className="rounded-[8px] bg-[#F7F0FF] px-[10px] py-[7px] text-[12px] font-bold text-[#651DFF] disabled:opacity-50"
+              className="shrink-0 rounded-[10px] bg-[#F7F0FF] px-[12px] py-[8px] text-[12px] font-bold text-[#651DFF] transition hover:scale-105 active:scale-95 disabled:opacity-50"
             >
               {markingAll ? "..." : "Read All"}
             </button>
@@ -147,12 +160,12 @@ const NotificationPage = () => {
         </header>
 
         {error && (
-          <div className="mt-[16px] rounded-[8px] bg-red-50 px-[12px] py-[9px] text-[13px] font-medium text-red-600">
+          <div className="mt-[16px] rounded-[12px] bg-red-50 px-[13px] py-[10px] text-[13px] font-semibold text-red-600">
             {error}
           </div>
         )}
 
-        <section className="mt-[24px]">
+        <section className="mt-[24px] rounded-[22px] border border-[#E5E7EB] bg-white px-[16px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
           {loading ? (
             <PageState type="loading" title="Memuat notifikasi..." />
           ) : notifications.length === 0 ? (
@@ -162,7 +175,7 @@ const NotificationPage = () => {
               message="Notifikasi dari sistem, teacher, dan AI akan muncul di sini."
             />
           ) : (
-            <div className="space-y-[12px]">
+            <div className="grid gap-[12px] lg:grid-cols-2">
               {notifications.map((item) => (
                 <NotificationItem
                   key={item._id}
@@ -174,6 +187,18 @@ const NotificationPage = () => {
           )}
         </section>
       </div>
+
+      {isTeacher ? (
+        <>
+          <TeacherDesktopNav />
+          <TeacherBottomNav />
+        </>
+      ) : (
+        <>
+          <StudentDesktopNav />
+          <StudentBottomNav />
+        </>
+      )}
     </main>
   );
 };
@@ -192,17 +217,17 @@ const NotificationItem = ({ item, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`flex w-full rounded-[14px] border border-[#E5E7EB] bg-white px-[16px] py-[14px] text-left ${
+      className={`flex min-h-[92px] w-full rounded-[16px] border border-[#E5E7EB] bg-white px-[16px] py-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99] ${
         !item.isRead ? "shadow-[0_3px_12px_rgba(0,0,0,0.04)]" : "opacity-80"
       }`}
     >
       <div
-        className={`flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] ${style.bg} ${style.color}`}
+        className={`flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[12px] ${style.bg} ${style.color}`}
       >
         <Icon size={24} />
       </div>
 
-      <div className="ml-[13px] flex-1">
+      <div className="ml-[13px] min-w-0 flex-1">
         <div className="flex items-start justify-between gap-[8px]">
           <h3 className="text-[15px] font-bold leading-tight text-black">
             {item.title}
@@ -213,7 +238,7 @@ const NotificationItem = ({ item, onClick }) => {
           )}
         </div>
 
-        <p className="mt-[5px] text-[12px] font-medium leading-[1.25] text-[#6B7280]">
+        <p className="mt-[5px] text-[12px] font-medium leading-[1.35] text-[#6B7280]">
           {item.message}
         </p>
 
