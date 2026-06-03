@@ -288,7 +288,7 @@ const QuizPlayPage = () => {
           onClose={() => navigate("/student/quizzes")}
         />
 
-        <section className="mx-auto mt-[70px] w-full rounded-[18px] border border-[#ECECEC] bg-white px-[27px] py-[28px] shadow-[0_8px_24px_rgba(101,29,255,0.08)] lg:max-w-[760px] lg:px-[42px] lg:py-[34px]">
+        <section className="mx-auto mt-[28px] w-full rounded-[18px] border border-[#ECECEC] bg-white px-[27px] py-[28px] shadow-[0_8px_24px_rgba(101,29,255,0.08)] lg:max-w-[760px] lg:px-[42px] lg:py-[34px]">
           <div className="flex items-center gap-[10px]">
             <div className="flex h-[35px] w-[35px] items-center justify-center rounded-[8px] bg-[#F3E8FF] text-[#6D22F3]">
               <Sparkles size={20} />
