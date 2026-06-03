@@ -106,7 +106,7 @@ const ProfilePage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         <header className="flex items-start justify-between">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
@@ -408,7 +408,7 @@ const MenuItem = ({ icon, title, desc, color, onClick }) => {
 const LogoutModal = ({ onCancel, onLogout }) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 px-[32px]">
-      <div className="w-full max-w-[337px] rounded-[18px] bg-white px-[28px] pb-[34px] pt-[35px] text-center shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
+      <div className="w-full max-w-[337px] rounded-[18px] bg-white px-[28px] pb-[34px] pt-[15px] text-center shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
         <div className="mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#FFCACA] bg-[#FFF1F1] text-red-500">
           <LogOut size={36} />
         </div>

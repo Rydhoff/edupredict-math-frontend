@@ -31,7 +31,7 @@ const DashboardPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-    <div className="mx-auto min-h-screen w-full max-w-[460px] lg:max-w-[1200px] px-[15px] pb-[104px] pt-[46px] lg:ml-[300px] lg:mr-[32px] lg:max-w-[1180px] lg:px-[32px] lg:pb-[40px]">
+    <div className="mx-auto min-h-screen w-full max-w-[460px] lg:max-w-[1200px] lg:pt-[56px] px-[16px] pb-[104px] pt-[16px] lg:ml-[300px] lg:mr-[32px] lg:max-w-[1180px] lg:px-[32px] lg:pb-[40px]">
         {loading ? (
           <PageState type="loading" title="Memuat dashboard..." />
         ) : error ? (

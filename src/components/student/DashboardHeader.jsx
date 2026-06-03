@@ -25,7 +25,7 @@ const DashboardHeader = ({ dashboard }) => {
         <NotificationBell to="/student/notifications" size={27} />
       </div>
 
-      <div className="mt-[26px] flex items-start justify-between">
+      <div className="mt-[26px] flex items-start justify-between lg:mt-0">
         <div>
           <h2 className="text-[25px] font-bold leading-none tracking-[-0.04em] text-[#080A14]">
             Hai, {name}! 👋

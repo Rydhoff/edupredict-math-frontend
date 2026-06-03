@@ -4,7 +4,7 @@ import {
   Plus,
   TrendingUp,
   TriangleAlert,
-  Users,
+  Users
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ import mascot from "../../assets/images/mascot-dashboard.png";
 
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearTeacherCache } from "../../utils/cache";
+import NotificationBell from "../../components/shared/NotificationBell";
 
 const TeacherDashboardPage = () => {
   const navigate = useNavigate();
@@ -90,14 +91,14 @@ const TeacherDashboardPage = () => {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[16px] lg:pt-[56px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
         <header>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[9px] lg:hidden">
               <img
                 src={logo}
                 alt="EduPredict Math"
-                className="h-[48px] w-auto"
+                className="h-[36px] w-auto"
               />
 
               <h1 className="text-[22px] font-bold tracking-[-0.03em] text-[#101322]">
@@ -113,6 +114,10 @@ const TeacherDashboardPage = () => {
               <h1 className="mt-[5px] text-[32px] font-extrabold leading-none tracking-[-0.04em] text-black">
                Halo, {greeting}! 👋
               </h1>
+            </div>
+
+            <div className="lg:hidden">
+              <NotificationBell to="/teacher/notifications" size={24} />
             </div>
           </div>
 
@@ -162,8 +167,9 @@ const TeacherDashboardPage = () => {
                     </p>
 
                     <p className="mt-[12px] w-[220px] text-[14px] font-bold leading-[1.08] text-black lg:mt-[18px] lg:w-[340px] lg:text-[22px] lg:leading-[1.12]">
-                      Pantau progress siswa dan bantu mereka berkembang setiap
-                      hari.
+                      Pantau progress siswa<br />
+                      dan bantu mereka<br />
+                      berkembang setiap hari.
                     </p>
                   </div>
 

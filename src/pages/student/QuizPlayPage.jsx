@@ -359,7 +359,7 @@ const QuizPlayPage = () => {
         </div>
       )}
 
-      <section className="mt-[70px] rounded-[18px] border border-[#ECECEC] bg-white px-[24px] py-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.10)]">
+      <section className="mt-[28px] rounded-[18px] border border-[#ECECEC] bg-white px-[24px] py-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.10)]">
         <div className="flex justify-center">
           <span className="rounded-[8px] bg-[#F6EFFF] px-[16px] py-[6px] text-[13px] font-bold text-[#651DFF]">
             Pertanyaan {questionNumber} dari {totalQuestions}
@@ -450,7 +450,7 @@ const QuizPlayPage = () => {
 const PageLayout = ({ children }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[18px] pb-[32px] pt-[22px] lg:flex lg:max-w-[980px] lg:flex-col lg:px-[32px] lg:pt-[38px]">
+      <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[32px] pt-[16px] lg:flex lg:max-w-[980px] lg:flex-col lg:px-[32px] lg:pb-[40px]">
         {children}
       </div>
     </main>

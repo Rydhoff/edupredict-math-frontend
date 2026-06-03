@@ -85,7 +85,7 @@ const QuizLibraryPage = () => {
   
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-  <div className="mx-auto min-h-screen w-full max-w-[460px] px-[10px] pb-[108px] pt-[38px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px] lg:pt-[49px]">
+  <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[108px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
         <button
           onClick={() => navigate("/student/quizzes")}
           className="ml-[2px] flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"

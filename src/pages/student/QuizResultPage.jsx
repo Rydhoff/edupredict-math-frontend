@@ -42,7 +42,7 @@ const QuizResultPage = () => {
   if (!result) {
     return (
       <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-        <div className="mx-auto flex min-h-screen w-full max-w-[460px] items-center px-[15px] lg:max-w-[720px] lg:px-[32px]">
+        <div className="mx-auto flex min-h-screen w-full max-w-[460px] items-center px-[16px] lg:max-w-[720px] lg:px-[32px]">
           <PageState
             type="empty"
             title="Result tidak tersedia"
