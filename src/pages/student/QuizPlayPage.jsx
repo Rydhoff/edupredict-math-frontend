@@ -299,6 +299,55 @@ const QuizPlayPage = () => {
             </h1>
           </div>
 
+          <div className="mt-[24px] rounded-[12px] border border-[#E5E7EB] bg-[#FAFAFA] p-[16px]">
+            <p className="text-[12px] font-bold uppercase tracking-wide text-[#6B7280]">
+              Soal yang dikerjakan
+            </p>
+
+            <h3 className="mt-[10px] text-[16px] font-bold leading-[1.5] text-black">
+              {currentQuestion.question}
+            </h3>
+
+            <div className="mt-[12px] space-y-[8px]">
+              {currentQuestion.choices.map((choice, index) => (
+                <div
+                  key={index}
+                  className={`rounded-[10px] border px-[12px] py-[9px] text-[14px] font-medium ${
+                    index === correctAnswer
+                      ? "border-[#16B966] bg-[#E8F8EE] text-[#16B966]"
+                      : index === selectedAnswer
+                      ? "border-[#EF4444] bg-[#FFF1F1] text-[#EF4444]"
+                      : "border-[#E5E7EB] bg-white text-black"
+                  }`}
+                >
+                  {String.fromCharCode(65 + index)}. {choice}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-[12px] grid grid-cols-2 gap-[10px]">
+            <div className="rounded-[10px] bg-[#FFF1F1] px-[12px] py-[10px]">
+              <p className="text-[11px] font-bold text-[#EF4444]">
+                Jawaban Kamu
+              </p>
+
+              <p className="mt-[4px] text-[15px] font-bold">
+                {String.fromCharCode(65 + selectedAnswer)}
+              </p>
+            </div>
+
+            <div className="rounded-[10px] bg-[#E8F8EE] px-[12px] py-[10px]">
+              <p className="text-[11px] font-bold text-[#16B966]">
+                Jawaban Benar
+              </p>
+
+              <p className="mt-[4px] text-[15px] font-bold">
+                {String.fromCharCode(65 + correctAnswer)}
+              </p>
+            </div>
+          </div>
+
           <p className="mt-[25px] text-[14px] font-medium text-[#6B7280]">
             Konsep yang kamu temui:
           </p>
