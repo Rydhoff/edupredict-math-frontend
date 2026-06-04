@@ -22,6 +22,11 @@ import { clearTeacherCache } from "../../utils/cache";
 import NotificationBell from "../../components/shared/NotificationBell";
 import AppPageShell from "../../components/layout/AppPageShell";
 
+const getMasteryValue = (value) => {
+  const numberValue = Number(value || 0);
+  return Math.min(Math.round(numberValue), 100);
+};
+
 const TeacherProfilePage = () => {
   const navigate = useNavigate();
   const { logout, user, getProfile } = useAuth();
@@ -66,6 +71,9 @@ const TeacherProfilePage = () => {
   const summary = dashboard?.summary || {};
   const classMonitoring = dashboard?.classMonitoring || [];
 
+  const averageMastery =
+    summary.averageMastery ?? summary.averageProgress ?? 0;
+
   if (loading) {
     return (
       <PageLayout>
@@ -96,22 +104,21 @@ const TeacherProfilePage = () => {
 
   return (
     <>
-    <AppPageShell>
-      <header className="flex items-start justify-between gap-[14px]">
+      <AppPageShell role="teacher">
+        <header className="flex items-start justify-between gap-[14px]">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
-              Profile
+              Profil
             </h1>
 
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
-              Kelola akun dan pantau kelasmu!
+              Kelola akun dan pantau kemahiran kelasmu!
             </p>
           </div>
 
-          
-            <div className="lg:hidden">
-              <NotificationBell to="/teacher/notifications" size={24} />
-            </div>
+          <div className="lg:hidden">
+            <NotificationBell to="/teacher/notifications" size={24} />
+          </div>
         </header>
 
         <div className="mt-[20px] lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-[24px]">
@@ -123,7 +130,7 @@ const TeacherProfilePage = () => {
 
                   <img
                     src={profile?.photoUrl || teacherPhoto}
-                    alt={profile?.fullName || "Teacher"}
+                    alt={profile?.fullName || "Guru"}
                     className="relative h-[82px] w-[82px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)] lg:h-[110px] lg:w-[110px]"
                   />
                 </div>
@@ -145,7 +152,7 @@ const TeacherProfilePage = () => {
                   className="flex h-[40px] items-center justify-center gap-[7px] rounded-[12px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
                 >
                   <Settings size={17} />
-                  Edit Profile
+                  Edit Profil
                 </button>
 
                 <button
@@ -170,15 +177,15 @@ const TeacherProfilePage = () => {
               <ProfileStat
                 icon={<Users size={20} />}
                 value={summary.totalStudents || 0}
-                label="Students"
+                label="Siswa"
                 color="text-[#16B966]"
                 bg="bg-[#E8F8EE]"
               />
 
               <ProfileStat
                 icon={<BarChart3 size={20} />}
-                value={`${summary.averageProgress || 0}%`}
-                label="Progress"
+                value={`${getMasteryValue(averageMastery)}%`}
+                label="Kemahiran"
                 color="text-[#F59E0B]"
                 bg="bg-[#FFF1D6]"
               />
@@ -187,7 +194,7 @@ const TeacherProfilePage = () => {
             <section className="mt-[16px] space-y-[12px]">
               <MenuItem
                 icon={<Settings size={25} />}
-                title="Setting"
+                title="Pengaturan"
                 desc="Ubah pengaturan akun dan lainnya"
                 color="violet"
                 onClick={() => navigate("/teacher/settings")}
@@ -195,7 +202,7 @@ const TeacherProfilePage = () => {
 
               <MenuItem
                 icon={<LogOut size={24} />}
-                title="Logout"
+                title="Keluar"
                 desc="Keluar dari akun yang digunakan saat ini"
                 color="red"
                 onClick={() => setShowLogout(true)}
@@ -211,7 +218,7 @@ const TeacherProfilePage = () => {
                 </h2>
 
                 <p className="mt-[5px] text-[12px] font-medium text-[#6B7280]">
-                  Monitoring kelas aktif teacher
+                  Monitoring kemahiran kelas aktif
                 </p>
               </div>
 
@@ -277,10 +284,7 @@ const TeacherProfilePage = () => {
 const PageLayout = ({ children }) => {
   return (
     <>
-    <AppPageShell>
-    {children}
-      </AppPageShell>
-
+      <AppPageShell role="teacher">{children}</AppPageShell>
       <TeacherDesktopNav />
       <TeacherBottomNav />
     </>
@@ -310,7 +314,7 @@ const ProfileStat = ({ icon, value, label, color, bg }) => {
 };
 
 const ClassItem = ({ item, onClick }) => {
-  const progress = Math.min(item.averageProgress || 0, 100);
+  const mastery = getMasteryValue(item.averageMastery ?? item.averageProgress);
 
   return (
     <button
@@ -336,16 +340,16 @@ const ClassItem = ({ item, onClick }) => {
 
       <div className="mt-[13px] flex items-center justify-between">
         <p className="text-[12px] font-medium text-[#6B7280]">
-          Rata-rata progress
+          Rata-rata kemahiran
         </p>
 
-        <p className="text-[14px] font-bold text-[#101348]">{progress}%</p>
+        <p className="text-[14px] font-bold text-[#101348]">{mastery}%</p>
       </div>
 
       <div className="mt-[6px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[#18C964] to-[#46E28A] transition-all duration-700"
-          style={{ width: `${progress}%` }}
+          style={{ width: `${mastery}%` }}
         />
       </div>
     </button>
@@ -396,13 +400,13 @@ const LogoutModal = ({ onCancel, onLogout }) => {
         </div>
 
         <h2 className="mt-[24px] text-[18px] font-bold leading-none text-black">
-          Yakin ingin logout?
+          Yakin ingin keluar?
         </h2>
 
         <p className="mt-[9px] text-[13px] font-medium leading-[1.35] text-[#6B7280]">
           Kamu akan keluar dari akun ini.
           <br />
-          Untuk kembali, silahkan login kembali.
+          Untuk kembali, silahkan masuk kembali.
         </p>
 
         <div className="mt-[18px] grid grid-cols-2 gap-[20px]">
@@ -417,7 +421,7 @@ const LogoutModal = ({ onCancel, onLogout }) => {
             onClick={onLogout}
             className="h-[34px] rounded-[9px] bg-red-600 text-[13px] font-bold text-white"
           >
-            Logout
+            Keluar
           </button>
         </div>
       </div>

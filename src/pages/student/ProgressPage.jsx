@@ -123,7 +123,7 @@ const ProgressPage = () => {
         <PageState
           type="empty"
           title="Belum ada progress"
-          message="Selesaikan quiz terlebih dahulu untuk melihat perkembangan skill."
+          message="Selesaikan kuis terlebih dahulu untuk melihat perkembangan skill."
         />
       </PageLayout>
     );
@@ -134,7 +134,7 @@ const ProgressPage = () => {
     <AppPageShell>
       
         <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
-          Progress Skill
+          Progres Skill
         </h1>
 
         <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
@@ -164,7 +164,7 @@ const ProgressPage = () => {
                   strokeWidth={2}
                   fill="#8A19FF"
                   fillOpacity={0.14}
-                  formatter={(value) => [`${value}%`, "Mastery"]}
+                  formatter={(value) => [`${value}%`, "Kemahiran"]}
                   dot={{ r: 4, fill: "#641BFF", strokeWidth: 0 }}
                 />
               </RadarChart>
@@ -217,11 +217,11 @@ const ProgressPage = () => {
 
             <div className="ml-[10px]">
               <h3 className="text-[14px] font-bold text-[#651DFF]">
-                AI Mastery Score
+                AI Skor Kemahiran
               </h3>
 
               <p className="mt-[1px] text-[12px] font-medium leading-[1.18] text-black">
-                Nilai mastery dihitung oleh AI
+                Nilai kemahiran dihitung oleh AI
                 <br />
                 berdasarkan pola pengerjaan soal. 🧠
               </p>
@@ -231,7 +231,7 @@ const ProgressPage = () => {
 
         <section className="mt-[24px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] py-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0">
           <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-            Progress per Kategori
+            Progres per Kategori
           </h2>
 
           <div className="mt-[17px] space-y-[12px]">

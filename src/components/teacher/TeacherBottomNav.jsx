@@ -2,10 +2,10 @@ import { BookOpen, Home, User, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const menus = [
-  { name: "Home", path: "/teacher", icon: Home },
-  { name: "Classes", path: "/teacher/classes", icon: BookOpen },
-  { name: "Students", path: "/teacher/students", icon: Users },
-  { name: "Profile", path: "/teacher/profile", icon: User },
+  { name: "Beranda", path: "/teacher", icon: Home },
+  { name: "Kelas", path: "/teacher/classes", icon: BookOpen },
+  { name: "Siswa", path: "/teacher/students", icon: Users },
+  { name: "Profil", path: "/teacher/profile", icon: User },
 ];
 
 const TeacherBottomNav = () => {

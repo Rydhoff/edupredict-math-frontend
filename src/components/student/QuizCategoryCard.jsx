@@ -112,7 +112,7 @@ const QuizCategoryCard = ({ quiz }) => {
           className={`mt-[20px] flex h-[37px] w-full items-center justify-center gap-[5px] rounded-[7px] text-[20px] font-bold text-white ${s.button} shadow-[0_8px_18px_rgba(0,0,0,0.14)] transition duration-300 hover:scale-[1.02] active:scale-[0.98]`}
         >
           <Play size={18} fill="white" />
-          Start Quiz
+          Mulai Kuis
         </button>
       </div>
     </section>

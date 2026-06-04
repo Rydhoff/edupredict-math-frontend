@@ -85,10 +85,11 @@ const QuizPlayPage = () => {
       setLoading(true);
       setError("");
 
+      const limit = Number(params.get("limit")) || 20;
       const { data } = await api.post("/quiz/start", {
         category,
         mode: "learning",
-        limit: 20,
+        limit,
       });
 
       setQuizSessionId(data.quizSessionId);
@@ -243,7 +244,7 @@ const QuizPlayPage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <PageState type="loading" title="Memuat quiz..." />
+        <PageState type="loading" title="Memuat kuis..." />
       </PageLayout>
     );
   }
@@ -253,7 +254,7 @@ const QuizPlayPage = () => {
       <PageLayout>
         <PageState
           type="error"
-          title="Gagal memuat quiz"
+          title="Gagal memuat kuis"
           message={error}
           action={
             <button
@@ -273,8 +274,8 @@ const QuizPlayPage = () => {
       <PageLayout>
         <PageState
           type="empty"
-          title="Quiz tidak tersedia"
-          message="Belum ada soal untuk quiz ini."
+          title="Kuis tidak tersedia"
+          message="Belum ada soal untuk kuis ini."
         />
       </PageLayout>
     );
@@ -519,7 +520,7 @@ const TopQuizBar = ({ onClose, elapsedTime }) => {
       </div>
 
       <button className="text-[#6B7280]">
-        <Flag size={22} />
+        {/* <Flag size={22} /> */}
       </button>
     </div>
   );

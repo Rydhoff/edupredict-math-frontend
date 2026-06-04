@@ -8,7 +8,7 @@ const DashboardHeader = ({ dashboard }) => {
   const navigate = useNavigate();
 
   const student = dashboard?.student;
-  const name = student?.fullName?.split(" ")[0] || "Student";
+  const name = student?.fullName?.split(" ")[0] || "Siswa";
   const streak = student?.streak || 0;
 
   return (
@@ -32,7 +32,7 @@ const DashboardHeader = ({ dashboard }) => {
           </h2>
 
           <p className="mt-[9px] text-[14px] font-medium text-[#77777F]">
-            Yuk tingkatkan skill matematika hari ini!
+            Yuk tingkatkan kemampuan matematika hari ini!
           </p>
         </div>
 
@@ -54,7 +54,7 @@ const DashboardHeader = ({ dashboard }) => {
           </div>
 
           <p className="mt-[2px] text-[10px] font-bold text-[#FF7A00]">
-              Day Streak
+              Streak
             </p>
         </div>
       </div>

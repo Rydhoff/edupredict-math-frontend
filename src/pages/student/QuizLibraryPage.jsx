@@ -66,7 +66,7 @@ const QuizLibraryPage = () => {
       const { data } = await api.post("/quiz/start", {
         category: apiCategory,
         mode: "learning",
-        limit: 20,
+        limit: quiz.questions,
       });
 
       navigate(`/student/quiz/play?sessionId=${data.quizSessionId}`, {
@@ -118,11 +118,11 @@ const QuizLibraryPage = () => {
 
         <section className="rounded-[18px] border border-[#E5E7EB] bg-white px-[13px] pb-[18px] pt-[17px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:px-[22px] lg:py-[22px]">
           <h1 className="text-[23px] font-bold leading-none tracking-[-0.04em] text-black">
-            Library Quiz
+            Perpustakaan Kuis
           </h1>
 
           <p className="mt-[7px] text-[12px] font-medium text-[#6B7280]">
-            Yuk pilih quiz untuk melatih kemampuanmu
+            Yuk pilih kuis untuk melatih kemampuanmu
           </p>
 
           <div className="relative mt-[15px] h-[40px] rounded-[10px] border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.04)] focus-within:border-[#651DFF] focus-within:shadow-[0_6px_18px_rgba(101,29,255,0.12)]">
@@ -134,7 +134,7 @@ const QuizLibraryPage = () => {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari quiz..."
+              placeholder="Cari kuis..."
               className="h-full w-full rounded-[7px] pl-[38px] pr-[12px] text-[13px] font-medium outline-none placeholder:text-[#8A8A92]"
             />
           </div>
@@ -183,7 +183,7 @@ const QuizLibraryPage = () => {
             <div className="mt-[14px]">
               <PageState
                 type="error"
-                title="Gagal memulai quiz"
+                title="Gagal memulai kuis"
                 message={error}
               />
             </div>

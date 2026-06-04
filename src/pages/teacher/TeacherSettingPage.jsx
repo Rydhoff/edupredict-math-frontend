@@ -69,7 +69,7 @@ const TeacherSettingPage = () => {
       const currentUser = profile || user;
 
       if (!currentUser) {
-        setError("Profile tidak ditemukan");
+        setError("Profil tidak ditemukan");
         return;
       }
 
@@ -83,7 +83,7 @@ const TeacherSettingPage = () => {
         gender: currentUser.gender || "",
       });
     } catch {
-      setError("Gagal memuat profile");
+      setError("Gagal memuat profil");
     } finally {
       setLoading(false);
     }
@@ -128,9 +128,9 @@ const TeacherSettingPage = () => {
       updateUser(data.user);
       clearTeacherCache();
       setProfilePhoto(data.user?.photoUrl || profilePhoto);
-      setSuccess("Profile teacher berhasil diperbarui");
+      setSuccess("Profil guru berhasil diperbarui");
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal update profile");
+      setError(err.response?.data?.message || "Gagal memperbarui profil");
     } finally {
       setSavingProfile(false);
     }
@@ -186,7 +186,7 @@ const TeacherSettingPage = () => {
       setProfilePhoto(data.photoUrl || data.user?.photoUrl || "");
       updateUser(data.user);
       clearTeacherCache();
-      setSuccess("Foto profile berhasil diperbarui");
+      setSuccess("Foto profil berhasil diperbarui");
     } catch (err) {
       setError(err.response?.data?.message || "Gagal upload foto");
     } finally {
@@ -240,7 +240,7 @@ const TeacherSettingPage = () => {
             </h1>
 
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
-              Kelola informasi akun teacher
+              Kelola informasi akun guru
             </p>
           </div>
         </header>
@@ -266,14 +266,14 @@ const TeacherSettingPage = () => {
 
                   <img
                     src={profilePhoto || teacherPhoto}
-                    alt="Profile"
+                    alt="Profil"
                     className="relative h-[86px] w-[86px] rounded-full border-4 border-white object-cover shadow-[0_6px_18px_rgba(0,0,0,0.14)] lg:h-[112px] lg:w-[112px]"
                   />
                 </div>
 
                 <div className="ml-[18px] min-w-0 flex-1 lg:ml-0 lg:mt-[16px] lg:w-full">
                   <h2 className="truncate text-[22px] font-bold tracking-[-0.04em] text-black">
-                    {form.fullName || "Teacher"}
+                    {form.fullName || "Guru"}
                   </h2>
 
                   <p className="mt-[5px] truncate text-[13px] font-medium text-[#6B7280]">
@@ -283,7 +283,7 @@ const TeacherSettingPage = () => {
               </div>
 
               <label className="mt-[18px] flex h-[42px] cursor-pointer items-center justify-center rounded-[13px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.02] active:scale-[0.98]">
-                {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profile"}
+                {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profil"}
                 <input
                   type="file"
                   accept="image/*"
@@ -297,7 +297,7 @@ const TeacherSettingPage = () => {
             <section className="rounded-[24px] border border-[#E5E7EB] bg-white px-[20px] pb-[22px] pt-[20px] shadow-[0_12px_34px_rgba(0,0,0,0.04)]">
               <SectionTitle
                 icon={<Lock size={19} />}
-                title="Security Center"
+                title="Pusat Keamanan"
                 color="text-red-500"
                 bg="bg-[#FFF1F1]"
               />
@@ -327,7 +327,7 @@ const TeacherSettingPage = () => {
                   <ShieldCheck size={18} className="mt-[1px] text-[#16B966]" />
 
                   <p className="text-[12px] font-medium leading-[1.45] text-[#6B7280]">
-                    Gunakan kombinasi huruf, angka, dan simbol agar akun teacher
+                    Gunakan kombinasi huruf, angka, dan simbol agar akun guru
                     lebih aman.
                   </p>
                 </div>
@@ -373,10 +373,10 @@ const TeacherSettingPage = () => {
 
               <div className="mt-[9px] grid grid-cols-2 gap-[10px]">
                 <RoleButton active={false} disabled>
-                  Student
+                  Siswa
                 </RoleButton>
 
-                <RoleButton active>Teacher</RoleButton>
+                <RoleButton active>Guru</RoleButton>
               </div>
             </div>
 
@@ -412,7 +412,7 @@ const TeacherSettingPage = () => {
                 <CheckCircle size={14} className="text-[#16B966]" />
               </span>
 
-              {savingProfile ? "Menyimpan profile..." : "Update profile"}
+              {savingProfile ? "Menyimpan profile" : "Perbarui Profil"}
             </button>
           </section>
         </div>

@@ -43,6 +43,17 @@ const descriptions = {
   Pengukuran: "Kemampuan memahami luas, volume, dan satuan",
 };
 
+const getRiskLabel = (riskLevel) => {
+  const riskLabelMap = {
+    Low: "Aman",
+    Medium: "Butuh Pendampingan",
+    Hard: "Butuh Intervensi",
+    Unknown: "Tidak Diketahui",
+  };
+
+  return riskLabelMap[riskLevel] || riskLabelMap.Unknown;
+};
+
 const getProgressColor = (value) => {
   if (value < 40) return "bg-[#EF4444]";
   if (value < 70) return "bg-[#F59E0B]";
@@ -53,6 +64,30 @@ const getValueTextColor = (value) => {
   if (value < 50) return "text-[#FF2D55]";
   if (value < 70) return "text-[#F59E0B]";
   return "text-[#641BFF]";
+};
+
+const getRiskIcon = (riskLevel) => {
+  if (riskLevel === "Low") return <Target size={18} />;
+  if (riskLevel === "Medium") return <TriangleAlert size={18} />;
+  if (riskLevel === "Hard") return <TriangleAlert size={18} />;
+
+  return <TriangleAlert size={18} />;
+};
+
+const getRiskTextColor = (riskLevel) => {
+  if (riskLevel === "Low") return "text-[#0FA85D]";
+  if (riskLevel === "Medium") return "text-[#D88B00]";
+  if (riskLevel === "Hard") return "text-[#EF4444]";
+
+  return "text-[#6B7280]";
+};
+
+const getRiskBgColor = (riskLevel) => {
+  if (riskLevel === "Low") return "bg-[#DFFBEA]";
+  if (riskLevel === "Medium") return "bg-[#FFF1D6]";
+  if (riskLevel === "Hard") return "bg-[#FFE1E1]";
+
+  return "bg-[#F3F4F6]";
 };
 
 const TeacherStudentDetailPage = () => {
@@ -139,6 +174,7 @@ const TeacherStudentDetailPage = () => {
 
     return categoryLabels.map((label) => {
       const rawMastery = mastery?.[label];
+
       const masteryValue =
         rawMastery === null || rawMastery === undefined
           ? 0
@@ -150,7 +186,7 @@ const TeacherStudentDetailPage = () => {
 
       return {
         title: label,
-        description: descriptions[label] || "Progress kategori",
+        description: descriptions[label] || "Kemahiran kategori",
         value: masteryValue,
         progressValue: Math.round(category.progress || 0),
         solved: category.solved || 0,
@@ -224,7 +260,7 @@ const TeacherStudentDetailPage = () => {
               </button>
 
               <h1 className="truncate text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
-                Student Detail
+                Detail Siswa
               </h1>
             </div>
 
@@ -278,17 +314,17 @@ const TeacherStudentDetailPage = () => {
                 <MiniStat
                   icon={<BarChart3 size={18} />}
                   value={stats.totalAttempts || 0}
-                  label="Attempts"
+                  label="Percobaan Soal"
                   color="text-[#16B966]"
                   bg="bg-[#E8F8EE]"
                 />
 
                 <MiniStat
-                  icon={<TriangleAlert size={18} />}
-                  value={riskLevel}
-                  label="Risk"
-                  color="text-[#EF4444]"
-                  bg="bg-[#FFE1E1]"
+                  icon={getRiskIcon(riskLevel)}
+                  value={getRiskLabel(riskLevel)}
+                  label="Status"
+                  color={getRiskTextColor(riskLevel)}
+                  bg={getRiskBgColor(riskLevel)}
                 />
               </div>
             </section>
@@ -298,7 +334,7 @@ const TeacherStudentDetailPage = () => {
                 active={tab === "overview"}
                 onClick={() => setTab("overview")}
               >
-                Overview
+                Ringkasan
               </TabButton>
 
               <TabButton active={tab === "skill"} onClick={() => setTab("skill")}>
@@ -374,7 +410,7 @@ const RiskBadge = ({ riskLevel }) => {
         style[riskLevel] || style.Unknown
       }`}
     >
-      {riskLevel} Risk
+      {getRiskLabel(riskLevel)}
     </span>
   );
 };
@@ -454,7 +490,7 @@ const OverviewTab = ({ radarData, skillData }) => {
       </h2>
 
       <p className="mt-[6px] text-[12px] font-medium text-[#6B7280]">
-        Berdasarkan prediksi mastery AI terbaru siswa.
+        Berdasarkan prediksi tingkat kemahiran AI terbaru siswa.
       </p>
 
       <div className="relative mt-[8px] h-[320px] lg:h-[430px]">
@@ -517,7 +553,7 @@ const SkillTab = ({ skillData }) => {
   return (
     <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
       <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
-        Progress per Kategori
+        Skill per Kategori
       </h2>
 
       <div className="mt-[17px] space-y-[12px]">
@@ -530,6 +566,10 @@ const SkillTab = ({ skillData }) => {
 };
 
 const SkillProgressCard = ({ item }) => {
+  const progress =
+  item.totalQuestions > 0
+    ? Math.round((item.solved / item.totalQuestions) * 100)
+    : 0;
   return (
     <div className="rounded-[15px] border border-[#E5E7EB] bg-white px-[20px] py-[17px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
       <div className="flex items-start justify-between gap-[12px]">
@@ -546,16 +586,18 @@ const SkillProgressCard = ({ item }) => {
         </div>
 
         <p className="shrink-0 text-[15px] font-bold text-black">
-          {item.progressValue}%
+          {progress}%
         </p>
       </div>
 
       <div className="mt-[11px] h-[6px] overflow-hidden rounded-full bg-[#D9D9D9]">
         <div
           className={`h-full rounded-full ${getProgressColor(
-            item.progressValue
+            item.value
           )} transition-all duration-700`}
-          style={{ width: `${item.progressValue}%` }}
+          style={{
+            width: `${progress}%`,
+          }}
         />
       </div>
     </div>

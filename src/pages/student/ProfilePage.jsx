@@ -123,7 +123,7 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <PageState type="loading" title="Memuat profile..." />
+        <PageState type="loading" title="Memuat profil..." />
       </PageLayout>
     );
   }
@@ -133,7 +133,7 @@ const ProfilePage = () => {
       <PageLayout>
         <PageState
           type="error"
-          title="Gagal memuat profile"
+          title="Gagal memuat profil"
           message={error}
           action={
             <button
@@ -154,7 +154,7 @@ const ProfilePage = () => {
         <header className="flex items-start justify-between">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
-              Profile
+              Profil
             </h1>
 
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
@@ -176,7 +176,7 @@ const ProfilePage = () => {
 
                   <img
                     src={student?.photoUrl || profileImage}
-                    alt={student?.fullName || "Student"}
+                    alt={student?.fullName || "Siswa"}
                     className="relative h-[78px] w-[78px] rounded-full border-4 border-white object-cover shadow-[0_3px_12px_rgba(0,0,0,0.12)]"
                   />
                 </div>
@@ -195,7 +195,7 @@ const ProfilePage = () => {
               <div className="mt-[16px]">
                 <div className="flex items-center justify-between">
                   <p className="text-[12px] font-bold text-[#6B7280]">
-                    XP Progress
+                    Progres XP
                   </p>
 
                   <p className="text-[12px] font-bold text-[#651DFF]">
@@ -217,7 +217,7 @@ const ProfilePage = () => {
                   className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.03] active:scale-[0.98]"
                 >
                   <Settings size={17} />
-                  Edit Profile
+                  Edit Profil
                 </button>
 
                 <button
@@ -225,7 +225,7 @@ const ProfilePage = () => {
                   className="flex h-[38px] items-center justify-center gap-[7px] rounded-[11px] bg-gradient-to-r from-[#981DFF] to-[#5A16E8] text-[13px] font-bold text-white shadow-[0_8px_18px_rgba(108,33,255,0.25)] transition hover:scale-[1.03] active:scale-[0.98]"
                 >
                   <Plus size={17} strokeWidth={3} />
-                  Join Kelas
+                  Gabung Kelas
                 </button>
               </div>
             </section>
@@ -250,7 +250,7 @@ const ProfilePage = () => {
               <ProfileStat
                 icon={<Trophy size={20} fill="#F5A400" />}
                 value={statistics.completedQuizzes || 0}
-                label="Quiz"
+                label="Kuis"
                 color="text-[#F5A400]"
                 bg="bg-[#FFF1D6]"
               />
@@ -258,7 +258,7 @@ const ProfilePage = () => {
               <ProfileStat
                 icon={<Target size={20} />}
                 value={`${statistics.accuracy || 0}%`}
-                label="Score"
+                label="Skor"
                 color="text-[#16B966]"
                 bg="bg-[#E8F8EE]"
               />
@@ -290,7 +290,7 @@ const ProfilePage = () => {
                 <PageState
                   type="empty"
                   title="Belum join kelas"
-                  message="Masukkan kode kelas dari teacher untuk bergabung."
+                  message="Masukkan kode kelas dari guru untuk bergabung."
                   action={
                     <button
                       onClick={() => setShowJoinClass(true)}
@@ -324,7 +324,7 @@ const ProfilePage = () => {
 
           <MenuItem
             icon={<Settings size={24} />}
-            title="Setting"
+            title="Pengaturan"
             desc="Ubah pengaturan akun dan lainnya"
             color="violet"
             onClick={() => navigate("/student/settings")}
@@ -332,7 +332,7 @@ const ProfilePage = () => {
 
           <MenuItem
             icon={<LogOut size={24} />}
-            title="Logout"
+            title="Keluar"
             desc="Keluar dari akun yang digunakan saat ini"
             color="red"
             onClick={() => setShowLogout(true)}
@@ -419,7 +419,7 @@ const ClassItem = ({ item, onLeave }) => {
           </h3>
 
           <p className="mt-[8px] text-[12px] font-medium leading-none text-[#6B7280]">
-            Teacher: {item.teacher?.fullName || "Teacher"}
+            Teacher: {item.teacher?.fullName || "Guru"}
           </p>
         </div>
 
@@ -535,7 +535,7 @@ const LogoutModal = ({ onCancel, onLogout }) => {
         </div>
 
         <h2 className="mt-[24px] text-[18px] font-bold leading-none text-black">
-          Yakin ingin logout?
+          Yakin ingin keluar?
         </h2>
 
         <p className="mt-[9px] text-[13px] font-medium leading-[1.35] text-[#6B7280]">
@@ -556,7 +556,7 @@ const LogoutModal = ({ onCancel, onLogout }) => {
             onClick={onLogout}
             className="h-[34px] rounded-[9px] bg-red-600 text-[13px] font-bold text-white"
           >
-            Logout
+            Keluar
           </button>
         </div>
       </div>

@@ -17,7 +17,7 @@ const HeroBanner = () => {
           </p>
 
           <p className="mt-[19px] w-[155px] text-[17px] font-bold leading-[1.08] tracking-[-0.03em] text-black">
-            Siap meningkatkan<br />skill matematika<br />hari ini?
+            Siap meningkatkan<br />kemampuan matematika<br />hari ini?
           </p>
 
           <button
@@ -25,7 +25,7 @@ const HeroBanner = () => {
             className="mt-[19px] inline-flex h-[38px] items-center gap-[5px] rounded-[7px] bg-[#8A19FF] px-[15px] text-[20px] font-bold text-white shadow-[0_8px_18px_rgba(138,25,255,0.25)] transition duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
             <Play size={18} fill="white" />
-            Start Quiz
+            Mulai Kuis
           </button>
         </div>
 

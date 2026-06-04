@@ -44,7 +44,7 @@ const CreateClassModal = ({ onClose, onSuccess }) => {
         </div>
 
         <p className="mt-[8px] text-[13px] font-medium text-[#6B7280]">
-          Buat kelas baru untuk mulai monitoring siswa.
+          Buat kelas baru untuk mulai memantau siswa.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-[20px]">
@@ -55,7 +55,7 @@ const CreateClassModal = ({ onClose, onSuccess }) => {
           <input
             value={className}
             onChange={(e) => setClassName(e.target.value)}
-            placeholder="Contoh: Math XII A"
+            placeholder="Contoh: Matematika XII A"
             className="mt-[7px] h-[39px] w-full rounded-[8px] border border-[#E5E7EB] px-[13px] text-[14px] font-medium outline-none focus:border-[#651DFF]"
           />
 

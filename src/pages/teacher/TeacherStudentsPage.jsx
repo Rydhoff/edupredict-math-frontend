@@ -16,8 +16,40 @@ import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import AppPageShell from "../../components/layout/AppPageShell";
 
-const filters = ["Semua", "Low Risk", "Medium Risk", "Hard Risk"];
+const filters = [
+  "Semua",
+  "Aman",
+  "Butuh Pendampingan",
+  "Butuh Intervensi",
+];
 const cacheKey = "teacher_students";
+
+const normalizeMastery = (value) => {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  const numberValue = Number(value);
+  return numberValue <= 1
+    ? Math.round(numberValue * 100)
+    : Math.round(numberValue);
+};
+
+const getStudentAverageMastery = (categoryMastery = {}) => {
+  const values = Object.values(categoryMastery)
+    .filter((value) => value !== null && value !== undefined)
+    .map(Number)
+    .filter((value) => !Number.isNaN(value));
+
+  if (values.length === 0) return 0;
+
+  const averageRaw =
+    values.reduce((sum, value) => sum + value, 0) / values.length;
+
+  return averageRaw <= 1
+    ? Math.round(averageRaw * 100)
+    : Math.round(averageRaw);
+};
 
 const TeacherStudentsPage = () => {
   const navigate = useNavigate();
@@ -80,16 +112,10 @@ const TeacherStudentsPage = () => {
     }
   };
 
-  const fetchAllStudents = async (classList = classes, force = false) => {
-    const cached = sessionStorage.getItem(cacheKey);
+  const fetchAllStudents = async (classList = classes) => {
+  try {
 
-    if (cached && !force) {
-      setStudents(JSON.parse(cached));
-      setStudentsLoading(false);
-      return;
-    }
-
-    try {
+    sessionStorage.removeItem(cacheKey);
       setStudentsLoading(true);
       setStudentsError("");
 
@@ -163,7 +189,14 @@ const TeacherStudentsPage = () => {
   const filteredStudents = useMemo(() => {
     return students.filter((item) => {
       const student = item.student || {};
-      const riskLabel = `${item.riskLevel || "Unknown"} Risk`;
+      const riskLabelMap = {
+        Low: "Aman",
+        Medium: "Butuh Pendampingan",
+        Hard: "Butuh Intervensi",
+      };
+
+      const riskLabel =
+        riskLabelMap[item.riskLevel] || "Tidak Diketahui";
 
       const matchRisk = activeFilter === "Semua" || riskLabel === activeFilter;
 
@@ -185,11 +218,12 @@ const TeacherStudentsPage = () => {
     (item) => item.riskLevel === "Hard"
   ).length;
 
-  const averageAccuracy =
+  const averageMastery =
     students.length > 0
       ? Math.round(
           students.reduce(
-            (sum, item) => sum + (item.statistics?.accuracy || 0),
+            (sum, item) =>
+              sum + getStudentAverageMastery(item.categoryMastery || {}),
             0
           ) / students.length
         )
@@ -197,16 +231,16 @@ const TeacherStudentsPage = () => {
 
   return (
     <>
-    <AppPageShell>
-      <header>
+      <AppPageShell>
+        <header>
           <div className="flex items-start justify-between gap-[14px]">
             <div>
               <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
-                Students
+                Siswa
               </h1>
 
               <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
-                Pantau perkembangan siswa dari semua kelas
+                Pantau tingkat kemahiran siswa dari semua kelas
               </p>
             </div>
 
@@ -227,8 +261,8 @@ const TeacherStudentsPage = () => {
 
           <MiniStatCard
             icon={<Target size={18} />}
-            value={`${averageAccuracy}%`}
-            label="Avg Akurasi"
+            value={`${averageMastery}%`}
+            label="Rata-rata Kemahiran"
             color="text-[#16B966]"
             bg="bg-[#E8F8EE]"
           />
@@ -236,14 +270,14 @@ const TeacherStudentsPage = () => {
           <MiniStatCard
             icon={<TriangleAlert size={18} />}
             value={hardRiskCount}
-            label="Hard Risk"
+            label="Butuh Intervensi"
             color="text-[#EF4444]"
             bg="bg-[#FFE1E1]"
           />
         </section>
 
         <div className="mt-[18px] lg:grid lg:items-start lg:gap-[22px]">
-           <aside className="mt-[18px] rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:rounded-[24px]">
+          <aside className="mt-[18px] rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:rounded-[24px]">
             <h2 className="text-[21px] font-bold tracking-[-0.04em] text-black">
               Filter Kelas
             </h2>
@@ -275,6 +309,7 @@ const TeacherStudentsPage = () => {
               />
             </div>
           </aside>
+
           <section>
             <div className="relative h-[44px] rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition focus-within:border-[#651DFF]">
               <Search
@@ -359,8 +394,6 @@ const TeacherStudentsPage = () => {
               )}
             </section>
           </section>
-
-         
         </div>
       </AppPageShell>
 
@@ -390,19 +423,10 @@ const MiniStatCard = ({ icon, value, label, color, bg }) => {
   );
 };
 
-const InfoRow = ({ label, value }) => {
-  return (
-    <div className="flex items-center justify-between">
-      <p className="text-[12px] font-medium text-[#6B7280]">{label}</p>
-      <p className="text-[13px] font-bold text-[#101348]">{value}</p>
-    </div>
-  );
-};
-
 const StudentItem = ({ item, rank, onClick }) => {
   const student = item.student || {};
-  const stats = item.statistics || {};
   const riskLevel = item.riskLevel || "Unknown";
+  const mastery = getStudentAverageMastery(item.categoryMastery || {});
 
   const riskStyle = {
     Low: "bg-[#DFFBEA] text-[#0FA85D]",
@@ -411,10 +435,10 @@ const StudentItem = ({ item, rank, onClick }) => {
     Unknown: "bg-[#F3F4F6] text-[#6B7280]",
   };
 
-  const progressColor =
-    stats.progress < 50
+  const masteryColor =
+    mastery < 50
       ? "text-[#EF4444]"
-      : stats.progress < 70
+      : mastery < 70
       ? "text-[#D88B00]"
       : "text-[#16B966]";
 
@@ -452,17 +476,8 @@ const StudentItem = ({ item, rank, onClick }) => {
 
         <div className="mt-[3px] flex gap-[13px] text-[12px] font-medium leading-tight text-[#6B7280]">
           <p>
-            Progress{" "}
-            <span className={`font-bold ${progressColor}`}>
-              Dipelajari {stats.progress || 0}%
-            </span>
-          </p>
-
-          <p>
-            Akurasi{" "}
-            <span className="font-bold text-[#651DFF]">
-              {stats.accuracy || 0}%
-            </span>
+            Kemahiran{" "}
+            <span className={`font-bold ${masteryColor}`}>{mastery}%</span>
           </p>
         </div>
       </div>

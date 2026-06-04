@@ -60,7 +60,7 @@ const QuizListItem = ({ quiz, onStart, loading }) => {
         ) : (
           <>
             <Play size={12} fill="#8A19FF" />
-            Start Quiz
+            Mulai Kuis
           </>
         )}
       </button>

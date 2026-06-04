@@ -17,6 +17,47 @@ import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import AppPageShell from "../../components/layout/AppPageShell";
 
+const normalizeMastery = (value) => {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  const numberValue = Number(value);
+
+  return numberValue <= 1
+    ? Math.round(numberValue * 100)
+    : Math.round(numberValue);
+};
+
+const getStudentAverageMastery = (categoryMastery = {}) => {
+  const values = Object.values(categoryMastery)
+    .filter((value) => value !== null && value !== undefined)
+    .map(Number)
+    .filter((value) => !Number.isNaN(value));
+
+  if (values.length === 0) return null;
+
+  const averageRaw =
+    values.reduce((sum, value) => sum + value, 0) / values.length;
+
+  return averageRaw <= 1
+    ? Math.round(averageRaw * 100)
+    : Math.round(averageRaw);
+};
+
+const getClassAverageMastery = (students = []) => {
+  const studentMasteries = students
+    .map((item) => getStudentAverageMastery(item.categoryMastery || {}))
+    .filter((value) => value !== null);
+
+  if (studentMasteries.length === 0) return 0;
+
+  return Math.round(
+    studentMasteries.reduce((sum, value) => sum + value, 0) /
+      studentMasteries.length
+  );
+};
+
 const TeacherClassDetailPage = () => {
   const navigate = useNavigate();
   const { classId } = useParams();
@@ -52,34 +93,30 @@ const TeacherClassDetailPage = () => {
     fetchClassAnalytics();
   }, [classId]);
 
-  const handleDeleteClass = async () => {
-    try {
-      setDeleting(true);
-      setError("");
+  const averageMastery = useMemo(() => {
+    const summaryValue =
+      summary?.averageMastery ?? summary?.averageProgress ?? null;
 
-      await api.delete(`/classes/${classId}`);
-
-      navigate("/teacher/classes");
-    } catch (err) {
-      setError(err.response?.data?.message || "Gagal menghapus kelas");
-    } finally {
-      setDeleting(false);
-      setShowDeleteModal(false);
+    if (summaryValue !== null && summaryValue !== undefined) {
+      return normalizeMastery(summaryValue) || 0;
     }
-  };
+
+    return getClassAverageMastery(students);
+  }, [summary, students]);
 
   const topicData = useMemo(() => {
     const categoryMap = {};
 
     students.forEach((item) => {
       Object.entries(item.categoryMastery || {}).forEach(([category, value]) => {
-        if (value === null || value === undefined) return;
+        const masteryValue = normalizeMastery(value);
+        if (masteryValue === null) return;
 
         if (!categoryMap[category]) {
           categoryMap[category] = [];
         }
 
-        categoryMap[category].push(value);
+        categoryMap[category].push(masteryValue);
       });
     });
 
@@ -89,8 +126,8 @@ const TeacherClassDetailPage = () => {
 
       return {
         title,
-        desc: "Rata-rata pemahaman siswa pada kategori ini",
-        value: Math.round(average * 100),
+        desc: "Rata-rata tingkat kemahiran siswa pada kategori ini",
+        value: Math.round(average),
       };
     });
   }, [students]);
@@ -98,55 +135,59 @@ const TeacherClassDetailPage = () => {
   const strengthTopics = topicData.filter((item) => item.value >= 70);
   const weakTopics = topicData.filter((item) => item.value < 70);
 
+  const handleDeleteClass = async () => {
+    try {
+      setDeleting(true);
+      setError("");
+
+      await api.delete(`/classes/${classId}`);
+      navigate("/teacher/classes");
+    } catch (err) {
+      setError(err.response?.data?.message || "Gagal menghapus kelas");
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
+    }
+  };
+
   if (loading) {
     return (
-      <PageWrapper>
-        <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-          <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
-          <div className="mt-[18px]">
-            <PageState type="loading" title="Memuat detail kelas..." />
-          </div>
+      <PageLayout>
+        <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
+        <div className="mt-[18px]">
+          <PageState type="loading" title="Memuat detail kelas..." />
         </div>
-
-        <TeacherDesktopNav />
-        <TeacherBottomNav />
-      </PageWrapper>
+      </PageLayout>
     );
   }
 
   if (error && !classData) {
     return (
-      <PageWrapper>
-        <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-          <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
-
-          <div className="mt-[18px]">
-            <PageState
-              type="error"
-              title="Gagal memuat detail kelas"
-              message={error}
-              action={
-                <button
-                  onClick={fetchClassAnalytics}
-                  className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
-                >
-                  Coba Lagi
-                </button>
-              }
-            />
-          </div>
+      <PageLayout>
+        <HeaderSkeleton onBack={() => navigate("/teacher/classes")} />
+        <div className="mt-[18px]">
+          <PageState
+            type="error"
+            title="Gagal memuat detail kelas"
+            message={error}
+            action={
+              <button
+                onClick={fetchClassAnalytics}
+                className="rounded-[8px] bg-[#651DFF] px-[16px] py-[8px] text-[13px] font-bold text-white"
+              >
+                Coba Lagi
+              </button>
+            }
+          />
         </div>
-
-        <TeacherDesktopNav />
-        <TeacherBottomNav />
-      </PageWrapper>
+      </PageLayout>
     );
   }
 
   return (
-    <PageWrapper>
-      <AppPageShell>
-      <header>
+    <>
+      <AppPageShell role="teacher">
+        <header>
           <div className="flex items-start justify-between gap-[14px]">
             <div className="flex min-w-0 items-start gap-[12px]">
               <button
@@ -162,7 +203,7 @@ const TeacherClassDetailPage = () => {
                 </h1>
 
                 <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
-                  {classData?.totalStudents || 0} students
+                  {classData?.totalStudents || 0} siswa
                 </p>
               </div>
             </div>
@@ -182,36 +223,32 @@ const TeacherClassDetailPage = () => {
           )}
         </header>
 
-        <div className="mt-[20px] lg:grid lg:items-start lg:gap-[22px]">
-          <aside className="lg:top-[32px]">
+        <div className="mt-[20px] lg:grid lg:grid-cols-[360px_1fr] lg:items-start lg:gap-[22px]">
+          <aside className="lg:sticky lg:top-[32px]">
             <section className="rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:rounded-[24px] lg:px-[20px] lg:py-[20px]">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[12px] font-bold text-[#651DFF]">
-                    Class Code
+                    Kode Kelas
                   </p>
 
                   <h2 className="mt-[4px] text-[22px] font-bold text-[#101348]">
                     {classData?.classCode || "-"}
                   </h2>
                 </div>
-
-                <div className="rounded-full bg-white px-[12px] py-[7px] text-[13px] font-bold text-[#651DFF] shadow-sm">
-                  Monitoring
-                </div>
               </div>
 
               <div className="mt-[16px] h-[8px] overflow-hidden rounded-full bg-[#D9D9D9]">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#981DFF] to-[#5A16E8] transition-all duration-700"
-                  style={{ width: `${summary?.averageAccuracy || 0}%` }}
+                  style={{ width: `${averageMastery}%` }}
                 />
               </div>
 
               <p className="mt-[9px] text-[12px] font-medium text-[#6B7280]">
-                Rata-rata akurasi kelas:{" "}
+                Rata-rata kemahiran kelas:{" "}
                 <span className="font-bold text-[#101348]">
-                  {summary?.averageAccuracy || 0}%
+                  {averageMastery}%
                 </span>
               </p>
             </section>
@@ -221,14 +258,14 @@ const TeacherClassDetailPage = () => {
                 active={tab === "overview"}
                 onClick={() => setTab("overview")}
               >
-                Overview
+                Ringkasan
               </TabButton>
 
               <TabButton
                 active={tab === "students"}
                 onClick={() => setTab("students")}
               >
-                Students
+                Daftar Siswa
               </TabButton>
             </div>
           </aside>
@@ -237,6 +274,7 @@ const TeacherClassDetailPage = () => {
             {tab === "overview" ? (
               <OverviewTab
                 summary={summary}
+                averageMastery={averageMastery}
                 strengthTopics={strengthTopics}
                 weakTopics={weakTopics}
               />
@@ -258,14 +296,16 @@ const TeacherClassDetailPage = () => {
           onDelete={handleDeleteClass}
         />
       )}
-    </PageWrapper>
+    </>
   );
 };
 
-const PageWrapper = ({ children }) => {
+const PageLayout = ({ children }) => {
   return (
     <>
-      {children}
+      <AppPageShell role="teacher">{children}</AppPageShell>
+      <TeacherDesktopNav />
+      <TeacherBottomNav />
     </>
   );
 };
@@ -281,7 +321,7 @@ const HeaderSkeleton = ({ onBack }) => {
       </button>
 
       <h1 className="text-[26px] font-bold tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
-        Class Detail
+        Detail Kelas
       </h1>
     </div>
   );
@@ -302,7 +342,7 @@ const TabButton = ({ active, onClick, children }) => {
   );
 };
 
-const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
+const OverviewTab = ({ summary, averageMastery, strengthTopics, weakTopics }) => {
   return (
     <div className="space-y-[17px]">
       <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px] lg:py-[20px]">
@@ -313,8 +353,8 @@ const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
         <div className="mt-[16px] grid grid-cols-2 gap-[9px] lg:gap-[12px]">
           <SummaryBox
             icon={<BarChart3 size={27} />}
-            value={`${summary?.averageAccuracy || 0}%`}
-            label="Rata-rata Akurasi"
+            value={`${averageMastery}%`}
+            label="Rata-rata Kemahiran"
             bg="bg-[#E8F8EE]"
             color="text-[#16B966]"
           />
@@ -322,7 +362,7 @@ const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
           <SummaryBox
             icon={<Target size={27} />}
             value={`${summary?.lowRiskStudents || 0}`}
-            label="Low Risk"
+            label="Aman"
             bg="bg-[#F3E8FF]"
             color="text-[#651DFF]"
           />
@@ -330,7 +370,7 @@ const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
           <SummaryBox
             icon={<TriangleAlert size={27} />}
             value={`${summary?.hardRiskStudents || 0}`}
-            label="Butuh Perhatian"
+            label="Butuh Intervensi"
             bg="bg-[#FFF1E3]"
             color="text-[#FF9A1F]"
           />
@@ -338,7 +378,7 @@ const OverviewTab = ({ summary, strengthTopics, weakTopics }) => {
           <SummaryBox
             icon={<FileText size={27} />}
             value={`${summary?.mediumRiskStudents || 0}`}
-            label="Medium Risk"
+            label="Butuh Pendampingan"
             bg="bg-[#EAF2FF]"
             color="text-[#2478FF]"
           />
@@ -469,9 +509,16 @@ const TopicCard = ({ item }) => {
 
 const StudentItem = ({ item, rank, onClick }) => {
   const student = item.student;
-  const stats = item.statistics;
-
+  const stats = item.statistics || {};
   const riskLevel = item.riskLevel || "Unknown";
+  const mastery = getStudentAverageMastery(item.categoryMastery || {}) || 0;
+
+  const riskLabelMap = {
+    Low: "Aman",
+    Medium: "Butuh Pendampingan",
+    Hard: "Butuh Intervensi",
+    Unknown: "Tidak Diketahui",
+  };
 
   const riskStyle = {
     Low: "bg-[#DFFBEA] text-[#0FA85D]",
@@ -480,10 +527,10 @@ const StudentItem = ({ item, rank, onClick }) => {
     Unknown: "bg-[#F3F4F6] text-[#6B7280]",
   };
 
-  const progressColor =
-    stats.progress < 50
+  const masteryColor =
+    mastery < 50
       ? "text-[#EF4444]"
-      : stats.progress < 70
+      : mastery < 70
       ? "text-[#D88B00]"
       : "text-[#16B966]";
 
@@ -503,16 +550,14 @@ const StudentItem = ({ item, rank, onClick }) => {
 
         <div className="mt-[7px] flex flex-wrap gap-x-[14px] gap-y-[4px] text-[12px] font-medium text-[#6B7280]">
           <p>
-            Progress{" "}
-            <span className={`font-bold ${progressColor}`}>
-              {stats.progress}%
-            </span>
+            Kemahiran{" "}
+            <span className={`font-bold ${masteryColor}`}>{mastery}%</span>
           </p>
 
           <p>
-            Akurasi{" "}
+            Quiz selesai{" "}
             <span className="font-bold text-[#651DFF]">
-              {stats.accuracy}%
+              {stats.completedQuizzes || 0}
             </span>
           </p>
         </div>
@@ -524,7 +569,7 @@ const StudentItem = ({ item, rank, onClick }) => {
             riskStyle[riskLevel] || riskStyle.Unknown
           }`}
         >
-          {riskLevel}
+          {riskLabelMap[riskLevel] || riskLabelMap.Unknown}
         </span>
 
         <ChevronRight

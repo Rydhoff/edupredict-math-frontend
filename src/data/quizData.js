@@ -67,75 +67,83 @@ export const quizCategories = [
   },
 ];
 
-export const quizLibrary = [
+const createQuizVariants = ({
+  idStart,
+  title,
+  category,
+  categoryLabel,
+  image,
+}) => [
   {
-    id: 1,
+    id: idStart,
+    title: `${title} - 10 Soal`,
+    category,
+    categoryLabel,
+    level: "Adaptive",
+    questions: 10,
+    minutes: 15,
+    image,
+  },
+  {
+    id: idStart + 1,
+    title: `${title} - 20 Soal`,
+    category,
+    categoryLabel,
+    level: "Adaptive",
+    questions: 20,
+    minutes: 30,
+    image,
+  },
+];
+
+export const quizLibrary = [
+  ...createQuizVariants({
+    idStart: 1,
     title: "Campuran Soal",
     category: "healthy-mix",
     categoryLabel: "Campuran Soal",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotHealthy,
-  },
-  {
-    id: 2,
+  }),
+  ...createQuizVariants({
+    idStart: 3,
     title: "Latihan Statistika",
     category: "statistika",
     categoryLabel: "Statistika",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
-  {
-    id: 3,
+  }),
+  ...createQuizVariants({
+    idStart: 5,
     title: "Latihan Geometri",
     category: "geometri",
     categoryLabel: "Geometri",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
-  {
-    id: 4,
+  }),
+  ...createQuizVariants({
+    idStart: 7,
     title: "Latihan Pengukuran",
     category: "pengukuran",
     categoryLabel: "Pengukuran",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
-  {
-    id: 5,
+  }),
+  ...createQuizVariants({
+    idStart: 9,
     title: "Latihan Bilangan",
     category: "bilangan",
     categoryLabel: "Bilangan",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
-  {
-    id: 6,
+  }),
+  ...createQuizVariants({
+    idStart: 11,
     title: "Latihan Rasio",
     category: "rasio",
     categoryLabel: "Rasio",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
-  {
-    id: 7,
+  }),
+  ...createQuizVariants({
+    idStart: 13,
     title: "Latihan Aljabar",
     category: "aljabar",
     categoryLabel: "Aljabar",
-    level: "Adaptive",
-    questions: 20,
-    minutes: 30,
     image: mascotMath,
-  },
+  }),
 ];

@@ -27,7 +27,7 @@ const TeacherDashboardPage = () => {
   const navigate = useNavigate();
 
   const { user } = useAuth();
-  const teacherName = user?.fullName?.split(" ")[0] || "Teacher";
+  const teacherName = user?.fullName?.split(" ")[0] || "Guru";
 
   const greeting =
     user?.gender === "male"
@@ -70,21 +70,21 @@ const TeacherDashboardPage = () => {
     {
       icon: TrendingUp,
       value: `${summary.averageProgress ?? 0}%`,
-      label: "Rata-rata\nProgress",
+      label: "Rata-rata\nKemahiran",
       bg: "bg-[#E8F8EE]",
       color: "text-[#16B966]",
     },
     {
       icon: TriangleAlert,
       value: summary.studentsNeedAttention ?? 0,
-      label: "Butuh\nPerhatian",
+      label: "Butuh\nIntervensi",
       bg: "bg-[#FFF1E3]",
       color: "text-[#FF9A1F]",
     },
     {
       icon: FileText,
       value: summary.weeklyCompletedQuiz ?? 0,
-      label: "Quiz\nMinggu Ini",
+      label: "Kuis\nMinggu Ini",
       bg: "bg-[#EAF2FF]",
       color: "text-[#2478FF]",
     },
@@ -168,7 +168,7 @@ const TeacherDashboardPage = () => {
                     </p>
 
                     <p className="mt-[12px] w-[220px] text-[14px] font-bold leading-[1.08] text-black lg:mt-[18px] lg:w-[340px] lg:text-[16px] lg:leading-[1.12]">
-                      Pantau progress siswa<br />
+                      Pantau perkembangan siswa<br />
                       dan bantu mereka<br />
                       berkembang setiap hari.
                     </p>
@@ -194,7 +194,7 @@ const TeacherDashboardPage = () => {
             <section className="mt-[14px] rounded-[20px] border border-[#E5E7EB] bg-white px-[16px] pb-[24px] pt-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:mt-0 lg:rounded-[24px] lg:px-[20px]">
               <div className="flex items-center justify-between">
                 <h2 className="text-[24px] font-bold tracking-[-0.04em] text-black lg:text-[26px]">
-                  Kelas Monitoring
+                  Monitoring Kelas
                 </h2>
 
                 <button
@@ -210,7 +210,7 @@ const TeacherDashboardPage = () => {
                   <PageState
                     type="empty"
                     title="Belum ada kelas"
-                    message="Tambahkan kelas untuk mulai memonitor siswa."
+                    message="Tambahkan kelas untuk mulai memantau siswa."
                     action={
                       <button
                         onClick={() => setShowCreateModal(true)}
@@ -287,7 +287,10 @@ const SummaryCard = ({ item }) => {
 };
 
 const ClassMonitoringCard = ({ item, onClick }) => {
-  const progress = Math.min(item.averageProgress || 0, 100);
+  const mastery = Math.min(
+    item.averageMastery ?? item.averageProgress ?? 0,
+    100
+  );
 
   return (
     <button
@@ -301,7 +304,7 @@ const ClassMonitoringCard = ({ item, onClick }) => {
           </h3>
 
           <p className="mt-[7px] text-[12px] font-medium leading-none text-[#6B7280]">
-            Class Code: {item.classCode}
+            Kode Kelas: {item.classCode}
           </p>
         </div>
 
@@ -312,16 +315,16 @@ const ClassMonitoringCard = ({ item, onClick }) => {
 
       <div className="mt-[13px] flex items-center justify-between">
         <p className="text-[12px] font-medium text-[#6B7280]">
-          Rata-rata progress
+          Rata-rata kemahiran
         </p>
 
-        <p className="text-[15px] font-bold text-[#101348]">{progress}%</p>
+        <p className="text-[15px] font-bold text-[#101348]">{mastery}%</p>
       </div>
 
       <div className="mt-[6px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[#18C964] to-[#46E28A] transition-all duration-700"
-          style={{ width: `${progress}%` }}
+          style={{ width: `${mastery}%` }}
         />
       </div>
     </button>

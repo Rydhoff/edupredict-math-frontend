@@ -1,10 +1,4 @@
-import {
-  ChevronRight,
-  Copy,
-  Plus,
-  Search,
-  Users,
-} from "lucide-react";
+import { ChevronRight, Copy, Plus, Search, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +39,7 @@ const TeacherClassesPage = () => {
       name: item.className,
       code: item.classCode,
       students: item.totalStudents || 0,
-      progress: item.averageProgress || 0,
+      mastery: item.averageMastery ?? item.averageProgress ?? 0,
     }));
   }, [dashboard]);
 
@@ -59,6 +53,16 @@ const TeacherClassesPage = () => {
       );
     });
   }, [search, classes]);
+
+  const totalStudents = classes.reduce((sum, item) => sum + item.students, 0);
+
+  const averageMastery =
+    classes.length > 0
+      ? Math.round(
+          classes.reduce((sum, item) => sum + (item.mastery || 0), 0) /
+            classes.length
+        )
+      : 0;
 
   const handleCreateSuccess = () => {
     clearTeacherCache();
@@ -79,23 +83,13 @@ const TeacherClassesPage = () => {
     }
   };
 
-  const totalStudents = classes.reduce((sum, item) => sum + item.students, 0);
-
-  const averageProgress =
-    classes.length > 0
-      ? Math.round(
-          classes.reduce((sum, item) => sum + (item.progress || 0), 0) /
-            classes.length
-        )
-      : 0;
-
   return (
     <>
-    <AppPageShell role="teacher">
+      <AppPageShell role="teacher">
         <header className="flex items-start justify-between gap-[14px]">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
-              Classes
+              Kelas
             </h1>
 
             <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
@@ -122,21 +116,21 @@ const TeacherClassesPage = () => {
             label="Total Kelas"
             color="text-[#651DFF]"
           />
+
           <MiniStatCard
             value={totalStudents}
             label="Total Siswa"
             color="text-[#16B966]"
           />
+
           <MiniStatCard
-            value={`${averageProgress}%`}
-            label="Avg Progress"
+            value={`${averageMastery}%`}
+            label="Rata-rata kemahiran"
             color="text-[#F59E0B]"
           />
         </section>
 
         <div className="mt-[18px] lg:grid lg:items-start lg:gap-[22px]">
-          
-            
           <section className="flex min-h-[150px] items-center overflow-hidden rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:flex-col lg:items-start lg:justify-between lg:px-[22px] lg:py-[22px]">
             <div className="flex items-center lg:w-full lg:items-start">
               <div className="relative">
@@ -155,25 +149,25 @@ const TeacherClassesPage = () => {
                 </h2>
 
                 <p className="mt-[7px] text-[13px] font-medium leading-[1.35] text-black lg:text-[14px]">
-                  Bagikan kode kelas agar siswa bisa join dan mulai belajar.
+                  Bagikan kode kelas agar siswa dapat bergabung dan mulai belajar.
                 </p>
-                <button
-              onClick={() =>
-                classes[0]?.code ? handleCopyCode(classes[0].code) : null
-              }
-              className="mt-[10px] hidden h-[38px] w-fit items-center justify-between rounded-[12px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF] lg:flex"
-            >
-              <p className="truncate text-[13px] font-bold text-black">
-                {classes[0]?.code || "Contoh: EP7K9M"}
-              </p>
 
-              <Copy size={17} className="text-[#651DFF] ml-[12px]" />
-            </button>
+                <button
+                  onClick={() =>
+                    classes[0]?.code ? handleCopyCode(classes[0].code) : null
+                  }
+                  className="mt-[10px] hidden h-[38px] w-fit items-center justify-between rounded-[12px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF] lg:flex"
+                >
+                  <p className="truncate text-[13px] font-bold text-black">
+                    {classes[0]?.code || "Contoh: EP7K9M"}
+                  </p>
+
+                  <Copy size={17} className="ml-[12px] text-[#651DFF]" />
+                </button>
               </div>
             </div>
-
-            
           </section>
+
           <div>
             <div className="relative h-[44px] rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition focus-within:border-[#651DFF]">
               <Search
@@ -188,7 +182,6 @@ const TeacherClassesPage = () => {
                 className="h-full w-full rounded-[14px] pl-[43px] pr-[12px] text-[15px] font-medium outline-none placeholder:text-[#8A8A92]"
               />
             </div>
-
 
             <section className="mt-[17px]">
               {loading ? (
@@ -240,13 +233,12 @@ const TeacherClassesPage = () => {
               )}
             </section>
           </div>
-
         </div>
       </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
-      
+
       {showCreateModal && (
         <CreateClassModal
           onClose={() => setShowCreateModal(false)}
@@ -272,7 +264,7 @@ const MiniStatCard = ({ value, label, color }) => {
 };
 
 const ClassCard = ({ item, onClick, onCopy, copiedCode }) => {
-  const progress = Math.min(item.progress || 0, 100);
+  const mastery = Math.min(item.mastery || 0, 100);
 
   return (
     <button
@@ -297,7 +289,7 @@ const ClassCard = ({ item, onClick, onCopy, copiedCode }) => {
               <Copy size={13} />
 
               <span className="truncate">
-                {copiedCode === item.code ? "Copied!" : item.code}
+                {copiedCode === item.code ? "Tersalin!" : item.code}
               </span>
             </button>
           </div>
@@ -311,22 +303,22 @@ const ClassCard = ({ item, onClick, onCopy, copiedCode }) => {
 
       <div className="mt-[15px] flex items-center justify-between">
         <p className="text-[12px] font-medium text-[#6B7280]">
-          Rata-rata progress
+          Rata-rata kemahiran
         </p>
 
-        <p className="text-[15px] font-bold text-[#101348]">{progress}%</p>
+        <p className="text-[15px] font-bold text-[#101348]">{mastery}%</p>
       </div>
 
       <div className="mt-[7px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[#18C964] to-[#46E28A] transition-all duration-700"
-          style={{ width: `${progress}%` }}
+          style={{ width: `${mastery}%` }}
         />
       </div>
 
       <div className="mt-[13px] flex items-center justify-between">
         <p className="text-[11px] font-medium text-[#9CA3AF]">
-          Klik untuk detail monitoring
+          Klik untuk melihat detail kelas
         </p>
 
         <ChevronRight

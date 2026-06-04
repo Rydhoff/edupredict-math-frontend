@@ -45,7 +45,7 @@ const QuizResultPage = () => {
         <div className="mx-auto flex min-h-screen w-full max-w-[460px] items-center px-[16px] lg:max-w-[720px] lg:px-[32px]">
           <PageState
             type="empty"
-            title="Result tidak tersedia"
+            title="Hasil tidak tersedia"
             message="Data hasil quiz tidak ditemukan. Silakan mulai quiz kembali."
             action={
               <button

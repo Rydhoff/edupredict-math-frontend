@@ -1,12 +1,18 @@
-import { BarChart3, Home, Trophy, User, BadgeQuestionMark } from "lucide-react";
+import {
+  BarChart3,
+  Home,
+  Trophy,
+  User,
+  BadgeQuestionMark,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const menus = [
-  { name: "Home", path: "/student", icon: Home },
-  { name: "Quizzes", path: "/student/quizzes", icon: BadgeQuestionMark },
-  { name: "Progress", path: "/student/progress", icon: BarChart3 },
-  { name: "Rewards", path: "/student/rewards", icon: Trophy },
-  { name: "Profile", path: "/student/profile", icon: User },
+  { name: "Beranda", path: "/student", icon: Home },
+  { name: "Kuis", path: "/student/quizzes", icon: BadgeQuestionMark },
+  { name: "Kemajuan", path: "/student/progress", icon: BarChart3 },
+  { name: "Pencapaian", path: "/student/rewards", icon: Trophy },
+  { name: "Profil", path: "/student/profile", icon: User },
 ];
 
 const StudentBottomNav = () => {

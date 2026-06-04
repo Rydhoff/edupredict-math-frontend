@@ -69,7 +69,7 @@ const SettingPage = () => {
       const currentUser = profile || user;
 
       if (!currentUser) {
-        setError("Profile tidak ditemukan");
+        setError("Profil tidak ditemukan");
         return;
       }
 
@@ -84,7 +84,7 @@ const SettingPage = () => {
         interests: currentUser.interests || "",
       });
     } catch {
-      setError("Gagal memuat profile");
+      setError("Gagal memuat profil");
     } finally {
       setLoading(false);
     }
@@ -135,7 +135,7 @@ const SettingPage = () => {
       clearStudentCache();
       setSuccess("Profile student berhasil diperbarui");
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal update profile");
+      setError(err.response?.data?.message || "Gagal perbarui profil");
     } finally {
       setSavingProfile(false);
     }
@@ -191,9 +191,9 @@ const SettingPage = () => {
       setProfilePhoto(data.photoUrl || data.user?.photoUrl || "");
       updateUser(data.user);
       clearStudentCache();
-      setSuccess("Foto profile berhasil diperbarui");
+      setSuccess("Foto profil berhasil diperbarui");
     } catch (err) {
-      setError(err.response?.data?.message || "Gagal upload foto");
+      setError(err.response?.data?.message || "Gagal memperbarui foto");
     } finally {
       setUploadingPhoto(false);
       e.target.value = "";
@@ -203,7 +203,7 @@ const SettingPage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <PageState type="loading" title="Memuat profile..." />
+        <PageState type="loading" title="Memuat profil..." />
       </PageLayout>
     );
   }
@@ -213,7 +213,7 @@ const SettingPage = () => {
       <PageLayout>
         <PageState
           type="error"
-          title="Gagal memuat profile"
+          title="Gagal memuat profil"
           message={error}
           action={
             <button
@@ -245,7 +245,7 @@ const SettingPage = () => {
             </h1>
 
             <p className="mt-[8px] text-[14px] font-medium text-[#6B7280]">
-              Kelola profil, keamanan, dan informasi akun student
+              Kelola profil, keamanan, dan informasi akun siswa
             </p>
           </div>
         </header>
@@ -271,14 +271,14 @@ const SettingPage = () => {
 
                   <img
                     src={profilePhoto || profileImage}
-                    alt="Profile"
+                    alt="Profil"
                     className="relative h-[86px] w-[86px] rounded-full border-4 border-white object-cover shadow-[0_6px_18px_rgba(0,0,0,0.14)] lg:h-[112px] lg:w-[112px]"
                   />
                 </div>
 
                 <div className="ml-[18px] min-w-0 flex-1 lg:ml-0 lg:mt-[16px] lg:w-full">
                   <h2 className="truncate text-[21px] font-extrabold tracking-[-0.04em] text-black">
-                    {form.fullName || "Student"}
+                    {form.fullName || "Siswa"}
                   </h2>
 
                   <p className="mt-[5px] truncate text-[13px] font-medium text-[#6B7280]">
@@ -288,7 +288,7 @@ const SettingPage = () => {
               </div>
 
               <label className="mt-[18px] flex h-[42px] cursor-pointer items-center justify-center rounded-[13px] bg-white text-[13px] font-bold text-[#651DFF] shadow-sm transition hover:scale-[1.02] active:scale-[0.98]">
-                {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profile"}
+                {uploadingPhoto ? "Mengupload foto..." : "Ubah Foto Profil"}
                 <input
                   type="file"
                   accept="image/*"
@@ -302,7 +302,7 @@ const SettingPage = () => {
             <section className="rounded-[24px] border border-[#E5E7EB] bg-white px-[20px] pb-[22px] pt-[20px] shadow-[0_12px_34px_rgba(0,0,0,0.04)]">
               <SectionTitle
                 icon={<Lock size={19} />}
-                title="Security Center"
+                title="Pusat Keamanan"
                 color="text-red-500"
                 bg="bg-[#FFF1F1]"
               />
@@ -332,7 +332,7 @@ const SettingPage = () => {
                   <ShieldCheck size={18} className="mt-[1px] text-[#16B966]" />
 
                   <p className="text-[12px] font-medium leading-[1.45] text-[#6B7280]">
-                    Gunakan kombinasi huruf, angka, dan simbol agar akun student
+                    Gunakan kombinasi huruf, angka, dan simbol agar akun siswa
                     lebih aman.
                   </p>
                 </div>
@@ -343,7 +343,7 @@ const SettingPage = () => {
                 disabled={savingPassword}
                 className="mt-[18px] h-[44px] w-full rounded-[14px] border border-[#E4D3FF] bg-[#F7F0FF] text-[14px] font-bold text-[#5A16E8] transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
               >
-                {savingPassword ? "Menyimpan password..." : "Update password"}
+                {savingPassword ? "Menyimpan password..." : "Perbarui Password"}
               </button>
             </section>
           </div>
@@ -377,9 +377,9 @@ const SettingPage = () => {
               <Label>Peran</Label>
 
               <div className="mt-[9px] grid grid-cols-2 gap-[10px]">
-                <RoleButton active>Student</RoleButton>
+                <RoleButton active>Siswa</RoleButton>
                 <RoleButton active={false} disabled>
-                  Teacher
+                  Guru
                 </RoleButton>
               </div>
             </div>
@@ -438,7 +438,7 @@ const SettingPage = () => {
               <span className="flex h-[19px] w-[19px] items-center justify-center rounded-full bg-white">
                 <CheckCircle size={14} className="text-[#16B966]" />
               </span>
-              {savingProfile ? "Menyimpan profile..." : "Update profile"}
+              {savingProfile ? "Menyimpan profile..." : "Perbarui Profil"}
             </button>
           </section>
         </div>

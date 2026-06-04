@@ -42,7 +42,7 @@ const achievementsBase = [
   },
   {
     title: "Perfect Score",
-    desc: "Dapatkan nilai 100 di Quiz",
+    desc: "Dapatkan nilai 100 di kuis",
     image: perfectScoreBadge,
     check: (student, stats) => stats.accuracy === 100,
   },
@@ -54,19 +54,19 @@ const achievementsBase = [
   },
   {
     title: "Math Master",
-    desc: "Selesaikan semua Quiz dengan nilai 100",
+    desc: "Selesaikan semua kuis dengan nilai 100",
     image: mathMasterLockedBadge,
     check: (student, stats) => stats.accuracy === 100 && stats.completedQuizzes >= 10,
   },
   {
     title: "Logic Genius",
-    desc: "Selesaikan Quiz Logika & Problem Solving",
+    desc: "Selesaikan kuis Logika & Problem Solving",
     image: logicGeniusBadge,
     check: (student, stats) => stats.totalAttempts >= 5,
   },
   {
     title: "Speed Solver",
-    desc: "Selesaikan Quiz kurang dari 5 menit",
+    desc: "Selesaikan kuis kurang dari 5 menit",
     image: speedSolverLockedBadge,
     check: () => false,
   },
@@ -140,7 +140,7 @@ const RewardsPage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <PageState type="loading" title="Memuat rewards..." />
+        <PageState type="loading" title="Memuat pencapaian..." />
       </PageLayout>
     );
   }
@@ -150,7 +150,7 @@ const RewardsPage = () => {
       <PageLayout>
         <PageState
           type="error"
-          title="Gagal memuat rewards"
+          title="Gagal memuat pencapaian"
           message={error}
           action={
             <button
@@ -170,8 +170,8 @@ const RewardsPage = () => {
       <PageLayout>
         <PageState
           type="empty"
-          title="Belum ada rewards"
-          message="Selesaikan quiz untuk mulai mendapatkan XP dan achievement."
+          title="Belum ada pencapaian"
+          message="Selesaikan kuis untuk mulai mendapatkan XP dan pencapaian."
         />
       </PageLayout>
     );
@@ -181,7 +181,7 @@ const RewardsPage = () => {
     <>
     <AppPageShell>
     <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
-          Rewards
+          Pencapaian
         </h1>
 
         <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
@@ -192,7 +192,7 @@ const RewardsPage = () => {
         <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[22px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0 lg:self-start">
           <div className="flex items-center justify-between">
             <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-              Leaderboard
+              Papan Peringkat
             </h2>
 
             <button className="h-[25px] rounded-[7px] border border-[#E5E7EB] bg-white px-[12px] text-[12px] font-medium text-[#6B7280]">
@@ -227,7 +227,7 @@ const RewardsPage = () => {
 
         <section className="mt-[20px] rounded-[16px] border border-[#E5E7EB] bg-white px-[21px] pb-[23px] pt-[20px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] lg:mt-0">
           <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-            Achievements
+            Pencapaian
           </h2>
 
           <div className="mt-[17px] grid grid-cols-2 gap-[12px] lg:grid-cols-3 xl:grid-cols-3">
@@ -235,7 +235,7 @@ const RewardsPage = () => {
               <PageState
                 type="empty"
                 title="Belum ada achievement"
-                message="Selesaikan quiz untuk membuka achievement."
+                message="Selesaikan kuis untuk membuka achievement."
               />
             ) : (
               achievements.map((achievement) => (

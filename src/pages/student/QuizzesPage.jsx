@@ -75,7 +75,7 @@ const QuizzesPage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <PageState type="loading" title="Memuat quiz..." />
+        <PageState type="loading" title="Memuat kuis..." />
       </PageLayout>
     );
   }
@@ -85,7 +85,7 @@ const QuizzesPage = () => {
       <PageLayout>
         <PageState
           type="error"
-          title="Gagal memuat quiz"
+          title="Gagal memuat kuis"
           message={error}
           action={
             <button
@@ -105,11 +105,11 @@ const QuizzesPage = () => {
     <AppPageShell>
     <header>
           <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
-            Quizzes
+            Kuis
           </h1>
 
           <p className="mt-[8px] text-[15px] font-medium text-[#6B7280]">
-            Pilih quiz dan mulai tantanganmu hari ini!
+            Pilih kuis dan mulai tantanganmu hari ini!
           </p>
         </header>
 
@@ -122,7 +122,7 @@ const QuizzesPage = () => {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari topik quiz..."
+            placeholder="Cari topik kuis..."
             className="h-full w-full rounded-[12px] pl-[43px] pr-[12px] text-[15px] font-medium outline-none placeholder:text-[#8A8A92]"
           />
         </div>

@@ -44,7 +44,7 @@ const DailyQuestCard = ({ dashboard }) => {
     return [
       {
         key: "empty",
-        title: "Belum ada quest hari ini",
+        title: "Belum ada misi hari ini",
         current: 0,
         target: 1,
         completed: false,
@@ -56,11 +56,11 @@ const DailyQuestCard = ({ dashboard }) => {
     <section className="mt-[16px] rounded-[15px] border border-[#E5E7EB] bg-white px-[17px] py-[20px] shadow-[0_6px_18px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)]">
       <div className="flex items-center justify-between gap-[10px]">
         <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
-          Daily Quest
+          Misi Harian
         </h2>
 
         <p className="shrink-0 rounded-full bg-[#F8F9FB] px-[10px] py-[5px] text-[12px] font-bold text-[#6B7280]">
-          Resets in {resetTimer}
+          Reset dalam {resetTimer}
         </p>
       </div>
 
