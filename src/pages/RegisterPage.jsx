@@ -242,14 +242,14 @@ const RegisterPage = () => {
                     active={form.role === "student"}
                     onClick={() => handleRole("student")}
                   >
-                    Student
+                    Siswa
                   </RoleButton>
 
                   <RoleButton
                     active={form.role === "teacher"}
                     onClick={() => handleRole("teacher")}
                   >
-                    Teacher
+                    Guru
                   </RoleButton>
                 </div>
               </div>
