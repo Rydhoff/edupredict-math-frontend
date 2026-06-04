@@ -21,6 +21,7 @@ import mascot from "../../assets/images/mascot-dashboard.png";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearTeacherCache } from "../../utils/cache";
 import NotificationBell from "../../components/shared/NotificationBell";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const TeacherDashboardPage = () => {
   const navigate = useNavigate();
@@ -90,9 +91,9 @@ const TeacherDashboardPage = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] pb-[104px] pt-[16px] lg:pt-[56px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        <header>
+    <>
+    <AppPageShell role="teacher">
+    <header>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[9px] lg:hidden">
               <img
@@ -166,7 +167,7 @@ const TeacherDashboardPage = () => {
                       si Gurita Pintar
                     </p>
 
-                    <p className="mt-[12px] w-[220px] text-[14px] font-bold leading-[1.08] text-black lg:mt-[18px] lg:w-[340px] lg:text-[22px] lg:leading-[1.12]">
+                    <p className="mt-[12px] w-[220px] text-[14px] font-bold leading-[1.08] text-black lg:mt-[18px] lg:w-[340px] lg:text-[16px] lg:leading-[1.12]">
                       Pantau progress siswa<br />
                       dan bantu mereka<br />
                       berkembang setiap hari.
@@ -248,7 +249,7 @@ const TeacherDashboardPage = () => {
             </section>
           </div>
         )}
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
@@ -259,7 +260,7 @@ const TeacherDashboardPage = () => {
           onSuccess={handleCreateSuccess}
         />
       )}
-    </main>
+    </>
   );
 };
 

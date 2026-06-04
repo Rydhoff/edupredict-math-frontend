@@ -65,31 +65,47 @@ const QuizCategoryCard = ({ quiz }) => {
     <section
       className={`relative min-h-[246px] overflow-hidden rounded-[16px] border ${s.border} ${s.bg} px-[21px] py-[22px] shadow-[0_8px_22px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.12)]`}
     >
-      <div className="relative z-10">
-        <h2
-          className={`text-[26px] font-bold leading-none tracking-[-0.035em] ${s.title}`}
-        >
-          {quiz.title}
-        </h2>
+      <div className="pointer-events-none absolute right-0 top-0 z-0 h-[145px] w-[170px]" />
 
-        <p className="mt-[10px] w-[185px] text-[15px] font-medium leading-[1.05] text-[#66666F]">
-          {quiz.description}
-        </p>
+      <img
+        src={quiz.image}
+        alt={quiz.title}
+        className="absolute right-[10px] top-[10px] z-0 w-[148px] object-contain transition duration-300 hover:scale-105 sm:w-[165px] lg:w-[150px] xl:w-[160px]"
+      />
+
+      <div className="relative z-10">
+        <div className="max-w-[120px] sm:max-w-[135px] lg:max-w-[115px] xl:max-w-[130px]">
+          <h2
+            className={`text-[25px] font-bold leading-[1.02] tracking-[-0.035em] ${s.title}`}
+          >
+            {quiz.title}
+          </h2>
+
+          <p className="mt-[9px] text-[15px] font-medium leading-[1.1] text-[#66666F]">
+            {quiz.description}
+          </p>
+        </div>
 
         <p className="mt-[20px] text-[15px] font-medium text-[#66666F]">
           {quiz.module}
         </p>
 
-        <p className="mt-[16px] text-[22px] font-bold leading-none text-black">
-          {quiz.progress}%
-        </p>
+        <div className="mt-[16px] flex items-end justify-between">
+            <p className="text-[22px] font-bold leading-none text-black">
+              {quiz.progress}%
+            </p>
+          </div>
 
-        <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#D9D9D9]">
-          <div
-            className={`h-full rounded-full ${s.bar} transition-all duration-700`}
-            style={{ width: `${quiz.progress}%` }}
-          />
-        </div>
+          <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#D9D9D9]">
+            <div
+              className={`h-full rounded-full ${s.bar} transition-all duration-700`}
+              style={{ width: `${quiz.progress}%` }}
+            />
+          </div>
+
+          <p className="mt-[7px] text-[11px] font-medium text-[#77777F]">
+            {quiz.solved || 0} dari {quiz.totalQuestions || 0} soal dipelajari
+          </p>
 
         <button
           onClick={goLibrary}
@@ -99,12 +115,6 @@ const QuizCategoryCard = ({ quiz }) => {
           Start Quiz
         </button>
       </div>
-
-      <img
-        src={quiz.image}
-        alt={quiz.title}
-        className="absolute right-[-2px] top-[8px] z-0 w-[170px] object-contain transition duration-300 hover:scale-105"
-      />
     </section>
   );
 };

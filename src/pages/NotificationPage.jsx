@@ -18,6 +18,7 @@ import StudentBottomNav from "../components/student/StudentBottomNav";
 import StudentDesktopNav from "../components/student/StudentDesktopNav";
 import TeacherBottomNav from "../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../components/teacher/TeacherDesktopNav";
+import AppPageShell from "../components/layout/AppPageShell";
 
 const iconMap = {
   achievement: Trophy,
@@ -114,6 +115,13 @@ const NotificationPage = () => {
           isRead: true,
         }))
       );
+
+      sessionStorage.setItem(
+        isTeacher
+          ? "teacher_unread_notification_count"
+          : "student_unread_notification_count",
+        "0"
+      );
     } catch (err) {
       setError(err.response?.data?.message || "Gagal membaca semua notifikasi");
     } finally {
@@ -124,9 +132,9 @@ const NotificationPage = () => {
   const unreadCount = notifications.filter((item) => !item.isRead).length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        <header className="flex items-start justify-between gap-[14px]">
+    <>
+    <AppPageShell>
+    <header className="flex items-start justify-between gap-[14px]">
           <div className="flex min-w-0 items-start gap-[12px]">
             <button
               onClick={() => navigate(-1)}
@@ -186,7 +194,7 @@ const NotificationPage = () => {
             </div>
           )}
         </section>
-      </div>
+      </AppPageShell>
 
       {isTeacher ? (
         <>
@@ -199,7 +207,7 @@ const NotificationPage = () => {
           <StudentBottomNav />
         </>
       )}
-    </main>
+    </>
   );
 };
 

@@ -9,6 +9,7 @@ import QuizListItem from "../../components/student/QuizListItem";
 import { quizCategories, quizLibrary } from "../../data/quizData";
 import mascot from "../../assets/images/mascot-dashboard.png";
 import StudentDesktopNav from "../../components/student/StudentDesktopNav";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const categoryMap = {
   campuran: "Campuran Soal",
@@ -65,7 +66,7 @@ const QuizLibraryPage = () => {
       const { data } = await api.post("/quiz/start", {
         category: apiCategory,
         mode: "learning",
-        limit: 10,
+        limit: 20,
       });
 
       navigate(`/student/quiz/play?sessionId=${data.quizSessionId}`, {
@@ -84,8 +85,8 @@ const QuizLibraryPage = () => {
   };
   
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-  <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[108px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
+    <>
+      <AppPageShell>
         <button
           onClick={() => navigate("/student/quizzes")}
           className="ml-[2px] flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
@@ -219,11 +220,11 @@ const QuizLibraryPage = () => {
             )}
           </div>
         </section>
-      </div>
+      </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 

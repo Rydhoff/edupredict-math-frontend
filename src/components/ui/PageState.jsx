@@ -9,19 +9,19 @@ const PageState = ({
 }) => {
   const config = {
     loading: {
-      icon: <LoaderCircle size={46} className="animate-spin text-[#651DFF]" />,
+      icon: <LoaderCircle size={26} className="animate-spin text-[#651DFF]" />,
       bg: "bg-[#F7F0FF]",
       defaultTitle: "Memuat data...",
       defaultMessage: "Tunggu sebentar ya.",
     },
     empty: {
-      icon: <Inbox size={46} className="text-[#651DFF]" />,
+      icon: <Inbox size={42} className="text-[#651DFF]" />,
       bg: "bg-[#F7F0FF]",
       defaultTitle: "Belum ada data",
       defaultMessage: "Data akan tampil di sini.",
     },
     error: {
-      icon: <AlertTriangle size={46} className="text-[#EF4444]" />,
+      icon: <AlertTriangle size={42} className="text-[#EF4444]" />,
       bg: "bg-[#FFF1F1]",
       defaultTitle: "Terjadi kesalahan",
       defaultMessage: "Silakan coba lagi.",
@@ -30,10 +30,28 @@ const PageState = ({
 
   const current = config[type] || config.empty;
 
-  const content = (
-    <div className="flex w-full max-w-[330px] flex-col items-center rounded-[22px] border border-[#E5E7EB] bg-white px-[24px] py-[34px] text-center shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
+  const loadingContent = (
+    <div className="flex w-full items-center justify-center py-[42px]">
+      <div className="flex items-center gap-[12px] rounded-full border border-[#E8E3F4] bg-white/80 px-[18px] py-[12px] shadow-[0_8px_24px_rgba(101,29,255,0.08)] backdrop-blur-sm">
+        {current.icon}
+
+        <div className="text-left">
+          <h3 className="text-[14px] font-bold leading-none text-black">
+            {title || current.defaultTitle}
+          </h3>
+
+          <p className="mt-[5px] text-[12px] font-medium leading-none text-[#6B7280]">
+            {message || current.defaultMessage}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const cardContent = (
+    <div className="flex w-full max-w-[330px] flex-col items-center rounded-[22px] border border-[#E5E7EB] bg-white px-[24px] py-[34px] text-center shadow-[0_16px_40px_rgba(0,0,0,0.08)]">
       <div
-        className={`flex h-[86px] w-[86px] items-center justify-center rounded-full ${current.bg}`}
+        className={`flex h-[76px] w-[76px] items-center justify-center rounded-full ${current.bg}`}
       >
         {current.icon}
       </div>
@@ -53,14 +71,18 @@ const PageState = ({
   if (overlay) {
     return (
       <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/30 px-[24px] backdrop-blur-[2px]">
-        {content}
+        {cardContent}
       </div>
     );
   }
 
+  if (type === "loading") {
+    return loadingContent;
+  }
+
   return (
-    <div className="flex min-h-[260px] items-center justify-center px-[10px]">
-      {content}
+    <div className="flex min-h-[220px] items-center justify-center px-[10px]">
+      {cardContent}
     </div>
   );
 };

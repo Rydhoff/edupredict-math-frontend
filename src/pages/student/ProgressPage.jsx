@@ -13,6 +13,7 @@ import StudentBottomNav from "../../components/student/StudentBottomNav";
 import mascotSmall from "../../assets/images/mascot-small.png";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import StudentDesktopNav from "../../components/student/StudentDesktopNav";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const labelPositions = [
   { key: "Bilangan", x: "50%", y: "5%", align: "center" },
@@ -33,9 +34,9 @@ const descriptions = {
 };
 
 const getProgressColor = (value) => {
-  if (value < 50) return "bg-[#FF6B1A]";
-  if (value < 70) return "bg-[#F9B700]";
-  return "bg-[#18B866]";
+  if (value < 40) return "bg-[#EF4444]";
+  if (value < 70) return "bg-[#F59E0B]";
+  return "bg-[#651DFF]";
 };
 
 const getValueTextColor = (value) => {
@@ -59,24 +60,29 @@ const ProgressPage = () => {
   });
 
   const categoryProgress = useMemo(() => {
+    const masteryData = dashboard?.categoryMastery || {};
     const progressData = dashboard?.categoryProgress || {};
 
     return labelPositions.map((item) => {
-      const value = progressData?.[item.key]?.progress || 0;
-      const total = progressData?.[item.key]?.total || 0;
-      const correct = progressData?.[item.key]?.correct || 0;
+      const masteryValue = masteryData?.[item.key] || 0;
+      const progressValue = progressData?.[item.key]?.progress || 0;
+      const total = progressData?.[item.key]?.solved || 0;
+      const totalQuestions = progressData?.[item.key]?.totalQuestions || 0;
 
       return {
         title: item.key,
         description: descriptions[item.key] || "Progress kategori",
-        value,
-        total,
-        correct,
+        value: masteryValue,
+        progressValue,
+        solved: total,
+        totalQuestions,
       };
     });
   }, [dashboard]);
 
-  const hasAnyProgress = categoryProgress.some((item) => item.total > 0);
+  const hasAnyProgress = categoryProgress.some(
+    (item) => item.value > 0
+  );
 
   const radarData = categoryProgress.map((item) => ({
     skill: item.title,
@@ -124,8 +130,9 @@ const ProgressPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
+    <>
+    <AppPageShell>
+      
         <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
           Progress Skill
         </h1>
@@ -157,6 +164,7 @@ const ProgressPage = () => {
                   strokeWidth={2}
                   fill="#8A19FF"
                   fillOpacity={0.14}
+                  formatter={(value) => [`${value}%`, "Mastery"]}
                   dot={{ r: 4, fill: "#641BFF", strokeWidth: 0 }}
                 />
               </RadarChart>
@@ -209,13 +217,13 @@ const ProgressPage = () => {
 
             <div className="ml-[10px]">
               <h3 className="text-[14px] font-bold text-[#651DFF]">
-                Great Job!
+                AI Mastery Score
               </h3>
 
               <p className="mt-[1px] text-[12px] font-medium leading-[1.18] text-black">
-                Progress dihitung dari jawaban benar
+                Nilai mastery dihitung oleh AI
                 <br />
-                pada setiap kategori quiz. 💪
+                berdasarkan pola pengerjaan soal. 🧠
               </p>
             </div>
           </div>
@@ -233,24 +241,24 @@ const ProgressPage = () => {
           </div>
         </section>
         </div>
-      </div>
+    </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
-        {children}
-      </div>
+    <>
+    <AppPageShell>
+      {children}
+    </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 
@@ -266,17 +274,17 @@ const CategoryProgressItem = ({ item }) => {
           </p>
 
           <p className="mt-[6px] text-[11px] font-medium text-[#9CA3AF]">
-            {item.correct} benar dari {item.total} percobaan
+            {item.solved} dari {item.totalQuestions} soal telah dipelajari
           </p>
         </div>
 
-        <p className="text-[15px] font-bold text-black">{item.value}%</p>
+        <p className="text-[15px] font-bold text-black">{item.progressValue}%</p>
       </div>
 
       <div className="mt-[11px] h-[6px] rounded-full bg-[#D9D9D9]">
         <div
-          className={`h-full rounded-full ${getProgressColor(item.value)}`}
-          style={{ width: `${item.value}%` }}
+          className={`h-full rounded-full ${getProgressColor(item.progressValue)}`}
+          style={{ width: `${item.progressValue}%` }}
         />
       </div>
     </div>

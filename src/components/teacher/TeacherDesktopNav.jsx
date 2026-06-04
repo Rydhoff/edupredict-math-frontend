@@ -13,7 +13,23 @@ const items = [
 
 const TeacherDesktopNav = () => {
   return (
-    <aside className="fixed left-[32px] top-[32px] hidden h-[calc(100vh-64px)] w-[252px] rounded-[28px] border border-[#E8E3F4] bg-white/85 px-[18px] py-[20px] shadow-[0_18px_50px_rgba(31,41,55,0.08)] backdrop-blur-xl lg:flex lg:flex-col">
+    <aside
+  className="
+    fixed left-[20px] top-[20px]
+    hidden h-[calc(100vh-40px)] w-[240px]
+    rounded-[28px] border border-[#E8E3F4]
+    bg-white/85 px-[18px] py-[20px]
+    shadow-[0_18px_50px_rgba(31,41,55,0.08)]
+    backdrop-blur-xl
+
+    lg:flex lg:flex-col
+
+    xl:left-[32px]
+    xl:top-[32px]
+    xl:h-[calc(100vh-64px)]
+    xl:w-[252px]
+  "
+>
       <div className="flex items-center gap-[10px] px-[6px]">
         <img src={logo} alt="EduPredict" className="h-[43px]" />
 

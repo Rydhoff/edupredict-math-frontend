@@ -17,6 +17,7 @@ import PageState from "../../components/ui/PageState";
 import mascotSmall from "../../assets/images/mascot-small.png";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearTeacherCache } from "../../utils/cache";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const TeacherClassesPage = () => {
   const navigate = useNavigate();
@@ -89,8 +90,8 @@ const TeacherClassesPage = () => {
       : 0;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+    <>
+    <AppPageShell role="teacher">
         <header className="flex items-start justify-between gap-[14px]">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
@@ -133,7 +134,46 @@ const TeacherClassesPage = () => {
           />
         </section>
 
-        <div className="mt-[18px] lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-[22px]">
+        <div className="mt-[18px] lg:grid lg:items-start lg:gap-[22px]">
+          
+            
+          <section className="flex min-h-[150px] items-center overflow-hidden rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:flex-col lg:items-start lg:justify-between lg:px-[22px] lg:py-[22px]">
+            <div className="flex items-center lg:w-full lg:items-start">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-[#EEE4FF] blur-[10px]" />
+
+                <img
+                  src={mascotSmall}
+                  alt="Octa"
+                  className="relative ml-[-3px] h-[100px] w-[100px] object-contain transition duration-300 hover:scale-105 lg:ml-0 lg:h-[120px] lg:w-[120px]"
+                />
+              </div>
+
+              <div className="ml-[14px] flex-1">
+                <h2 className="text-[18px] font-bold leading-none text-[#5A16E8] lg:text-[22px]">
+                  Cara siswa bergabung
+                </h2>
+
+                <p className="mt-[7px] text-[13px] font-medium leading-[1.35] text-black lg:text-[14px]">
+                  Bagikan kode kelas agar siswa bisa join dan mulai belajar.
+                </p>
+                <button
+              onClick={() =>
+                classes[0]?.code ? handleCopyCode(classes[0].code) : null
+              }
+              className="mt-[10px] hidden h-[38px] w-fit items-center justify-between rounded-[12px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF] lg:flex"
+            >
+              <p className="truncate text-[13px] font-bold text-black">
+                {classes[0]?.code || "Contoh: EP7K9M"}
+              </p>
+
+              <Copy size={17} className="text-[#651DFF] ml-[12px]" />
+            </button>
+              </div>
+            </div>
+
+            
+          </section>
           <div>
             <div className="relative h-[44px] rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition focus-within:border-[#651DFF]">
               <Search
@@ -148,6 +188,7 @@ const TeacherClassesPage = () => {
                 className="h-full w-full rounded-[14px] pl-[43px] pr-[12px] text-[15px] font-medium outline-none placeholder:text-[#8A8A92]"
               />
             </div>
+
 
             <section className="mt-[17px]">
               {loading ? (
@@ -200,55 +241,19 @@ const TeacherClassesPage = () => {
             </section>
           </div>
 
-          <section className="mt-[17px] flex min-h-[150px] items-center overflow-hidden rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[16px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:min-h-[260px] lg:flex-col lg:items-start lg:justify-between lg:px-[22px] lg:py-[22px]">
-            <div className="flex items-center lg:w-full lg:flex-col lg:items-start">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-[#EEE4FF] blur-[10px]" />
-
-                <img
-                  src={mascotSmall}
-                  alt="Octa"
-                  className="relative ml-[-3px] h-[100px] w-[100px] object-contain transition duration-300 hover:scale-105 lg:ml-0 lg:h-[120px] lg:w-[120px]"
-                />
-              </div>
-
-              <div className="ml-[13px] flex-1 lg:ml-0 lg:mt-[14px]">
-                <h2 className="text-[18px] font-bold leading-none text-[#5A16E8] lg:text-[22px]">
-                  Cara siswa bergabung
-                </h2>
-
-                <p className="mt-[7px] text-[13px] font-medium leading-[1.35] text-black lg:text-[14px]">
-                  Bagikan kode kelas agar siswa bisa join dan mulai belajar.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() =>
-                classes[0]?.code ? handleCopyCode(classes[0].code) : null
-              }
-              className="mt-[10px] hidden h-[38px] w-full items-center justify-between rounded-[12px] border border-[#E5E7EB] bg-white px-[12px] transition duration-300 hover:border-[#D7C4FF] hover:bg-[#FCFAFF] lg:flex"
-            >
-              <p className="truncate text-[13px] font-bold text-black">
-                {classes[0]?.code || "Contoh: EP7K9M"}
-              </p>
-
-              <Copy size={17} className="text-[#651DFF]" />
-            </button>
-          </section>
         </div>
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
-
+      
       {showCreateModal && (
         <CreateClassModal
           onClose={() => setShowCreateModal(false)}
           onSuccess={handleCreateSuccess}
         />
       )}
-    </main>
+    </>
   );
 };
 

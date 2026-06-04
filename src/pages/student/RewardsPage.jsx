@@ -26,6 +26,7 @@ import logicGeniusLockedBadge from "../../assets/images/badges/logic-genius-lock
 import speedSolverBadge from "../../assets/images/badges/speed-solver.png";
 import speedSolverLockedBadge from "../../assets/images/badges/speed-solver-locked.png";
 import StudentDesktopNav from "../../components/student/StudentDesktopNav";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const avatarMap = {
   male: maleAvatar,
@@ -177,9 +178,9 @@ const RewardsPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
-        <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
+    <>
+    <AppPageShell>
+    <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
           Rewards
         </h1>
 
@@ -229,7 +230,7 @@ const RewardsPage = () => {
             Achievements
           </h2>
 
-          <div className="mt-[17px] grid grid-cols-2 gap-[12px] lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-[17px] grid grid-cols-2 gap-[12px] lg:grid-cols-3 xl:grid-cols-3">
             {achievements.length === 0 ? (
               <PageState
                 type="empty"
@@ -250,24 +251,24 @@ const RewardsPage = () => {
           </div>
         </section>
         </div>
-      </div>
+      </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
-        {children}
-      </div>
+    <>
+    <AppPageShell>
+      {children}
+    </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 

@@ -88,7 +88,7 @@ const QuizPlayPage = () => {
       const { data } = await api.post("/quiz/start", {
         category,
         mode: "learning",
-        limit: 10,
+        limit: 20,
       });
 
       setQuizSessionId(data.quizSessionId);

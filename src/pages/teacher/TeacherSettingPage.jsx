@@ -19,6 +19,7 @@ import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import teacherPhoto from "../../assets/images/profile/teacher-profile.png";
 import { clearTeacherCache } from "../../utils/cache";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const formatDateForInput = (value) => {
   if (!value) return "";
@@ -223,9 +224,9 @@ const TeacherSettingPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        <header className="flex items-start gap-[14px]">
+   <>
+   <AppPageShell>
+    <header className="flex items-start gap-[14px]">
           <button
             onClick={() => navigate("/teacher/profile")}
             className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] bg-white text-[#6B7280] shadow-sm transition hover:scale-105 active:scale-95"
@@ -415,11 +416,11 @@ const TeacherSettingPage = () => {
             </button>
           </section>
         </div>
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
-    </main>
+    </>
   );
 };
 

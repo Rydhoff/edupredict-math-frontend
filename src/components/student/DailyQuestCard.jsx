@@ -54,21 +54,27 @@ const DailyQuestCard = ({ dashboard }) => {
 
   return (
     <section className="mt-[16px] rounded-[15px] border border-[#E5E7EB] bg-white px-[17px] py-[20px] shadow-[0_6px_18px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-[10px]">
         <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black">
           Daily Quest
         </h2>
 
-        <p className="rounded-full bg-[#F8F9FB] px-[10px] py-[5px] text-[12px] font-bold text-[#6B7280]">
+        <p className="shrink-0 rounded-full bg-[#F8F9FB] px-[10px] py-[5px] text-[12px] font-bold text-[#6B7280]">
           Resets in {resetTimer}
         </p>
       </div>
 
       <div className="mt-[17px] space-y-[12px]">
         {questList.map((quest) => {
-          const progressPercent = quest.target
-            ? Math.min((quest.current / quest.target) * 100, 100)
-            : 0;
+          const target = Number(quest.target) || 1;
+          const rawCurrent = Number(quest.current) || 0;
+          const displayCurrent = Math.min(rawCurrent, target);
+          const isCompleted = quest.completed || rawCurrent >= target;
+
+          const progressPercent = Math.min(
+            (displayCurrent / target) * 100,
+            100
+          );
 
           return (
             <div
@@ -77,7 +83,7 @@ const DailyQuestCard = ({ dashboard }) => {
             >
               <div
                 className={`flex h-[25px] w-[25px] shrink-0 items-center justify-center rounded-full transition duration-300 ${
-                  quest.completed
+                  isCompleted
                     ? "bg-[#16B966] shadow-[0_5px_12px_rgba(22,185,102,0.25)]"
                     : "bg-[#D9D9D9]"
                 }`}
@@ -85,14 +91,14 @@ const DailyQuestCard = ({ dashboard }) => {
                 <Check size={16} strokeWidth={3} className="text-white" />
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <p className="text-[14px] font-bold text-black">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-[10px]">
+                  <p className="truncate text-[14px] font-bold text-black">
                     {quest.title}
                   </p>
 
-                  <p className="text-[14px] font-bold text-black">
-                    {quest.current} / {quest.target}
+                  <p className="shrink-0 text-[14px] font-bold text-black">
+                    {displayCurrent} / {target}
                   </p>
                 </div>
 

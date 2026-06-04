@@ -15,6 +15,7 @@ import api from "../../services/api";
 import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const TeacherClassDetailPage = () => {
   const navigate = useNavigate();
@@ -144,8 +145,8 @@ const TeacherClassDetailPage = () => {
 
   return (
     <PageWrapper>
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        <header>
+      <AppPageShell>
+      <header>
           <div className="flex items-start justify-between gap-[14px]">
             <div className="flex min-w-0 items-start gap-[12px]">
               <button
@@ -181,8 +182,8 @@ const TeacherClassDetailPage = () => {
           )}
         </header>
 
-        <div className="mt-[20px] lg:grid lg:grid-cols-[360px_1fr] lg:items-start lg:gap-[22px]">
-          <aside className="lg:sticky lg:top-[32px]">
+        <div className="mt-[20px] lg:grid lg:items-start lg:gap-[22px]">
+          <aside className="lg:top-[32px]">
             <section className="rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:rounded-[24px] lg:px-[20px] lg:py-[20px]">
               <div className="flex items-center justify-between">
                 <div>
@@ -244,7 +245,7 @@ const TeacherClassDetailPage = () => {
             )}
           </section>
         </div>
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
@@ -263,9 +264,9 @@ const TeacherClassDetailPage = () => {
 
 const PageWrapper = ({ children }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
+    <>
       {children}
-    </main>
+    </>
   );
 };
 

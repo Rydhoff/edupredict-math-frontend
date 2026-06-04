@@ -8,11 +8,22 @@ import QuizCategoryCard from "../../components/student/QuizCategoryCard";
 import { quizCategories } from "../../data/quizData";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import StudentDesktopNav from "../../components/student/StudentDesktopNav";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const getProgressByCategory = (dashboard, categoryTitle) => {
-  const key = categoryTitle === "Campuran Soal" ? "Healthy Mix" : categoryTitle;
+  const key =
+    categoryTitle === "Campuran" || categoryTitle === "Campuran Soal"
+      ? "Healthy Mix"
+      : categoryTitle;
 
-  return dashboard?.categoryProgress?.[key]?.progress || 0;
+  const item = dashboard?.categoryProgress?.[key];
+
+  return {
+    progress: item?.progress || 0,
+    solved: item?.solved || 0,
+    totalQuestions: item?.totalQuestions || 0,
+    accuracy: item?.accuracy || 0,
+  };
 };
 
 const QuizzesPage = () => {
@@ -32,10 +43,14 @@ const QuizzesPage = () => {
   });
 
   const categories = useMemo(() => {
-    return quizCategories.map((quiz) => ({
-      ...quiz,
-      progress: getProgressByCategory(dashboard, quiz.title),
-    }));
+    return quizCategories.map((quiz) => {
+      const progressData = getProgressByCategory(dashboard, quiz.title);
+
+      return {
+        ...quiz,
+        ...progressData,
+      };
+    });
   }, [dashboard]);
 
   const filteredCategories = useMemo(() => {
@@ -86,9 +101,9 @@ const QuizzesPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
-        <header>
+    <>
+    <AppPageShell>
+    <header>
           <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
             Quizzes
           </h1>
@@ -134,11 +149,11 @@ const QuizzesPage = () => {
             ))
           )}
         </div>
-      </div>
+      </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 

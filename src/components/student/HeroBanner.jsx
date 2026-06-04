@@ -1,7 +1,9 @@
 import { Play } from "lucide-react";
 import mascot from "../../assets/images/mascot-dashboard.png";
+import { useNavigate } from "react-router-dom";
 
 const HeroBanner = () => {
+  const navigate = useNavigate();
   return (
     <section className="mt-[21px] overflow-hidden rounded-[14px] border border-[#E4D3FF] bg-[#F7F0FF] shadow-[0_8px_24px_rgba(101,29,255,0.08)] transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_14px_30px_rgba(101,29,255,0.14)]">
       <div className="relative h-[234px] px-[20px] py-[24px]">
@@ -18,13 +20,13 @@ const HeroBanner = () => {
             Siap meningkatkan<br />skill matematika<br />hari ini?
           </p>
 
-          <a
-            href="/student/quizzes"
+          <button
+            onClick={() => navigate("/student/quizzes")}
             className="mt-[19px] inline-flex h-[38px] items-center gap-[5px] rounded-[7px] bg-[#8A19FF] px-[15px] text-[20px] font-bold text-white shadow-[0_8px_18px_rgba(138,25,255,0.25)] transition duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
             <Play size={18} fill="white" />
             Start Quiz
-          </a>
+          </button>
         </div>
 
         <div className="absolute right-[-3px] top-[11px] h-[212px] w-[212px] rounded-full bg-[#EEE4FF]" />

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BarChart3,
-  ChevronRight,
   Flame,
   LogOut,
   Plus,
@@ -10,6 +9,7 @@ import {
   Star,
   Target,
   Trophy,
+  X,
 } from "lucide-react";
 
 import api from "../../services/api";
@@ -22,9 +22,14 @@ import profileImage from "../../assets/images/profile/student-profile.png";
 import NotificationBell from "../../components/shared/NotificationBell";
 import useCachedFetch from "../../hooks/useCachedFetch";
 import { clearStudentCache } from "../../utils/cache";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const getNextLevelXP = (level = 1) => {
   return Math.max(Number(level) || 1, 1) * 100;
+};
+
+const getClassId = (item) => {
+  return item?._id || item?.id || item?.classId;
 };
 
 const ProfilePage = () => {
@@ -33,6 +38,9 @@ const ProfilePage = () => {
 
   const [showLogout, setShowLogout] = useState(false);
   const [showJoinClass, setShowJoinClass] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [leaving, setLeaving] = useState(false);
+  const [leaveError, setLeaveError] = useState("");
 
   const {
     data: profileData,
@@ -57,6 +65,42 @@ const ProfilePage = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleOpenLeaveModal = (classItem) => {
+    setLeaveError("");
+    setSelectedClass(classItem);
+  };
+
+  const handleLeaveClass = async () => {
+    const classId = getClassId(selectedClass);
+
+    if (!classId) {
+      setLeaveError("ID kelas tidak ditemukan");
+      return;
+    }
+
+    try {
+      setLeaving(true);
+      setLeaveError("");
+
+      await api.delete(`/classes/${classId}/leave`);
+
+      clearStudentCache();
+      sessionStorage.removeItem("student_profile");
+
+      setSelectedClass(null);
+
+      fetchProfileData({
+        forceLoading: true,
+      });
+    } catch (err) {
+      setLeaveError(
+        err.response?.data?.message || "Gagal keluar dari kelas"
+      );
+    } finally {
+      setLeaving(false);
+    }
   };
 
   const dashboard = profileData?.dashboard;
@@ -105,8 +149,8 @@ const ProfilePage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] lg:pt-[56px] px-[16px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
+    <>
+      <AppPageShell>
         <header className="flex items-start justify-between">
           <div>
             <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black">
@@ -257,7 +301,13 @@ const ProfilePage = () => {
                   }
                 />
               ) : (
-                classes.map((item) => <ClassItem key={item._id} item={item} />)
+                classes.map((item) => (
+                  <ClassItem
+                    key={getClassId(item)}
+                    item={item}
+                    onLeave={handleOpenLeaveModal}
+                  />
+                ))
               )}
             </div>
           </section>
@@ -288,7 +338,7 @@ const ProfilePage = () => {
             onClick={() => setShowLogout(true)}
           />
         </section>
-      </div>
+      </AppPageShell>
 
       <StudentDesktopNav />
       <StudentBottomNav />
@@ -298,9 +348,24 @@ const ProfilePage = () => {
           onClose={() => setShowJoinClass(false)}
           onSuccess={() => {
             clearStudentCache();
+            sessionStorage.removeItem("student_profile");
             setShowJoinClass(false);
             fetchProfileData({ forceLoading: true });
           }}
+        />
+      )}
+
+      {selectedClass && (
+        <LeaveClassModal
+          classItem={selectedClass}
+          loading={leaving}
+          error={leaveError}
+          onCancel={() => {
+            if (leaving) return;
+            setLeaveError("");
+            setSelectedClass(null);
+          }}
+          onConfirm={handleLeaveClass}
         />
       )}
 
@@ -310,20 +375,17 @@ const ProfilePage = () => {
           onLogout={handleLogout}
         />
       )}
-    </main>
+    </>
   );
 };
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1200px] lg:px-[32px] lg:pb-[40px]">
-        {children}
-      </div>
-
+    <>
+      <AppPageShell>{children}</AppPageShell>
       <StudentDesktopNav />
       <StudentBottomNav />
-    </main>
+    </>
   );
 };
 
@@ -347,11 +409,11 @@ const ProfileStat = ({ icon, value, label, color, bg }) => {
   );
 };
 
-const ClassItem = ({ item }) => {
+const ClassItem = ({ item, onLeave }) => {
   return (
-    <div className="group w-full rounded-[16px] border border-[#E5E7EB] bg-white px-[15px] py-[14px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
-      <div className="flex items-start justify-between">
-        <div className="min-w-0">
+    <div className="group w-full rounded-[16px] border border-[#E5E7EB] bg-white px-[15px] py-[14px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
+      <div className="flex items-start justify-between gap-[12px]">
+        <div className="min-w-0 flex-1">
           <h3 className="truncate text-[15px] font-bold leading-none text-[#101348]">
             {item.className}
           </h3>
@@ -361,10 +423,12 @@ const ClassItem = ({ item }) => {
           </p>
         </div>
 
-        <ChevronRight
-          size={23}
-          className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF]"
-        />
+        <button
+          onClick={() => onLeave(item)}
+          className="shrink-0 rounded-[9px] bg-[#FFF1F1] px-[11px] py-[7px] text-[11px] font-bold text-red-500 transition hover:bg-red-500 hover:text-white active:scale-95"
+        >
+          Keluar
+        </button>
       </div>
     </div>
   );
@@ -379,7 +443,7 @@ const MenuItem = ({ icon, title, desc, color, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="group flex h-[64px] w-full items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[16px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99] lg:h-[118px] lg:flex-col lg:items-start lg:justify-center"
+      className="group relative flex h-[64px] w-full items-center rounded-[16px] border border-[#E5E7EB] bg-white px-[16px] text-left transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)] active:scale-[0.99] lg:h-[118px] lg:flex-col lg:items-start lg:justify-center"
     >
       <div
         className={`flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-[11px] ${iconBox}`}
@@ -396,12 +460,69 @@ const MenuItem = ({ icon, title, desc, color, onClick }) => {
           {desc}
         </p>
       </div>
-
-      <ChevronRight
-        size={25}
-        className="text-[#6B7280] transition group-hover:translate-x-[3px] group-hover:text-[#651DFF] lg:absolute lg:right-[16px] lg:top-[16px]"
-      />
     </button>
+  );
+};
+
+const LeaveClassModal = ({
+  classItem,
+  onCancel,
+  onConfirm,
+  loading,
+  error,
+}) => {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/35 px-[24px]">
+      <div className="w-full max-w-[340px] rounded-[18px] bg-white px-[24px] pb-[26px] pt-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.22)]">
+        <div className="flex items-start justify-between gap-[14px]">
+          <div>
+            <h2 className="text-[19px] font-bold text-black">
+              Keluar dari kelas?
+            </h2>
+
+            <p className="mt-[9px] text-[13px] font-medium leading-[1.45] text-[#6B7280]">
+              Kamu akan keluar dari kelas{" "}
+              <span className="font-bold text-black">
+                {classItem?.className}
+              </span>
+              .
+            </p>
+          </div>
+
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-[#F3F4F6] text-[#6B7280] disabled:opacity-60"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {error && (
+          <div className="mt-[14px] rounded-[10px] bg-red-50 px-[12px] py-[9px] text-[12px] font-semibold text-red-600">
+            {error}
+          </div>
+        )}
+
+        <div className="mt-[22px] grid grid-cols-2 gap-[12px]">
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="h-[40px] rounded-[10px] border border-[#E5E7EB] text-[13px] font-bold text-black disabled:opacity-60"
+          >
+            Batal
+          </button>
+
+          <button
+            onClick={onConfirm}
+            disabled={loading}
+            className="h-[40px] rounded-[10px] bg-red-600 text-[13px] font-bold text-white disabled:opacity-60"
+          >
+            {loading ? "Keluar..." : "Keluar"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

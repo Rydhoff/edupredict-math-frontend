@@ -4,8 +4,8 @@ import mascotMath from "../assets/images/mascot-dashboard.png";
 export const quizCategories = [
   {
     id: "healthy-mix",
-    title: "Campuran Soal",
-    description: "Campuran soal dari semua topik.",
+    title: "Campuran",
+    description: "Campuran soal dari semua topik yang ada.",
     module: "6 topik - adaptive",
     progress: 85,
     color: "purple",
@@ -23,7 +23,7 @@ export const quizCategories = [
   {
     id: "geometri",
     title: "Geometri",
-    description: "Bentuk, ruang, sudut, dan posisi.",
+    description: "Bentuk, bangun ruang, sudut, dan posisi.",
     module: "1 topik - adaptive",
     progress: 75,
     color: "blue",
@@ -41,7 +41,7 @@ export const quizCategories = [
   {
     id: "bilangan",
     title: "Bilangan",
-    description: "Operasi, sifat, dan konsep bilangan.",
+    description: "Operasi hitung, sifat, dan konsep bilangan.",
     module: "1 topik - adaptive",
     progress: 78,
     color: "yellow",
@@ -74,8 +74,8 @@ export const quizLibrary = [
     category: "healthy-mix",
     categoryLabel: "Campuran Soal",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotHealthy,
   },
   {
@@ -84,8 +84,8 @@ export const quizLibrary = [
     category: "statistika",
     categoryLabel: "Statistika",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
   {
@@ -94,8 +94,8 @@ export const quizLibrary = [
     category: "geometri",
     categoryLabel: "Geometri",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
   {
@@ -104,8 +104,8 @@ export const quizLibrary = [
     category: "pengukuran",
     categoryLabel: "Pengukuran",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
   {
@@ -114,8 +114,8 @@ export const quizLibrary = [
     category: "bilangan",
     categoryLabel: "Bilangan",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
   {
@@ -124,8 +124,8 @@ export const quizLibrary = [
     category: "rasio",
     categoryLabel: "Rasio",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
   {
@@ -134,8 +134,8 @@ export const quizLibrary = [
     category: "aljabar",
     categoryLabel: "Aljabar",
     level: "Adaptive",
-    questions: 10,
-    minutes: 15,
+    questions: 20,
+    minutes: 30,
     image: mascotMath,
   },
 ];

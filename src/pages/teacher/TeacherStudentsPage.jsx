@@ -14,6 +14,7 @@ import PageState from "../../components/ui/PageState";
 import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import useCachedFetch from "../../hooks/useCachedFetch";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const filters = ["Semua", "Low Risk", "Medium Risk", "Hard Risk"];
 const cacheKey = "teacher_students";
@@ -195,9 +196,9 @@ const TeacherStudentsPage = () => {
       : 0;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        <header>
+    <>
+    <AppPageShell>
+      <header>
           <div className="flex items-start justify-between gap-[14px]">
             <div>
               <h1 className="text-[26px] font-bold leading-none tracking-[-0.04em] text-black lg:text-[32px] lg:font-extrabold">
@@ -241,7 +242,39 @@ const TeacherStudentsPage = () => {
           />
         </section>
 
-        <div className="mt-[18px] lg:grid lg:grid-cols-[1fr_330px] lg:items-start lg:gap-[22px]">
+        <div className="mt-[18px] lg:grid lg:items-start lg:gap-[22px]">
+           <aside className="mt-[18px] rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:rounded-[24px]">
+            <h2 className="text-[21px] font-bold tracking-[-0.04em] text-black">
+              Filter Kelas
+            </h2>
+
+            <div className="relative mt-[16px]">
+              <select
+                value={selectedClassId}
+                onChange={handleChangeClass}
+                className="h-[44px] w-full appearance-none rounded-[14px] border border-[#E4D3FF] bg-white px-[14px] pr-[40px] text-[14px] font-bold text-[#101348] outline-none"
+              >
+                <option value="all">Semua Kelas</option>
+
+                {classes.length === 0 ? (
+                  <option value="" disabled>
+                    Belum ada kelas
+                  </option>
+                ) : (
+                  classes.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.className}
+                    </option>
+                  ))
+                )}
+              </select>
+
+              <ChevronDown
+                size={22}
+                className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[#651DFF]"
+              />
+            </div>
+          </aside>
           <section>
             <div className="relative h-[44px] rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_5px_18px_rgba(0,0,0,0.03)] transition focus-within:border-[#651DFF]">
               <Search
@@ -327,60 +360,13 @@ const TeacherStudentsPage = () => {
             </section>
           </section>
 
-          <aside className="mt-[18px] rounded-[22px] border border-[#E4D3FF] bg-gradient-to-br from-[#F8F2FF] to-white px-[18px] py-[18px] shadow-[0_10px_26px_rgba(101,29,255,0.08)] lg:sticky lg:top-[32px] lg:mt-0 lg:rounded-[24px]">
-            <h2 className="text-[21px] font-bold tracking-[-0.04em] text-black">
-              Filter Kelas
-            </h2>
-
-            <p className="mt-[7px] text-[13px] font-medium leading-[1.4] text-[#6B7280]">
-              Pilih kelas tertentu untuk melihat siswa berdasarkan kelas.
-            </p>
-
-            <div className="relative mt-[16px]">
-              <select
-                value={selectedClassId}
-                onChange={handleChangeClass}
-                className="h-[44px] w-full appearance-none rounded-[14px] border border-[#E4D3FF] bg-white px-[14px] pr-[40px] text-[14px] font-bold text-[#101348] outline-none"
-              >
-                <option value="all">Semua Kelas</option>
-
-                {classes.length === 0 ? (
-                  <option value="" disabled>
-                    Belum ada kelas
-                  </option>
-                ) : (
-                  classes.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.className}
-                    </option>
-                  ))
-                )}
-              </select>
-
-              <ChevronDown
-                size={22}
-                className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[#651DFF]"
-              />
-            </div>
-
-            <div className="mt-[18px] rounded-[16px] border border-[#EEE7FF] bg-white px-[14px] py-[13px]">
-              <p className="text-[13px] font-bold text-[#101348]">
-                Ringkasan
-              </p>
-
-              <div className="mt-[12px] space-y-[9px]">
-                <InfoRow label="Total siswa" value={totalStudents} />
-                <InfoRow label="Avg akurasi" value={`${averageAccuracy}%`} />
-                <InfoRow label="Hard risk" value={hardRiskCount} />
-              </div>
-            </div>
-          </aside>
+         
         </div>
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
-    </main>
+    </>
   );
 };
 
@@ -468,7 +454,7 @@ const StudentItem = ({ item, rank, onClick }) => {
           <p>
             Progress{" "}
             <span className={`font-bold ${progressColor}`}>
-              {stats.progress || 0}%
+              Dipelajari {stats.progress || 0}%
             </span>
           </p>
 

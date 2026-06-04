@@ -23,6 +23,7 @@ import TeacherBottomNav from "../../components/teacher/TeacherBottomNav";
 import TeacherDesktopNav from "../../components/teacher/TeacherDesktopNav";
 import studentPhoto from "../../assets/images/profile/student-ridho.png";
 import { clearTeacherCache } from "../../utils/cache";
+import AppPageShell from "../../components/layout/AppPageShell";
 
 const categoryLabels = [
   "Bilangan",
@@ -32,6 +33,27 @@ const categoryLabels = [
   "Rasio",
   "Pengukuran",
 ];
+
+const descriptions = {
+  Bilangan: "Kemampuan operasi dan konsep bilangan",
+  Aljabar: "Kemampuan memahami pola dan persamaan",
+  Geometri: "Kemampuan memahami bentuk dan ruang",
+  Statistika: "Kemampuan memahami data, grafik, dan peluang",
+  Rasio: "Kemampuan memahami perbandingan dan persen",
+  Pengukuran: "Kemampuan memahami luas, volume, dan satuan",
+};
+
+const getProgressColor = (value) => {
+  if (value < 40) return "bg-[#EF4444]";
+  if (value < 70) return "bg-[#F59E0B]";
+  return "bg-[#651DFF]";
+};
+
+const getValueTextColor = (value) => {
+  if (value < 50) return "text-[#FF2D55]";
+  if (value < 70) return "text-[#F59E0B]";
+  return "text-[#641BFF]";
+};
 
 const TeacherStudentDetailPage = () => {
   const navigate = useNavigate();
@@ -107,14 +129,32 @@ const TeacherStudentDetailPage = () => {
   const skillData = useMemo(() => {
     const mastery = data?.latestPrediction?.categoryMastery || {};
 
+    const progressData =
+      data?.categoryProgress ||
+      data?.dashboard?.categoryProgress ||
+      data?.progress?.categoryProgress ||
+      data?.studentProgress?.categoryProgress ||
+      data?.statistics?.categoryProgress ||
+      {};
+
     return categoryLabels.map((label) => {
-      const value = mastery[label];
+      const rawMastery = mastery?.[label];
+      const masteryValue =
+        rawMastery === null || rawMastery === undefined
+          ? 0
+          : rawMastery <= 1
+          ? Math.round(rawMastery * 100)
+          : Math.round(rawMastery);
+
+      const category = progressData?.[label] || {};
 
       return {
         title: label,
-        desc: "Kemampuan siswa pada kategori ini",
-        value:
-          value === null || value === undefined ? 0 : Math.round(value * 100),
+        description: descriptions[label] || "Progress kategori",
+        value: masteryValue,
+        progressValue: Math.round(category.progress || 0),
+        solved: category.solved || 0,
+        totalQuestions: category.totalQuestions || 0,
       };
     });
   }, [data]);
@@ -171,8 +211,8 @@ const TeacherStudentDetailPage = () => {
   const riskLevel = data.latestPrediction?.riskLevel || "Unknown";
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[16px] lg:pt-[56px] pb-[104px] pt-[16px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
+    <>
+      <AppPageShell>
         <header>
           <div className="flex items-center justify-between gap-[14px]">
             <div className="flex min-w-0 items-center gap-[12px]">
@@ -230,7 +270,7 @@ const TeacherStudentDetailPage = () => {
                 <MiniStat
                   icon={<Target size={18} />}
                   value={`${stats.accuracy || 0}%`}
-                  label="Akurasi"
+                  label="Akurasi Jawaban"
                   color="text-[#651DFF]"
                   bg="bg-[#F7F0FF]"
                 />
@@ -275,7 +315,7 @@ const TeacherStudentDetailPage = () => {
             )}
           </section>
         </div>
-      </div>
+      </AppPageShell>
 
       <TeacherDesktopNav />
       <TeacherBottomNav />
@@ -291,20 +331,17 @@ const TeacherStudentDetailPage = () => {
           onRemove={handleRemoveStudent}
         />
       )}
-    </main>
+    </>
   );
 };
 
 const PageLayout = ({ children }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F8F2FF] via-white to-white">
-      <div className="mx-auto min-h-screen w-full max-w-[460px] px-[14px] pb-[104px] pt-[49px] lg:ml-[304px] lg:max-w-[1100px] lg:px-[32px] lg:pb-[44px]">
-        {children}
-      </div>
-
+    <>
+      <AppPageShell>{children}</AppPageShell>
       <TeacherDesktopNav />
       <TeacherBottomNav />
-    </main>
+    </>
   );
 };
 
@@ -416,6 +453,10 @@ const OverviewTab = ({ radarData, skillData }) => {
         Skill Mapping
       </h2>
 
+      <p className="mt-[6px] text-[12px] font-medium text-[#6B7280]">
+        Berdasarkan prediksi mastery AI terbaru siswa.
+      </p>
+
       <div className="relative mt-[8px] h-[320px] lg:h-[430px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={radarData} outerRadius="62%">
@@ -458,7 +499,11 @@ const OverviewTab = ({ radarData, skillData }) => {
               {item.title}
             </p>
 
-            <p className="mt-[3px] text-[15px] font-bold leading-none text-[#641BFF] lg:text-[17px]">
+            <p
+              className={`mt-[3px] text-[15px] font-bold leading-none lg:text-[17px] ${getValueTextColor(
+                item.value
+              )}`}
+            >
               {item.value}%
             </p>
           </div>
@@ -472,10 +517,10 @@ const SkillTab = ({ skillData }) => {
   return (
     <section className="rounded-[22px] border border-[#E5E7EB] bg-white px-[18px] py-[18px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] lg:rounded-[24px] lg:px-[20px]">
       <h2 className="text-[22px] font-bold tracking-[-0.04em] text-black lg:text-[24px]">
-        Skill Progress
+        Progress per Kategori
       </h2>
 
-      <div className="mt-[20px] grid gap-[12px] lg:grid-cols-2">
+      <div className="mt-[17px] space-y-[12px]">
         {skillData.map((item) => (
           <SkillProgressCard key={item.title} item={item} />
         ))}
@@ -485,33 +530,32 @@ const SkillTab = ({ skillData }) => {
 };
 
 const SkillProgressCard = ({ item }) => {
-  const color =
-    item.value < 50
-      ? "bg-[#FF6B1A]"
-      : item.value < 70
-      ? "bg-[#F9B700]"
-      : "bg-[#18B866]";
-
   return (
-    <div className="rounded-[16px] border border-[#E5E7EB] bg-white px-[18px] py-[16px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
+    <div className="rounded-[15px] border border-[#E5E7EB] bg-white px-[20px] py-[17px] transition hover:-translate-y-[2px] hover:border-[#D7C4FF] hover:shadow-[0_10px_24px_rgba(101,29,255,0.08)]">
       <div className="flex items-start justify-between gap-[12px]">
         <div className="min-w-0">
           <h3 className="text-[14px] font-bold text-black">{item.title}</h3>
 
           <p className="mt-[3px] text-[12px] font-medium text-[#6B7280]">
-            {item.desc}
+            {item.description}
+          </p>
+
+          <p className="mt-[6px] text-[11px] font-medium text-[#9CA3AF]">
+            {item.solved} dari {item.totalQuestions} soal telah dipelajari
           </p>
         </div>
 
         <p className="shrink-0 text-[15px] font-bold text-black">
-          {item.value}%
+          {item.progressValue}%
         </p>
       </div>
 
-      <div className="mt-[11px] h-[7px] overflow-hidden rounded-full bg-[#D9D9D9]">
+      <div className="mt-[11px] h-[6px] overflow-hidden rounded-full bg-[#D9D9D9]">
         <div
-          className={`h-full rounded-full ${color} transition-all duration-700`}
-          style={{ width: `${item.value}%` }}
+          className={`h-full rounded-full ${getProgressColor(
+            item.progressValue
+          )} transition-all duration-700`}
+          style={{ width: `${item.progressValue}%` }}
         />
       </div>
     </div>
